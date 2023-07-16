@@ -1,0 +1,129 @@
+{% extends "baseAdmin.html.twig" %}
+
+
+
+
+{% block body %}
+
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="card mb-3">
+                {# <div class="card-body col-lg-12"></div> #}
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        <div class="card-body">
+                            <h4 class="card-title">Command num
+                                {{ commandeMateriels.getCommande().getRef()}}</h4>
+                            <div class="table-responsive">
+
+
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th>Command Description</th>
+                                        <td>{{ commandeMateriels.getCommande().getDescription() }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Banque</th>
+                                        <td>{{ commandeMateriels.getCommande().banque.nom }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Materiels</th>
+                                        <td>
+                                            {# {{ commandeMateriels.getMateriel().getNom() }}
+                                            ({{ commandeMateriels.getQuantite() }})
+                                            {% for material in commandeMateriels.getCommande() %}
+                                                <br>
+                                                {{ material.getMateriel().getNom() }}
+                                                ({{ material.getQuantite() }})
+                                            {% endfor %} #}
+                                           {% for material in commandeMateriels.getCommande().getCommandeMateriels() %}
+                                                <br>
+                                                <span class=" mb-3">{{ material.getMateriel().getNom() }}</span>
+                                                -> Qte : {{ material.getQuantite() }}
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Prix unitaire</th>
+                                        <td>
+                                            {% for material in commandeMateriels.getCommande().getCommandeMateriels() %}
+                                                <br>
+                                                {{ material.getMateriel().getPu() }}
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>taux tva</th>
+                                        <td>{{ commandeMateriels.getCommande().tauxtva * 100 }}
+                                            %</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Avance</th>
+                                        <td>{{ commandeMateriels.getCommande().avance }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>TOTAL HT</th>
+                                        <td>
+                                            {# Calculate the total HT #}
+                                            {% set totalHT = 0 %}
+                                            {% for material in commandeMateriels.getCommande().getCommandeMateriels() %}
+                                                {% set totalHT = totalHT + (material.getQuantite() * material.getMateriel().getPu()) %}
+                                            {% endfor %}
+                                            {{ totalHT }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>TVA</th>
+                                        <td>
+                                            {# Calculate the TVA #}
+                                            {% set tva = totalHT * commandeMateriels.getCommande().tauxtva %}
+                                            {{ tva }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>TOTAL TTC</th>
+                                        <td>
+                                            {# Calculate the total TTC #}
+                                            {% set totalTTC = totalHT + tva %}
+                                            {{ totalTTC }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>RESTE</th>
+                                        <td>
+                                            {# Calculate the remaining amount #}
+                                            {% set reste = totalTTC - commandeMateriels.getCommande().avance %}
+                                            {{ reste }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+{% endblock %}

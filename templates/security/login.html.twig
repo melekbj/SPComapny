@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+{# <br><br><br><br><br><br><br> #}
+{# <form method="post">
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% endif %}
+
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <label for="inputEmail">Email</label>
+    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+    <label for="inputPassword">Password</label>
+    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+
+    <input type="hidden" name="_csrf_token"
+           value="{{ csrf_token('authenticate') }}"
+    >
+
+    <button class="btn btn-lg btn-primary" type="submit">
+        Sign in
+    </button>
+</form> #}
+<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						{# <p>Fresh and Organic</p> #}
+						<h1>Hello! Let's get started</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+<div class="container-scroller">
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="content-wrapper d-flex align-items-center auth px-0">
+            <div class="row w-100 mx-0" style="padding:30px;">
+                <div class="col-lg-4 mx-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-center">
+                                {# <img src="{{ asset('assets/images/sp.png')}}" width="250px" alt="logo"> #}
+                                {# <h4 class="mt-4 mb-4">Hello! Let's get started</h4> #}
+                            </div>
+
+                            {% for message in app.flashes('success') %}
+                                <div class="alert alert-success">
+                                {{ message }}
+                                </div>
+                            {% endfor %}
+                            
+                            <h6 class="font-weight-light">Sign in to continue.</h6>
+                            <form class="pt-3" method="post">
+                                <!-- Form content -->
+                                {% if error %}
+                                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                {% endif %}
+
+                                {% if app.user %}
+                                <div class="mb-3">
+                                    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                                </div>
+                                {% endif %}
+                                <div class="form-group">
+                                    <label for="inputEmail" class="input-label">
+                                        <i class="fas fa-envelope"></i>
+                                        Email
+                                    </label>
+                                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class=" form-control" autocomplete="email" required autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPassword" class="input-label">
+                                        <i class="fas fa-lock"></i>
+                                        Password
+                                    </label>
+                                    <input type="password" name="password" id="inputPassword" class=" form-control" autocomplete="current-password" required>
+                                </div>
+
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                <div class="mt-3">
+                                    <button type="submit" class="btn btn-block btn-lg auth-form-btn" style="background-color:#F28123;color:white;">Sign in</button>
+                                </div>
+                                <div class="my-2 d-flex justify-content-between align-items-center">
+                                    <div class="form-check">
+                                    </div>
+                                    <a href="#" class="auth-link text-black">Forgot password?</a>
+                                </div>
+                                <div class="text-center mt-4 font-weight-light">
+                                    Don't have an account? <a href="{{path('app_registration')}}" class="text-primary">Sign up</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- content-wrapper ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+{% endblock %}

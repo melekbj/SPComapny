@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+
+
+
+{% block body %}
+
+<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						{# <p>Fresh and Organic</p> #}
+						<h1>Welcome! Create an account and unlock a world of possibilities.</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+<div class="container-scroller">
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="content-wrapper d-flex align-items-center auth px-0">
+            <div class="row w-100 mx-0">
+                <div class="col-lg-6 mx-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-center">
+                                <h4 class="mt-4 mb-4 text-center">Create your account</h4>
+                            </div>
+                            
+                                <!-- Form content -->
+                              {{ form_start(registerForm) }}
+                              {{ form_row(registerForm.roles, {'attr': {'class': 'form-control'}}) }}
+                              {{ form_row(registerForm.fullname, {'attr': {'class': 'form-control '}}) }}
+                              {{ form_row(registerForm.imageFile, {'attr': {'class': 'form-control'}}) }}
+                              {{ form_row(registerForm.email, {'attr': {'class': 'form-control'}}) }}
+                              {{ form_row(registerForm.password.first, {'attr': {'class': 'form-control'}}) }}
+                              {{ form_row(registerForm.password.second, {'attr': {'class': 'form-control'}}) }}
+                              {{ form_row(registerForm.save) }}
+                              {{ form_end(registerForm) }}                        
+                                
+                                <div class="text-center mt-4 font-weight-light">
+                                    You already have an account? <a href="{{path('app_login')}}" class="text-primary">Sign in</a>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- content-wrapper ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<br><br><br>
+
+  {% endblock %}

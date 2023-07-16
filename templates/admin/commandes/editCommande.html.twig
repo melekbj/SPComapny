@@ -1,0 +1,80 @@
+{% extends "baseAdmin.html.twig" %}
+
+
+
+{% block body %}
+
+
+  <div class="main-panel">        
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Edit a material</h4>
+                  {# <p class="card-description">
+                    Basic form elements
+                  </p> #}
+                   
+
+                  <form method="POST">
+                      <div>
+                          <label for="description">Description:</label>
+                          <input type="text" id="description" name="description" value="{{ commande.description }}" required>
+                      </div>
+                      <div>
+                          <label for="tauxtva">Taux TVA:</label>
+                          <input type="number" id="tauxtva" name="tauxtva" value="{{ commande.tauxTVA }}" required>
+                      </div>
+                      <div>
+                          <label for="avance">Avance:</label>
+                          <input type="number" id="avance" name="avance" value="{{ commande.avance }}" required>
+                      </div>
+                      <div>
+                          <label for="date">Date:</label>
+                          <input type="date" id="date" name="date" value="{{ commande.date|date('Y-m-d') }}" required>
+                      </div>
+                      <div>
+                          <label for="banque">Banque:</label>
+                          <select id="banque" name="banque" required>
+                              {% for banque in banques %}
+                                  <option value="{{ banque.id }}" {% if commande.banque and banque.id == commande.banque.id %}selected{% endif %}>{{ banque.nom }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div>            
+                          
+                      </div>
+                      <button type="submit">Update Commande</button>
+                  </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+      </div
+
+
+
+
+
+
+{% endblock %}

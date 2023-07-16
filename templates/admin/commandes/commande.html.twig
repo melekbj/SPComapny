@@ -1,0 +1,265 @@
+{% extends "baseAdmin.html.twig" %}
+
+
+
+
+
+
+{% block body %}
+
+<div class="main-panel">
+	<div class="content-wrapper">
+		<div class="col-12 col-xl-12">
+			<button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#exampleModal">
+				Ajourter un bon de commande +
+			</button>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-12 grid-margin stretch-card">
+				<div class="card">
+					{% for message in app.flashes('success') %}
+						<div class="alert alert-success">
+							{{ message }}
+						</div>
+					{% endfor %}
+					<div class="card-body">
+						<h4 class="card-title">list of commands</h4>
+						{# <p class="card-description">
+						                                                  Add class <code>.table-striped</code>
+						                                                </p> #}
+
+
+						<br><br>
+
+
+						<div class="table-responsive">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>
+											Réference
+										</th>
+										<th>
+											Description
+										</th>
+										<th>
+											Materiel
+										</th>
+										<th>
+											PU
+										</th>
+										<th>
+											Nom du banque
+										</th>
+										<th>
+											Taux tva
+										</th>
+										<th>
+											AVANCE
+										</th>
+										<th>
+											Date
+										</th>
+										<th>
+											Etat
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for item in commandes %}
+										<tr class="{% if item.etat == 'nonlivre' %}table-danger{% elseif item.etat == 'livrepaye' %}table-primary{% elseif item.etat == 'livrenonpaye' %}table-info{% endif %}">
+											<td class="py-1">
+												{{ item.ref }}
+											</td>
+											<td class="py-1">
+												{{ item.description }}
+											</td>
+											<td>
+												{% for commande_materiel in item.commandemateriels %}
+													{{ commande_materiel.materiel.nom }}
+													({{ commande_materiel.quantite }})
+													<br>
+												{% endfor %}
+											</td>
+											<td>
+												{% for commande_materiel in item.commandemateriels %}
+													{{ commande_materiel.materiel.pu }}
+													<br>
+												{% endfor %}
+											</td>
+											<td>
+												{{ item.banque.nom }}
+											</td>
+											<td>
+												{{ item.tauxtva * 100 }}
+												%
+											</td>
+											<td>
+												{{item.avance}}
+											</td>
+											<td>
+												{{item.date | date('d-m-Y')}}
+											</td>
+											<td>
+												{% if item.etat == NULL %}
+													<h6 class="text-info">In progress...</h6>
+												{% else %}
+													{{item.etat}}
+												{% endif %}
+											</td>
+
+											<td>
+												<a href="{{path('app_show_commande', {'id': item.id})}}" class="btn btn-info btn-sm">Show</a>
+												<a href="{{path('app_edit_commande', {'id': item.id})}}" class="btn btn-success btn-sm">Edit</a>
+												<a href="{{path('app_delete_commande', {'id': item.id})}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this command?')">Delete</a>
+											</td>
+											<td>
+												<div class="dropdown">
+													<button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+														Set Etat
+													</button>
+													<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+														<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'nonlivre'})}}">Non Livré</a>
+														<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'livrenonpaye'})}}">Livré non payé</a>
+														<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'livrepaye'})}}">Livré payé</a>
+													</div>
+												</div>
+											</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog  modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Ajouter nouveau commande</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div
+				class="modal-body">
+
+				<form action="{{ path('app_commandes') }}" method="POST">
+					<div class="row">
+					<div class="col-md-4">
+							<div class="form-group">
+								<label for="ref">Réference</label>
+								<input type="number" class="form-control" id="ref" name="ref" required>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="description">Description</label>
+								<input type="text" class="form-control" id="description" name="description" required>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="banque">Banque</label>
+								<select class="form-control" id="banque" name="banque" required>
+									<option value="">Choose a banque</option>
+									{% for banque in banques %}
+										<option value="{{ banque.id }}">{{ banque.nom }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="tauxtva">Taux TVA ( 10% = 0.1 )</label>
+								<input type="text" class="form-control" id="tauxtva" name="tauxtva" pattern="\d+(\.\d+)?" title="Please enter a valid float number" required>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="avance">Avance</label>
+								<input type="text" class="form-control" id="avance" name="avance" pattern="[0-9]+" title="Please enter an integer number">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="date">Date</label>
+								<input type="date" class="form-control" id="date" name="date" required>
+							</div>
+						</div>
+
+
+					</div>
+
+
+					<div class="ml-4 form-group">
+						<label for="materiel">Materiels</label>
+						{% for materiel in materiels %}
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="materiel{{ materiel.id }}" name="materiel[]" value="{{ materiel.id }}">
+								<label class="form-check-label" for="materiel{{ materiel.id }}">{{ materiel.nom }}</label>
+							</div>
+							<div class="text-area-container" style="display: none;">
+								<label for="textarea{{ materiel.id }}">Quantité</label>
+								<textarea class="form-control col-2" id="textarea{{ materiel.id }}" name="textarea{{ materiel.id }}"></textarea>
+							</div>
+						{% endfor %}
+					</div>
+
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Confirm</button>
+					</div>
+				</form>
+
+
+
+			</div>
+
+			{# <div class="modal-footer">
+			                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			                                <button type="submit" class="btn btn-primary">Save changes</button>
+			                              </div> #}
+		</div>
+	</div>
+</div>
+
+
+
+
+
+<script>
+
+	$(document).ready(function () {
+$('input[type="checkbox"]').change(function () {
+var checkboxId = $(this).attr('id');
+var textareaId = checkboxId.replace('materiel', 'textarea');
+var textAreaContainer = $('#' + textareaId).closest('.text-area-container');
+if ($(this).is(':checked')) {
+textAreaContainer.show();
+} else {
+textAreaContainer.hide();
+}
+});
+});
+</script>
+
+
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "baseAdmin.html.twig" %}
+
+
+
+{% block body %}
+
+
+  <div class="main-panel">        
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Edit a material</h4>
+                  {# <p class="card-description">
+                    Basic form elements
+                  </p> #}
+                    {{ form_start(editForm) }}
+                    <div class="form-group">
+                            {{ form_row(editForm.nom, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(editForm.imageFile, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(editForm.pu, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                        {{ form_row(editForm.Add, {'label': 'Modifier', 'attr': {'class': 'btn btn-success'}}) }}
+                    {{ form_end(editForm) }} 
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+      </div
+
+
+
+
+
+
+{% endblock %}

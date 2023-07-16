@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20230715090940 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return '';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE TABLE commande_materiels (id INT AUTO_INCREMENT NOT NULL, commande_id INT DEFAULT NULL, materiel_id INT DEFAULT NULL, quantite INT NOT NULL, INDEX IDX_8C12E42B82EA2E54 (commande_id), INDEX IDX_8C12E42B16880AAF (materiel_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE commande_materiels ADD CONSTRAINT FK_8C12E42B82EA2E54 FOREIGN KEY (commande_id) REFERENCES commande (id)');
+        $this->addSql('ALTER TABLE commande_materiels ADD CONSTRAINT FK_8C12E42B16880AAF FOREIGN KEY (materiel_id) REFERENCES materiels (id)');
+        $this->addSql('ALTER TABLE commande DROP date');
+        $this->addSql('ALTER TABLE commande ADD CONSTRAINT FK_6EEAA67D37E080D9 FOREIGN KEY (banque_id) REFERENCES banques (id)');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE commande_materiels DROP FOREIGN KEY FK_8C12E42B82EA2E54');
+        $this->addSql('ALTER TABLE commande_materiels DROP FOREIGN KEY FK_8C12E42B16880AAF');
+        $this->addSql('DROP TABLE commande_materiels');
+        $this->addSql('ALTER TABLE commande DROP FOREIGN KEY FK_6EEAA67D37E080D9');
+        $this->addSql('ALTER TABLE commande ADD date DATETIME NOT NULL');
+    }
+}
