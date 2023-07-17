@@ -39,7 +39,18 @@
             <!-- responsive -->
             <link rel="stylesheet" href="{{ asset('assets/css/responsive.css')}}">
 
+			<style>
+			
+			.submenu {
+			display: none;
+			}
 
+			.submenu-parent:hover .submenu {
+			display: block;
+			}
+
+			
+			</style>
 
         {% endblock %}
 
@@ -116,20 +127,26 @@
 								<li><a href="{{path('app_about')}}">Société</a></li>
 								<li><a href="#">Sécurité</a>
 									<ul class="sub-menu">
-										<li><a href="404.html">Chèque</a></li>
-										<li><a href="about.html">Document sécurisé</a></li>
-										<li><a href="cart.html">Anticopie-Antiscan</a></li>
-										<li><a href="checkout.html">Encre de sécurité</a></li>
+										<li><a href="{{path('app_securite_cheques')}}">Chèque</a></li>
+										<li><a href="{{path('app_securite_document')}}">Document sécurisé</a></li>
+										<li><a href="{{path('app_copie_scan')}}">Anticopie-Antiscan</a></li>
+										<li class="submenu-parent">
+											<a href="{{path('app_securite_document')}}">Encre de sécurité</a>
+											<ul class="submenu">
+											<li><a href="#">Encre réactive</a></li>
+											<li><a href="#">Encre fluorescente</a></li>
+											</ul>
+										</li>
 									</ul>
 								</li>
 								<li><a href="news.html">Nos travaux</a>
 									<ul class="sub-menu">
 										<li><a href="{{path('app_travaux_solution')}}">Nos solutions</a></li>
-										<li><a href="single-news.html">Personnalisation</a></li>
-                                        <li><a href="single-news.html">Exemples</a></li>
+										<li><a href="#">Personnalisation</a></li>
+                                        <li><a href="#">Exemples</a></li>
 									</ul>
 								</li>
-								<li><a href="contact.html">Normalisation</a></li>
+								<li><a href="#">Normalisation</a></li>
 								<li><a href="{{path('app_contact')}}">Contact</a>
 								</li>
 								<li>

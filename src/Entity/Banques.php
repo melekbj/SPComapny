@@ -113,4 +113,22 @@ class Banques
 
         return $this;
     }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile): void
+    {
+        $this->imageFile = $imageFile;
+
+        if ($imageFile) {
+            // It's important to update the "updatedAt" field to trigger the upload
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
+
+
 }

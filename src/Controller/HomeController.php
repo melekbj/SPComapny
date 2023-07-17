@@ -71,6 +71,14 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/securite/anticopie-antiscan', name: 'app_copie_scan')]
+    public function anticopie(): Response
+    {
+        return $this->render('home/securite/anticopie.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
 
     #[Route('/travaux/solution', name: 'app_travaux_solution')]
     public function solution(): Response
@@ -90,7 +98,24 @@ class HomeController extends AbstractController
     }
 
 
+    #[Route('/detail_product/{id}', name: 'app_detail_product')]
+    public function showProduct($id, PersistenceManagerRegistry $doctrine): Response
+    {
+        // $user = $this->getUser();
+        // $image = $user->getImage();
+        // Retrieve the command details based on the provided ID
+        $produit = $doctrine->getRepository(Materiels::class)->find($id);
 
+        if (!$produit) {
+            throw $this->createNotFoundException('produit not found');
+        }
+
+        // Render the template and pass the command details
+        return $this->render('home/singleProduct.html.twig', [
+            'produit' => $produit,
+            // 'image' => $image,
+        ]);
+    }
 
 
 

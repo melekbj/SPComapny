@@ -15,13 +15,15 @@
                   {# <p class="card-description">
                     Basic form elements
                   </p> #}
+                  
                     {{ form_start(editForm) }}
                     <div class="form-group">
                             {{ form_row(editForm.nom, {'attr': {'class': 'form-control'}}) }}
                     </div>
-                    <div class="form-group">
+                    
+                    {# <div class="form-group">
                         {{ form_row(editForm.imageFile, {'attr': {'class': 'form-control'}}) }}
-                    </div>
+                    </div> #}
                         {{ form_row(editForm.Add, {'label': 'Modifier', 'attr': {'class': 'btn btn-success'}}) }}
                     {{ form_end(editForm) }} 
 

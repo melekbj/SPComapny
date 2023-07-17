@@ -178,6 +178,27 @@ class Commande
 
 
 
+    public function hasMateriel($materiel)
+{
+    foreach ($this->getCommandeMateriels() as $commandeMateriel) {
+        if ($commandeMateriel->getMateriel() === $materiel) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+public function getMaterielQuantity($materiel)
+{
+    foreach ($this->getCommandeMateriels() as $commandeMateriel) {
+        if ($commandeMateriel->getMateriel() === $materiel) {
+            return $commandeMateriel->getQuantite();
+        }
+    }
+
+    return null;
+}
 
 
 

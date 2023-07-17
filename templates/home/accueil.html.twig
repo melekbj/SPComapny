@@ -106,28 +106,26 @@
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="section-title">	
 						<h3><span class="orange-text">Our</span> Products</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, fuga quas itaque eveniet beatae optio.</p>
+						{# <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, fuga quas itaque eveniet beatae optio.</p> #}
 					</div>
 				</div>
 			</div>
 
 			<div class="row">
-            {% for materiel in materiels %}
-				<div class="col-lg-4 col-md-6 text-center">
-                
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="single-product.html"><img src="{{ vich_uploader_asset(materiel, 'imageFile') }}" alt=""></a>
-						</div>
-						<h3>{{materiel.nom}}</h3>
-						<p class="product-price"><span>Per Kg</span> {{materiel.pu}} </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
-					
-                    </div>
-                    
-				</div>
-                {% endfor %}
-			</div>
+  {% for materiel in materiels %}
+    <div class="col-lg-4 col-md-6 col-sm-12 text-center">
+      <div class="single-product-item">
+        <div class="product-image">
+          <a href="{{path('app_detail_product', {'id': materiel.id})}}"><img src="{{ vich_uploader_asset(materiel, 'imageFile') }}" alt=""></a>
+        </div>
+        <h3>{{materiel.nom}}</h3>
+        <p class="product-price">{{materiel.pu}}</p>
+        <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
 		</div>
 	</div>
 	<!-- end product section -->
