@@ -414,27 +414,122 @@ class AdminController extends AbstractController
 
 
     #[Route('/edit_commande/{id}', name: 'app_edit_commande')]
-    public function editCommande(int $id, PersistenceManagerRegistry $doctrine, Request $request): Response
+    // public function editCommande(int $id, PersistenceManagerRegistry $doctrine, Request $request): Response
+    // {
+    //     $user = $this->getUser();
+    //     $image = $user->getImage();
+
+    //     // Get the Doctrine entity manager
+    //     $em = $doctrine->getManager();
+
+    //     // Retrieve the Commande entity by ID
+    //     $commande = $em->getRepository(Commande::class)->find($id);
+
+    //     // Check if the Commande exists
+    //     if (!$commande) {
+    //         throw $this->createNotFoundException('Commande not found');
+    //     }
+
+    //     // Retrieve the list of banques from the database
+    //     $banques = $em->getRepository(Banques::class)->findAll();
+
+    //     // Retrieve the list of materiels from the database
+    //     $materiels = $em->getRepository(Materiels::class)->findAll();
+
+    //     if ($request->isMethod('POST')) {
+    //         // Get the submitted data
+    //         $description = $request->request->get('description');
+    //         $tauxtva = $request->request->get('tauxtva');
+    //         $avance = $request->request->get('avance');
+    //         $ref = $request->request->get('ref');
+    //         $dateString = $request->request->get('date');
+    //         $date = \DateTime::createFromFormat('Y-m-d', $dateString); // Assuming the date format is "YYYY-MM-DD"
+    //         $banqueId = $request->request->get('banque');
+    //         $materielIds = $request->request->all('materiel');
+
+    //         // Retrieve the selected Banque entity
+    //         $banque = $em->getRepository(Banques::class)->find($banqueId);
+
+    //         // Update the Commande entity with the new values
+    //         $commande->setDescription($description);
+    //         $commande->setTauxTVA($tauxtva);
+    //         $commande->setAvance($avance);
+    //         $commande->setBanque($banque);
+    //         $commande->setDate($date);
+    //         $commande->setRef($ref);
+
+    //         // Update existing CommandeMateriels associations
+    //         $existingCommandeMateriels = $commande->getCommandeMateriels();
+    //         $existingMaterielIds = [];
+
+    //         foreach ($existingCommandeMateriels as $commandeMateriel) {
+    //             $materielId = $commandeMateriel->getMateriel()->getId();
+
+    //             // Check if the materiel is still selected
+    //             if (in_array($materielId, $materielIds)) {
+    //                 $quantity = $request->request->get('textarea' . $materielId);
+    //                 $commandeMateriel->setQuantite($quantity);
+    //                 $existingMaterielIds[] = $materielId;
+    //             } else {
+    //                 // Remove the association if the materiel is unchecked
+    //                 $em->remove($commandeMateriel);
+    //             }
+    //         }
+
+    //         // Create new CommandeMateriels associations
+    //         foreach ($materielIds as $materielId) {
+    //             if (!in_array($materielId, $existingMaterielIds)) {
+    //                 $materiel = $em->getRepository(Materiels::class)->find($materielId);
+    //                 $quantity = $request->request->get('textarea' . $materielId);
+
+    //                 $commandeMateriel = new CommandeMateriels();
+    //                 $commandeMateriel->setCommande($commande);
+    //                 $commandeMateriel->setMateriel($materiel);
+    //                 $commandeMateriel->setQuantite($quantity);
+
+    //                 $em->persist($commandeMateriel);
+    //             }
+    //         }
+
+    //         // Flush the changes to the database
+    //         $em->flush();
+
+    //         // Redirect
+    //         $this->addFlash('success', 'Commande mise à jour avec succès');
+    //         return $this->redirectToRoute('app_commandes');
+    //     }
+
+    //     return $this->render('admin/commandes/editCommande.html.twig', [
+    //         'controller_name' => 'AdminController',
+    //         'commande' => $commande,
+    //         'materiels' => $materiels,
+    //         'banques' => $banques,
+    //         'image' => $image,
+    //     ]);
+    // }
+
+    public function editCommande($id, PersistenceManagerRegistry $doctrine, Request $request): Response
     {
+
         $user = $this->getUser();
         $image = $user->getImage();
-
         // Get the Doctrine entity manager
         $em = $doctrine->getManager();
 
-        // Retrieve the Commande entity by ID
-        $commande = $em->getRepository(Commande::class)->find($id);
-
-        // Check if the Commande exists
-        if (!$commande) {
-            throw $this->createNotFoundException('Commande not found');
-        }
-
+        
         // Retrieve the list of banques from the database
         $banques = $em->getRepository(Banques::class)->findAll();
 
         // Retrieve the list of materiels from the database
         $materiels = $em->getRepository(Materiels::class)->findAll();
+
+        // Retrieve the command entity
+        $commande = $em->getRepository(Commande::class)->find($id);
+
+        // Check if the command exists
+        if (!$commande) {
+            throw $this->createNotFoundException('Commande not found');
+        }
 
         if ($request->isMethod('POST')) {
             // Get the submitted data
@@ -450,7 +545,7 @@ class AdminController extends AbstractController
             // Retrieve the selected Banque entity
             $banque = $em->getRepository(Banques::class)->find($banqueId);
 
-            // Update the Commande entity with the new values
+            // Update the command attributes
             $commande->setDescription($description);
             $commande->setTauxTVA($tauxtva);
             $commande->setAvance($avance);
@@ -458,37 +553,28 @@ class AdminController extends AbstractController
             $commande->setDate($date);
             $commande->setRef($ref);
 
-            // Update existing CommandeMateriels associations
-            $existingCommandeMateriels = $commande->getCommandeMateriels();
-            $existingMaterielIds = [];
+            // Retrieve the current materials of the command
+            $currentMaterials = $commande->getCommandeMateriels()->toArray();
 
-            foreach ($existingCommandeMateriels as $commandeMateriel) {
-                $materielId = $commandeMateriel->getMateriel()->getId();
-
-                // Check if the materiel is still selected
-                if (in_array($materielId, $materielIds)) {
-                    $quantity = $request->request->get('textarea' . $materielId);
-                    $commandeMateriel->setQuantite($quantity);
-                    $existingMaterielIds[] = $materielId;
-                } else {
-                    // Remove the association if the materiel is unchecked
-                    $em->remove($commandeMateriel);
-                }
+            // Iterate over the current materials and remove them from the command
+            foreach ($currentMaterials as $currentMaterial) {
+                $commande->removeCommandeMateriel($currentMaterial);
+                $em->remove($currentMaterial);
             }
 
-            // Create new CommandeMateriels associations
+            // Iterate over the selected Materiel IDs and create new CommandMaterial entities
             foreach ($materielIds as $materielId) {
-                if (!in_array($materielId, $existingMaterielIds)) {
-                    $materiel = $em->getRepository(Materiels::class)->find($materielId);
-                    $quantity = $request->request->get('textarea' . $materielId);
+                $materiel = $em->getRepository(Materiels::class)->find($materielId);
+                $quantity = $request->request->get('textarea' . $materielId);
 
-                    $commandeMateriel = new CommandeMateriels();
-                    $commandeMateriel->setCommande($commande);
-                    $commandeMateriel->setMateriel($materiel);
-                    $commandeMateriel->setQuantite($quantity);
+                // Create a new CommandMaterial instance
+                $commandMaterial = new CommandeMateriels();
+                $commandMaterial->setCommande($commande);
+                $commandMaterial->setMateriel($materiel);
+                $commandMaterial->setQuantite($quantity);
 
-                    $em->persist($commandeMateriel);
-                }
+                // Persist the CommandMaterial entity
+                $em->persist($commandMaterial);
             }
 
             // Flush the changes to the database
@@ -502,11 +588,12 @@ class AdminController extends AbstractController
         return $this->render('admin/commandes/editCommande.html.twig', [
             'controller_name' => 'AdminController',
             'commande' => $commande,
-            'materiels' => $materiels,
-            'banques' => $banques,
             'image' => $image,
+            'banques' => $banques,
+            'materiels' => $materiels,
         ]);
     }
+
 
     
 
@@ -616,25 +703,48 @@ class AdminController extends AbstractController
     //     ]);
     // }
 
-    #[Route('/commande/{id}', name: 'app_show_commande')]
-
-     public function showCommande($id, PersistenceManagerRegistry $doctrine): Response
+    #[Route('/commande_materiel/{id}', name: 'app_show_commande')]
+    public function showCommandeMateriel($id, PersistenceManagerRegistry $doctrine): Response
     {
         $user = $this->getUser();
         $image = $user->getImage();
-        // Retrieve the command details based on the provided ID
-        $commandeMateriels = $doctrine->getRepository(CommandeMateriels::class)->find($id);
+        // Get the Doctrine entity manager
+        $em = $doctrine->getManager();
 
-        if (!$commandeMateriels) {
-            throw $this->createNotFoundException('CommandeMateriels not found');
+        // Retrieve the command entity
+        $commande = $em->getRepository(Commande::class)->find($id);
+
+        // Check if the command exists
+        if (!$commande) {
+            throw $this->createNotFoundException('Commande not found');
         }
 
-        // Render the template and pass the command details
         return $this->render('admin/detailCommande.html.twig', [
-            'commandeMateriels' => $commandeMateriels,
+            'controller_name' => 'AdminController',
+            'commande' => $commande,
             'image' => $image,
         ]);
     }
+
+    //  public function showCommande($id, PersistenceManagerRegistry $doctrine): Response
+    // {
+    //     $user = $this->getUser();
+    //     $image = $user->getImage();
+    //     // Retrieve the command details based on the provided ID
+    //     $commandeMateriels = $doctrine->getRepository(CommandeMateriels::class)->find($id);
+
+    //     dd($commandeMateriels);
+
+    //     // if (!$commandeMateriels) {
+    //     //     throw $this->createNotFoundException('CommandeMateriels not found');
+    //     // }
+
+    //     // Render the template and pass the command details
+    //     return $this->render('admin/detailCommande.html.twig', [
+    //         'commandeMateriels' => $commandeMateriels,
+    //         'image' => $image,
+    //     ]);
+    // }
 
 
 

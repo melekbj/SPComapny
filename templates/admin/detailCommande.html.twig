@@ -22,7 +22,7 @@
                         {% endfor %}
                         <div class="card-body">
                             <h4 class="card-title">Command num
-                                {{ commandeMateriels.getCommande().getRef()}}</h4>
+                                {{ commande.ref}}</h4>
                             <div class="table-responsive">
 
 
@@ -30,82 +30,69 @@
                                 <tbody>
                                     <tr>
                                         <th>Command Description</th>
-                                        <td>{{ commandeMateriels.getCommande().getDescription() }}</td>
+                                        <td>{{ commande.description }}</td>
                                     </tr>
                                     <tr>
                                         <th>Banque</th>
-                                        <td>{{ commandeMateriels.getCommande().banque.nom }}</td>
+                                        <td>{{ commande.banque.nom }}</td>
                                     </tr>
                                     <tr>
                                         <th>Materiels</th>
                                         <td>
-                                            {# {{ commandeMateriels.getMateriel().getNom() }}
-                                            ({{ commandeMateriels.getQuantite() }})
-                                            {% for material in commandeMateriels.getCommande() %}
-                                                <br>
-                                                {{ material.getMateriel().getNom() }}
-                                                ({{ material.getQuantite() }})
-                                            {% endfor %} #}
-                                           {% for material in commandeMateriels.getCommande().getCommandeMateriels() %}
-                                                <br>
-                                                <span class=" mb-3">{{ material.getMateriel().getNom() }}</span>
-                                                -> Qte : {{ material.getQuantite() }}
+                                            {% for commandeMateriel in commande.commandeMateriels %}
+                                                <li>{{ commandeMateriel.materiel.nom }} ({{ commandeMateriel.quantite }})</li>
                                             {% endfor %}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>Prix unitaire</th>
                                         <td>
-                                            {% for material in commandeMateriels.getCommande().getCommandeMateriels() %}
-                                                <br>
-                                                {{ material.getMateriel().getPu() }}
+                                          {% for commandeMateriel in commande.commandeMateriels %}
+                                                <li>{{ commandeMateriel.materiel.pu }}</li>
                                             {% endfor %}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>taux tva</th>
-                                        <td>{{ commandeMateriels.getCommande().tauxtva * 100 }}
+                                        <td>{{ commande.tauxtva * 100 }}
                                             %</td>
                                     </tr>
                                     <tr>
                                         <th>Avance</th>
-                                        <td>{{ commandeMateriels.getCommande().avance }}</td>
+                                        <td>{{ commande.avance }}</td>
                                     </tr>
                                     <tr>
                                         <th>TOTAL HT</th>
                                         <td>
-                                            {# Calculate the total HT #}
-                                            {% set totalHT = 0 %}
-                                            {% for material in commandeMateriels.getCommande().getCommandeMateriels() %}
-                                                {% set totalHT = totalHT + (material.getQuantite() * material.getMateriel().getPu()) %}
-                                            {% endfor %}
+                                            {%- set totalHT = 0 -%}
+                                            {%- for commandeMateriel in commande.commandeMateriels -%}
+                                                {%- set totalHT = totalHT + (commandeMateriel.quantite * commandeMateriel.materiel.pu) -%}
+                                            {%- endfor -%}
                                             {{ totalHT }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>TVA</th>
                                         <td>
-                                            {# Calculate the TVA #}
-                                            {% set tva = totalHT * commandeMateriels.getCommande().tauxtva %}
-                                            {{ tva }}
+                                            {%- set TVA = totalHT * (commande.tauxtva) -%}
+                                            {{ TVA }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>TOTAL TTC</th>
                                         <td>
-                                            {# Calculate the total TTC #}
-                                            {% set totalTTC = totalHT + tva %}
+                                            {%- set totalTTC = totalHT + TVA -%}
                                             {{ totalTTC }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>RESTE</th>
                                         <td>
-                                            {# Calculate the remaining amount #}
-                                            {% set reste = totalTTC - commandeMateriels.getCommande().avance %}
+                                            {%- set reste = totalTTC - commande.avance -%}
                                             {{ reste }}
                                         </td>
                                     </tr>
+
                                 </tbody>
                             </table>
 
