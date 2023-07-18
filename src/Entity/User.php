@@ -40,6 +40,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $image = null;  
 
+    #[ORM\Column(length: 255,nullable:true)]
+    private ?string $resetToken;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -133,4 +136,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+
+
+
+
+
+
+
+
 }

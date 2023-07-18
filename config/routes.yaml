@@ -1,5 +1,16 @@
 controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+    resource: ../src/Controller/
+    type: annotation
+
+kernel:
+    resource: ../src/Kernel.php
+    type: annotation
+    
+captcha_route:
+    path: /login
+    controller: Gregwar\CaptchaBundle\Controller\CaptchaController::generateAction
+
+# liste_users:
+#   path: /listeUsers/{userId}
+#   controller: App\Controller\AdminController::getUserAction
+#   methods: GET
