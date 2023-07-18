@@ -36,10 +36,10 @@ class Commande
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $etat = null;
 
-    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    #[ORM\ManyToOne(inversedBy: 'commandes', cascade:['remove'])]
     private ?Banques $banque = null;
 
-    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: CommandeMateriels::class)]
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: CommandeMateriels::class, cascade:['remove'])]
     private Collection $commandeMateriels;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]

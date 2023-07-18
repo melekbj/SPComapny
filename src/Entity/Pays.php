@@ -31,7 +31,7 @@ class Pays
     #[ORM\Column(length: 255)]
     private ?string $photo = null;
 
-    #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Banques::class)]
+    #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Banques::class,  cascade:['remove'])]
     private Collection $banques;
 
     public function __construct()

@@ -51,7 +51,7 @@ h3, .h3,
 h4, .h4,
 h5, .h5,
 h6, .h6 {
-  font-family: "Poppins", sans-serif;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-weight: 700;
   margin: 0 0 1.25rem 0;
   color: #051922;
@@ -1113,6 +1113,8 @@ a.tof-btn:hover i {
   -webkit-transition: 0.3s;
   -o-transition: 0.3s;
   transition: 0.3s;
+  padding: 20%;
+  /* height: 90px; */
 }
 
 .single-logo-item:hover {
