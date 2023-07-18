@@ -133,26 +133,26 @@
 										<li class="submenu-parent">
 											<a href="{{path('app_securite_document')}}">Encre de sécurité</a>
 											<ul class="submenu">
-											<li><a href="#">Encre réactive</a></li>
-											<li><a href="#">Encre fluorescente</a></li>
+											<li><a href="{{path('app_encre_reactive')}}">Encre réactive</a></li>
+											<li><a href="{{path('app_encre_fluorescente')}}">Encre fluorescente</a></li>
 											</ul>
 										</li>
 									</ul>
 								</li>
-								<li><a href="news.html">Nos travaux</a>
+								<li><a href="#">Nos travaux</a>
 									<ul class="sub-menu">
 										<li><a href="{{path('app_travaux_solution')}}">Nos solutions</a></li>
-										<li><a href="#">Personnalisation</a></li>
-                                        <li><a href="#">Exemples</a></li>
+										<li><a href="{{path('app_travaux_perso')}}">Personnalisation</a></li>
+                                        <li><a href="{{path('app_travaux_exemple')}}">Exemples</a></li>
 									</ul>
 								</li>
-								<li><a href="#">Normalisation</a></li>
+								<li><a href="{{path('app_normalisation')}}">Normalisation</a></li>
 								<li><a href="{{path('app_contact')}}">Contact</a>
 								</li>
 								<li>
 									<div class="header-icons">
-										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+										{# <a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a> #}
+										<a class="shopping-cart" href="#"><i class="fas fa-shopping-cart"></i></a>
 										{% if app.user %}
 										<a class="shopping-cart" href="{{path('app_country')}}"><i class="fas fa-user"></i></a>
 										<a class="shopping-cart" href="{{path('app_logout')}}"><i class="fas fa-sign-out-alt"></i></a>

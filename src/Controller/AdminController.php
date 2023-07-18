@@ -418,24 +418,24 @@ class AdminController extends AbstractController
     {
         $user = $this->getUser();
         $image = $user->getImage();
-    
+
         // Get the Doctrine entity manager
         $em = $doctrine->getManager();
-    
+
         // Retrieve the Commande entity by ID
         $commande = $em->getRepository(Commande::class)->find($id);
-    
+
         // Check if the Commande exists
         if (!$commande) {
             throw $this->createNotFoundException('Commande not found');
         }
-    
+
         // Retrieve the list of banques from the database
         $banques = $em->getRepository(Banques::class)->findAll();
-    
+
         // Retrieve the list of materiels from the database
         $materiels = $em->getRepository(Materiels::class)->findAll();
-    
+
         if ($request->isMethod('POST')) {
             // Get the submitted data
             $description = $request->request->get('description');
@@ -447,10 +447,9 @@ class AdminController extends AbstractController
             $banqueId = $request->request->get('banque');
             $materielIds = $request->request->all('materiel');
 
-    
             // Retrieve the selected Banque entity
             $banque = $em->getRepository(Banques::class)->find($banqueId);
-    
+
             // Update the Commande entity with the new values
             $commande->setDescription($description);
             $commande->setTauxTVA($tauxtva);
@@ -458,41 +457,48 @@ class AdminController extends AbstractController
             $commande->setBanque($banque);
             $commande->setDate($date);
             $commande->setRef($ref);
-    
+
             // Update existing CommandeMateriels associations
             $existingCommandeMateriels = $commande->getCommandeMateriels();
             $existingMaterielIds = [];
-    
+
             foreach ($existingCommandeMateriels as $commandeMateriel) {
                 $materielId = $commandeMateriel->getMateriel()->getId();
-                $quantity = $request->request->get('textarea' . $materielId);
-                $commandeMateriel->setQuantite($quantity);
-                $existingMaterielIds[] = $materielId;
+
+                // Check if the materiel is still selected
+                if (in_array($materielId, $materielIds)) {
+                    $quantity = $request->request->get('textarea' . $materielId);
+                    $commandeMateriel->setQuantite($quantity);
+                    $existingMaterielIds[] = $materielId;
+                } else {
+                    // Remove the association if the materiel is unchecked
+                    $em->remove($commandeMateriel);
+                }
             }
-    
+
             // Create new CommandeMateriels associations
             foreach ($materielIds as $materielId) {
                 if (!in_array($materielId, $existingMaterielIds)) {
                     $materiel = $em->getRepository(Materiels::class)->find($materielId);
                     $quantity = $request->request->get('textarea' . $materielId);
-    
+
                     $commandeMateriel = new CommandeMateriels();
                     $commandeMateriel->setCommande($commande);
                     $commandeMateriel->setMateriel($materiel);
                     $commandeMateriel->setQuantite($quantity);
-    
+
                     $em->persist($commandeMateriel);
                 }
             }
-    
+
             // Flush the changes to the database
             $em->flush();
-    
+
             // Redirect
             $this->addFlash('success', 'Commande mise à jour avec succès');
             return $this->redirectToRoute('app_commandes');
         }
-    
+
         return $this->render('admin/commandes/editCommande.html.twig', [
             'controller_name' => 'AdminController',
             'commande' => $commande,
@@ -501,6 +507,7 @@ class AdminController extends AbstractController
             'image' => $image,
         ]);
     }
+
     
 
 

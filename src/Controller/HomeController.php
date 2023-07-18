@@ -79,6 +79,22 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/securite/encre_reactive', name: 'app_encre_reactive')]
+    public function EncreR(): Response
+    {
+        return $this->render('home/securite/encreR.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+    #[Route('/securite/encre_fluorescente', name: 'app_encre_fluorescente')]
+    public function EncreF(): Response
+    {
+        return $this->render('home/securite/encreF.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
 
     #[Route('/travaux/solution', name: 'app_travaux_solution')]
     public function solution(): Response
@@ -93,6 +109,22 @@ class HomeController extends AbstractController
     public function personn(): Response
     {
         return $this->render('home/travaux/personnalisation.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+    #[Route('/travaux/exemples', name: 'app_travaux_exemple')]
+    public function exemple(): Response
+    {
+        return $this->render('home/travaux/exemple.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+    #[Route('/normalisation', name: 'app_normalisation')]
+    public function normalisation(): Response
+    {
+        return $this->render('home/normalisation.html.twig', [
             'controller_name' => 'HomeController',
         ]);
     }

@@ -1,0 +1,91 @@
+{% extends "base.html.twig" %}
+
+
+{% block body %}
+
+<style>
+  .carousel-control {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin:-50px;
+  }
+
+   .carousel-control-prev-icon i,
+  .carousel-control-next-icon i {
+    font-size: 2rem;
+  }
+</style>
+
+<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<h1>Exemples de nos impression</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+    <div class="container col-md-4 mt-5 mb-5">
+  <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="https://secureprinte.com/wp-content/uploads/2021/01/b7.png" class="d-block w-100" alt="Image 1">
+      </div>
+      <div class="carousel-item">
+        <img src="https://secureprinte.com/wp-content/uploads/2021/01/b9.png" class="d-block w-100" alt="Image 2">
+      </div>
+      <div class="carousel-item">
+        <img src="https://secureprinte.com/wp-content/uploads/2021/01/b8.png" class="d-block w-100" alt="Image 3">
+      </div>
+      <div class="carousel-item">
+        <img src="https://secureprinte.com/wp-content/uploads/2021/01/b6.jpg" class="d-block w-100" alt="Image 4">
+      </div>
+      <div class="carousel-item">
+        <img src="https://secureprinte.com/wp-content/uploads/2021/01/b5.png" class="d-block w-100" alt="Image 5">
+      </div>
+      <div class="carousel-item">
+        <img src="https://secureprinte.com/wp-content/uploads/2021/01/b4.png" class="d-block w-100" alt="Image 6">
+      </div>
+      <div class="carousel-item">
+        <img src="https://secureprinte.com/wp-content/uploads/2021/01/b3.jpg" class="d-block w-100" alt="Image 7">
+      </div>
+      <div class="carousel-item">
+        <img src="https://secureprinte.com/wp-content/uploads/2021/01/b2.jpg" class="d-block w-100" alt="Image 7">
+      </div>
+      <div class="carousel-item">
+        <img src="https://secureprinte.com/wp-content/uploads/2021/01/b1.png" class="d-block w-100" alt="Image 7">
+      </div>
+    </div>
+    <div class="carousel-control carousel-control-prev">
+  <a class="carousel-control-prev-icon" href="#carouselExample" role="button" data-bs-slide="prev">
+    <i class="fas fa-chevron-left"></i>
+  </a>
+</div>
+<div class="carousel-control carousel-control-next">
+  <a class="carousel-control-next-icon" href="#carouselExample" role="button" data-bs-slide="next">
+    <i class="fas fa-chevron-right"></i>
+  </a>
+</div>
+
+  </div>
+</div>
+
+
+
+<!-- Include Bootstrap JavaScript and jQuery library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+
+
+
+	<!-- /End page content -->
+
+
+{% endblock %}
