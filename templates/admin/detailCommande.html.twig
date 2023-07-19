@@ -5,6 +5,31 @@
 
 {% block body %}
 
+
+<style>
+
+.facture-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.facture-table th, .facture-table td {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+.facture-heading {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+
+
+
+
+
+</style>
+
     <div class="main-panel">
         <div class="content-wrapper">
             <div class="card mb-3">
@@ -27,79 +52,69 @@
 
 
                             <table class="table table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <th>Command Description</th>
-                                        <td>{{ commande.description }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Banque</th>
-                                        <td>{{ commande.banque.nom }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Materiels</th>
-                                        <td>
-                                            {% for commandeMateriel in commande.commandeMateriels %}
-                                                <li>{{ commandeMateriel.materiel.nom }} ({{ commandeMateriel.quantite }})</li>
-                                            {% endfor %}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Prix unitaire</th>
-                                        <td>
-                                          {% for commandeMateriel in commande.commandeMateriels %}
-                                                <li>{{ commandeMateriel.materiel.pu }}</li>
-                                            {% endfor %}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>taux tva</th>
-                                        <td>{{ commande.tauxtva * 100 }}
-                                            %</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Avance</th>
-                                        <td>{{ commande.avance }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>TOTAL HT</th>
-                                        <td>
-                                            {%- set totalHT = 0 -%}
-                                            {%- for commandeMateriel in commande.commandeMateriels -%}
-                                                {%- set totalHT = totalHT + (commandeMateriel.quantite * commandeMateriel.materiel.pu) -%}
-                                            {%- endfor -%}
-                                            {{ totalHT }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>TVA</th>
-                                        <td>
-                                            {%- set TVA = totalHT * (commande.tauxtva) -%}
-                                            {{ TVA }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>TOTAL TTC</th>
-                                        <td>
-                                            {%- set totalTTC = totalHT + TVA -%}
-                                            {{ totalTTC }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>RESTE</th>
-                                        <td>
-                                            {%- set reste = totalTTC - commande.avance -%}
-                                            {{ reste }}
-                                        </td>
-                                    </tr>
+    <thead>
+        <tr>
+            {# <th>Command Description</th>
+            <th>Banque</th> #}
+            <th>Materiel</th>
+            <th>Quantity</th>
+            <th>Taux TVA</th>
+            <th>PRIX UNIT. HT</th>
+            <th>MONTANT HT</th>
+            {# <th>Avance</th>
+            <th>Montant HT</th>
+            <th>TVA</th>
+            <th>TOTAL TTC</th>
+            <th>RESTE</th> #}
+        </tr>
+    </thead>
+    <tbody>
+    {% set totalHT = 0 %}
 
-                                </tbody>
-                            </table>
+        {% for commandeMateriel in commande.commandeMateriels %}
+            <tr>
+                {# {% if loop.first %}
+                    <td rowspan="{{ commande.commandeMateriels|length }}">{{ commande.description }}</td>
+                    <td rowspan="{{ commande.commandeMateriels|length }}">{{ commande.banque.nom }}</td>
+                {% endif %} #}
+                <td>{{ commandeMateriel.materiel.nom }}</td>
+                <td>{{ commandeMateriel.quantite }}</td>
+                <td>{{ commandeMateriel.materiel.tauxtva }}</td>
+                <td>{{ commandeMateriel.materiel.pu }}</td>
+                <td>{{ commandeMateriel.quantite * commandeMateriel.materiel.pu }}</td>
+
+            </tr>
+            {% set totalHT = totalHT + (commandeMateriel.quantite * commandeMateriel.materiel.pu) %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class=" float-right mr-1 mt-4 mb-4">
+<table>
+<tr>
+<td> Total HT:</span> {{ totalHT }} </td>
+</tr>
+<tr>
+<td>
+<span class=" mr-lg-5">TVA: </span> {{ totalHT * commande.tauxtva }}
+</td>
+</tr>
+</table>
+{# <p> <span class=" mr-lg-5"></span> {{ totalHT }}</p>
+<p> <span class=" mr-lg-5">TVA: </span>{{ totalHT * commande.tauxtva }}</p> #}
+</div>
+
+
+<table class="table table-bordered">
+<tr>
+<th>TOTAL <span class=" float-right">{{ totalHT + (totalHT * commande.tauxtva) }}</span></th>
+</tr>
+
+</table>
 
 
 
-                            </table>
-
+                         
 
                         </div>
                     </div>

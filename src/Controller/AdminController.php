@@ -296,36 +296,7 @@ class AdminController extends AbstractController
 
 
     //gestion des commandes
-
-    // #[Route('/commandes', name: 'app_commandes')]
-    // public function addCommandes(PersistenceManagerRegistry $doctrine, Request $request): Response
-    // {
-    //     $user = $this->getUser();
-    //     $image = $user->getImage();
-
-    //     $em = $doctrine->getManager();
-    //     $commande = $em->getRepository(Commande::class)->findAll();
-
-    //     $commandes = new Commande();
-    //     $form = $this->createForm(CommandeType::class, $commandes);
-    //     $form->handleRequest($request);
-
-    //     if($form->isSubmitted() && $form->isValid()){
-    //         $entityManager = $doctrine->getManager();
-    //         $entityManager->persist($commandes);
-    //         $entityManager->flush();
-    //         $this->addFlash('success', 'Commande ajouté avec succès');
-    //         return $this->redirectToRoute('app_commandes');
-    //     }
-
-    //     return $this->render('admin/commandes/commande.html.twig', [
-    //         'controller_name' => 'AdminController',
-    //         'image' => $image,
-    //         'commandes' => $commande,
-    //         'commandForm' =>$form->createView(),
-    //     ]);
-    // }
-
+ 
 
     #[Route('/commandes', name: 'app_commandes')]
     public function addCommandes(PersistenceManagerRegistry $doctrine, Request $request): Response
@@ -409,105 +380,8 @@ class AdminController extends AbstractController
 
 
 
-
-
-
-
     #[Route('/edit_commande/{id}', name: 'app_edit_commande')]
-    // public function editCommande(int $id, PersistenceManagerRegistry $doctrine, Request $request): Response
-    // {
-    //     $user = $this->getUser();
-    //     $image = $user->getImage();
-
-    //     // Get the Doctrine entity manager
-    //     $em = $doctrine->getManager();
-
-    //     // Retrieve the Commande entity by ID
-    //     $commande = $em->getRepository(Commande::class)->find($id);
-
-    //     // Check if the Commande exists
-    //     if (!$commande) {
-    //         throw $this->createNotFoundException('Commande not found');
-    //     }
-
-    //     // Retrieve the list of banques from the database
-    //     $banques = $em->getRepository(Banques::class)->findAll();
-
-    //     // Retrieve the list of materiels from the database
-    //     $materiels = $em->getRepository(Materiels::class)->findAll();
-
-    //     if ($request->isMethod('POST')) {
-    //         // Get the submitted data
-    //         $description = $request->request->get('description');
-    //         $tauxtva = $request->request->get('tauxtva');
-    //         $avance = $request->request->get('avance');
-    //         $ref = $request->request->get('ref');
-    //         $dateString = $request->request->get('date');
-    //         $date = \DateTime::createFromFormat('Y-m-d', $dateString); // Assuming the date format is "YYYY-MM-DD"
-    //         $banqueId = $request->request->get('banque');
-    //         $materielIds = $request->request->all('materiel');
-
-    //         // Retrieve the selected Banque entity
-    //         $banque = $em->getRepository(Banques::class)->find($banqueId);
-
-    //         // Update the Commande entity with the new values
-    //         $commande->setDescription($description);
-    //         $commande->setTauxTVA($tauxtva);
-    //         $commande->setAvance($avance);
-    //         $commande->setBanque($banque);
-    //         $commande->setDate($date);
-    //         $commande->setRef($ref);
-
-    //         // Update existing CommandeMateriels associations
-    //         $existingCommandeMateriels = $commande->getCommandeMateriels();
-    //         $existingMaterielIds = [];
-
-    //         foreach ($existingCommandeMateriels as $commandeMateriel) {
-    //             $materielId = $commandeMateriel->getMateriel()->getId();
-
-    //             // Check if the materiel is still selected
-    //             if (in_array($materielId, $materielIds)) {
-    //                 $quantity = $request->request->get('textarea' . $materielId);
-    //                 $commandeMateriel->setQuantite($quantity);
-    //                 $existingMaterielIds[] = $materielId;
-    //             } else {
-    //                 // Remove the association if the materiel is unchecked
-    //                 $em->remove($commandeMateriel);
-    //             }
-    //         }
-
-    //         // Create new CommandeMateriels associations
-    //         foreach ($materielIds as $materielId) {
-    //             if (!in_array($materielId, $existingMaterielIds)) {
-    //                 $materiel = $em->getRepository(Materiels::class)->find($materielId);
-    //                 $quantity = $request->request->get('textarea' . $materielId);
-
-    //                 $commandeMateriel = new CommandeMateriels();
-    //                 $commandeMateriel->setCommande($commande);
-    //                 $commandeMateriel->setMateriel($materiel);
-    //                 $commandeMateriel->setQuantite($quantity);
-
-    //                 $em->persist($commandeMateriel);
-    //             }
-    //         }
-
-    //         // Flush the changes to the database
-    //         $em->flush();
-
-    //         // Redirect
-    //         $this->addFlash('success', 'Commande mise à jour avec succès');
-    //         return $this->redirectToRoute('app_commandes');
-    //     }
-
-    //     return $this->render('admin/commandes/editCommande.html.twig', [
-    //         'controller_name' => 'AdminController',
-    //         'commande' => $commande,
-    //         'materiels' => $materiels,
-    //         'banques' => $banques,
-    //         'image' => $image,
-    //     ]);
-    // }
-
+   
     public function editCommande($id, PersistenceManagerRegistry $doctrine, Request $request): Response
     {
 
@@ -595,31 +469,28 @@ class AdminController extends AbstractController
     }
 
 
-    
-
-
 
     #[Route('/delete_commande/{id}', name: 'app_delete_commande')]
     public function deleteCommande(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
-{
-    $user = $this->getUser();
-    $image = $user->getImage();
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
 
-    $em = $doctrine->getManager();
-    $commande = $em->getRepository(Commande::class)->find($id);
+        $em = $doctrine->getManager();
+        $commande = $em->getRepository(Commande::class)->find($id);
 
-    // Remove the associated CommandeMateriels records
-    $commandeMateriels = $commande->getCommandeMateriels();
-    foreach ($commandeMateriels as $commandeMateriel) {
-        $em->remove($commandeMateriel);
+        // Remove the associated CommandeMateriels records
+        $commandeMateriels = $commande->getCommandeMateriels();
+        foreach ($commandeMateriels as $commandeMateriel) {
+            $em->remove($commandeMateriel);
+        }
+
+        $em->remove($commande);
+        $em->flush();
+
+        $this->addFlash('success', 'Commande supprimée avec succès');
+        return $this->redirectToRoute('app_commandes');
     }
-
-    $em->remove($commande);
-    $em->flush();
-
-    $this->addFlash('success', 'Commande supprimée avec succès');
-    return $this->redirectToRoute('app_commandes');
-}
 
 
 
@@ -685,23 +556,7 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('app_commandes');
     }
 
-    // #[Route("/filter", name: 'app_filter')]
-    // public function filterCommandes(Request $request,PersistenceManagerRegistry $doctrine): Response
-    // {
-    //     $user = $this->getUser();
-    //     $image = $user->getImage();
-    //     $etat = $request->query->get('etat');
-        
-    //     // Perform the filtering based on the selected "etat" value
-    //     $entityManager = $doctrine->getManager();
-    //     $commandes = $entityManager->getRepository(Commande::class)->findByEtat($etat);
-        
-    //     // Pass the filtered results to the template for rendering
-    //     return $this->render('admin/commandByBank.html.twig', [
-    //         'commandes' => $commandes,
-    //         'image' => $image,
-    //     ]);
-    // }
+
 
     #[Route('/commande_materiel/{id}', name: 'app_show_commande')]
     public function showCommandeMateriel($id, PersistenceManagerRegistry $doctrine): Response
@@ -726,25 +581,42 @@ class AdminController extends AbstractController
         ]);
     }
 
-    //  public function showCommande($id, PersistenceManagerRegistry $doctrine): Response
-    // {
-    //     $user = $this->getUser();
-    //     $image = $user->getImage();
-    //     // Retrieve the command details based on the provided ID
-    //     $commandeMateriels = $doctrine->getRepository(CommandeMateriels::class)->find($id);
 
-    //     dd($commandeMateriels);
+    #[Route('/commandesLP', name: 'app_commandes_lp')]
+    public function ListeCommandesLP(PersistenceManagerRegistry $doctrine, Request $request): Response
+    {
+        // Get the user and image information
+        $user = $this->getUser();
+        $image = $user->getImage();
 
-    //     // if (!$commandeMateriels) {
-    //     //     throw $this->createNotFoundException('CommandeMateriels not found');
-    //     // }
+        // Get the Doctrine entity manager
+        $em = $doctrine->getManager();
 
-    //     // Render the template and pass the command details
-    //     return $this->render('admin/detailCommande.html.twig', [
-    //         'commandeMateriels' => $commandeMateriels,
-    //         'image' => $image,
-    //     ]);
-    // }
+        $commande = $em->getRepository(Commande::class)->findBy(['etat' => 'livrepaye']);
+
+        // Retrieve the list of banques from the database
+        $banques = $em->getRepository(Banques::class)->findAll();
+        
+        // Retrieve the list of materiels from the database
+        $materiels = $em->getRepository(Materiels::class)->findAll();
+        
+
+        
+
+        return $this->render('admin/commandes/commandeLP.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'materiels' => $materiels,
+            'banques' => $banques,
+            'commandes' => $commande,
+        ]);
+    }
+
+
+  
+
+
+    
 
 
 

@@ -103,29 +103,34 @@
 											</td>
 											<td>
 												{% if item.etat == NULL %}
-													<h6 class="text-info">In progress...</h6>
-												{% else %}
-													{{item.etat}}
+													<span class="text-info font-italic font-weight-500 font-weight-bold">In progress...</span>
+												{% elseif item.etat == 'nonlivre' %}
+													<span class="" style="font-size:15px;"><strong>Non livré</strong></span> 
+                          						{% elseif item.etat == 'livrepaye' %}
+													<span class="" style="font-size:15px;"><strong>Livré et payé</strong></span>
+                          						{% elseif item.etat == 'livrenonpaye' %}
+													<span class="" style="font-size:15px;"><strong>Livré non payé</strong></span>
 												{% endif %}
 											</td>
-
-											<td>
-												<a href="{{path('app_show_commande', {'id': item.id})}}" class="btn btn-info btn-sm">Show</a>
-												<a href="{{path('app_edit_commande', {'id': item.id})}}" class="btn btn-success btn-sm">Edit</a>
-												<a href="{{path('app_delete_commande', {'id': item.id})}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this command?')">Delete</a>
-											</td>
-											<td>
-												<div class="dropdown">
-													<button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														Set Etat
-													</button>
-													<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-														<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'nonlivre'})}}">Non Livré</a>
-														<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'livrenonpaye'})}}">Livré non payé</a>
-														<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'livrepaye'})}}">Livré payé</a>
+											{% if app.user.getRoles()=='ROLE_ADMIN' %}
+												<td>
+													<a href="{{path('app_show_commande', {'id': item.id})}}" class="btn btn-info btn-sm">Show</a>
+													<a href="{{path('app_edit_commande', {'id': item.id})}}" class="btn btn-success btn-sm">Edit</a>
+													<a href="{{path('app_delete_commande', {'id': item.id})}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this command?')">Delete</a>
+												</td>
+												<td>
+													<div class="dropdown">
+														<button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+															Set Etat
+														</button>
+														<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+															<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'nonlivre'})}}">Non Livré</a>
+															<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'livrenonpaye'})}}">Livré non payé</a>
+															<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'livrepaye'})}}">Livré payé</a>
+														</div>
 													</div>
-												</div>
-											</td>
+												</td>
+											{% endif %}
 										</tr>
 									{% endfor %}
 								</tbody>
@@ -209,16 +214,25 @@
 
 					<div class="ml-4 form-group">
 						<label for="materiel">Materiels</label>
-						{% for materiel in materiels %}
-							<div class="form-check">
+						<div class="row">
+	{% for materiel in materiels %}
+		{% if loop.index0 % 5 == 0 %}
+			</div>
+			<div class="row">
+		{% endif %}
+		<div class="col">
+			<div class="form-check">
 								<input class="form-check-input" type="checkbox" id="materiel{{ materiel.id }}" name="materiel[]" value="{{ materiel.id }}">
 								<label class="form-check-label" for="materiel{{ materiel.id }}">{{ materiel.nom }}</label>
 							</div>
 							<div class="text-area-container" style="display: none;">
 								<label for="textarea{{ materiel.id }}">Quantité</label>
-								<textarea class="form-control col-2" id="textarea{{ materiel.id }}" name="textarea{{ materiel.id }}"></textarea>
+								<textarea class="form-control col-lg-12" id="textarea{{ materiel.id }}" name="textarea{{ materiel.id }}"></textarea>
 							</div>
-						{% endfor %}
+		</div>
+	{% endfor %}
+</div>
+
 					</div>
 
 

@@ -22,6 +22,12 @@ class CommandeMateriels
     #[ORM\Column]
     private ?int $quantite = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $prixV = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $remise = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +65,30 @@ class CommandeMateriels
     public function setQuantite(int $quantite): static
     {
         $this->quantite = $quantite;
+
+        return $this;
+    }
+
+    public function getPrixV(): ?float
+    {
+        return $this->prixV;
+    }
+
+    public function setPrixV(float $prixV): static
+    {
+        $this->prixV = $prixV;
+
+        return $this;
+    }
+
+    public function getRemise(): ?float
+    {
+        return $this->remise;
+    }
+
+    public function setRemise(?float $remise): static
+    {
+        $this->remise = $remise;
 
         return $this;
     }

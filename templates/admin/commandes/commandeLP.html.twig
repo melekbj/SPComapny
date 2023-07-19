@@ -1,0 +1,131 @@
+{% extends "baseAdmin.html.twig" %}
+
+
+
+
+
+
+{% block body %}
+
+<div class="main-panel">
+	<div class="content-wrapper">
+		<div class="col-12 col-xl-12">
+		</div>
+
+		<div class="row">
+			<div class="col-lg-12 grid-margin stretch-card">
+				<div class="card">
+					{% for message in app.flashes('success') %}
+						<div class="alert alert-success">
+							{{ message }}
+						</div>
+					{% endfor %}
+					<div class="card-body">
+						<h4 class="card-title">liste des commandes livré et Payé</h4>
+						<br><br>
+						<div class="table-responsive">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>
+											Réference
+										</th>
+										<th>
+											Description
+										</th>
+										<th>
+											Materiel
+										</th>
+										<th>
+											PU
+										</th>
+										<th>
+											Nom du banque
+										</th>
+										<th>
+											Taux tva
+										</th>
+										<th>
+											Date
+										</th>
+										<th>
+											Etat
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for item in commandes %}
+										<tr class="{% if item.etat == 'nonlivre' %}table-danger{% elseif item.etat == 'livrepaye' %}table-primary{% elseif item.etat == 'livrenonpaye' %}table-info{% endif %}">
+											<td class="py-1">
+												{{ item.ref }}
+											</td>
+											<td class="py-1">
+												{{ item.description }}
+											</td>
+											<td>
+												{% for commande_materiel in item.commandemateriels %}
+													{{ commande_materiel.materiel.nom }}
+													({{ commande_materiel.quantite }})
+													<br>
+												{% endfor %}
+											</td>
+											<td>
+												{% for commande_materiel in item.commandemateriels %}
+													{{ commande_materiel.materiel.pu }}
+													<br>
+												{% endfor %}
+											</td>
+											<td>
+												{{ item.banque.nom }}
+											</td>
+											<td>
+												{{ item.tauxtva * 100 }}
+												%
+											</td>
+											<td>
+												{{item.date | date('d-m-Y')}}
+											</td>
+											<td>
+												{% if item.etat == NULL %}
+													<span class="text-info font-italic font-weight-500 font-weight-bold">In progress...</span>
+												{% elseif item.etat == 'nonlivre' %}
+													<span class="" style="font-size:15px;"><strong>Non livré</strong></span> 
+                          						{% elseif item.etat == 'livrepaye' %}
+													<span class="" style="font-size:15px;"><strong>Livré et payé</strong></span>
+                          						{% elseif item.etat == 'livrenonpaye' %}
+													<span class="" style="font-size:15px;"><strong>Livré non payé</strong></span>
+												{% endif %}
+											</td>
+											{% if app.user.getRoles()=='ROLE_ADMIN' %}
+												<td>
+													<a href="{{path('app_show_commande', {'id': item.id})}}" class="btn btn-info btn-sm">Show</a>
+												</td>
+											{% endif %}
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

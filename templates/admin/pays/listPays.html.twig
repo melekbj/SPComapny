@@ -32,9 +32,11 @@
                           <th>
                             Country name
                           </th>
+                          {% if app.user.getRoles()=='ROLE_ADMIN' %}
                           <th>
                             Actions
                           </th>
+                          {% endif %}
                         </tr>
                       </thead>
                       <tbody>
@@ -46,10 +48,12 @@
                           <td>
                             {{item.nom}}
                           </td>
+                          {% if app.user.getRoles()=='ROLE_ADMIN' %}
                             <td>
                                 <a href="{{path('app_edit_country', {'id': item.id})}}" class="btn btn-success btn-sm">Edit</a>
                                 <a href="{{ path('app_delete_country', {'id': item.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this country?')">Delete</a>
                             </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                       </tbody>

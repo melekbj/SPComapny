@@ -33,6 +33,9 @@ class Materiels
     #[ORM\OneToMany(mappedBy: 'materiel', targetEntity: CommandeMateriels::class)]
     private Collection $commandeMateriels;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $tauxtva = null;
+
     
     public function __construct()
     {
@@ -107,6 +110,18 @@ class Materiels
                 $commandeMateriel->setMateriel(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTauxtva(): ?float
+    {
+        return $this->tauxtva;
+    }
+
+    public function setTauxtva(?float $tauxtva): static
+    {
+        $this->tauxtva = $tauxtva;
 
         return $this;
     }

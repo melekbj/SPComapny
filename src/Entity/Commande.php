@@ -46,7 +46,7 @@ class Commande
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(unique:true)]
-    private ?int $ref = null;
+    private ?string $ref = null;
 
 
     public function __construct()
