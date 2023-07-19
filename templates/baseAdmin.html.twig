@@ -363,16 +363,26 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{(path('app_commandes'))}}">
-              <i class="icon-grid menu-icon"></i>
+              <i class="icon-columns menu-icon"></i>
               <span class="menu-title">list of Commandes</span>
             </a>
           </li>
+          {% if app.user.getRoles()=='ROLE_USER' %} 
           <li class="nav-item">
-            <a class="nav-link" href="{{(path('app_commandes_lp'))}}">
-              <i class="icon-grid menu-icon"></i>
-              <span class="menu-title">Commandes livrés et <br>payés</span>
+            <a class="nav-link" href="{{(path('app_show_commande_lp'))}}">
+              <i class="icon-columns menu-icon"></i>
+              <span class="menu-title">Commandes livrés et <br> payés</span>
+            </a>
+          </li> 
+          {% endif %}
+          {% if app.user.getRoles()=='ROLE_ADMIN' %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{(path('app_users'))}}">
+              <i class="icon-columns menu-icon"></i>
+              <span class="menu-title">Liste des utilisateurs</span>
             </a>
           </li>
+          {% endif %}
         </ul>
       </nav>
       <!-- partial -->

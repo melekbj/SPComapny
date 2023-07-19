@@ -48,6 +48,9 @@ class Commande
     #[ORM\Column(unique:true)]
     private ?string $ref = null;
 
+    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    private ?User $user = null;
+
 
     public function __construct()
     {
@@ -198,6 +201,18 @@ public function getMaterielQuantity($materiel)
     }
 
     return null;
+}
+
+public function getUser(): ?User
+{
+    return $this->user;
+}
+
+public function setUser(?User $user): static
+{
+    $this->user = $user;
+
+    return $this;
 }
 
 

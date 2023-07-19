@@ -89,15 +89,15 @@
     </tbody>
 </table>
 
-<div class=" float-right mr-1 mt-4 mb-4">
-<table>
+<div style="margin-left:75%;" class="mt-2 mb-2">
+<table class="table table-borderless col-md-12">
 <tr>
-<td> Total HT:</span> {{ totalHT }} </td>
+<th> Total HT <span class=" float-right">{{ totalHT }}</span> </th>
 </tr>
 <tr>
-<td>
-<span class=" mr-lg-5">TVA: </span> {{ totalHT * commande.tauxtva }}
-</td>
+<th>
+TVA <span class=" float-right">{{ totalHT * commande.tauxtva }} </span>
+</th>
 </tr>
 </table>
 {# <p> <span class=" mr-lg-5"></span> {{ totalHT }}</p>
@@ -107,7 +107,7 @@
 
 <table class="table table-bordered">
 <tr>
-<th>TOTAL <span class=" float-right">{{ totalHT + (totalHT * commande.tauxtva) }}</span></th>
+<th>TOTAL TTC <span class=" float-right">{{ totalHT + (totalHT * commande.tauxtva) }}</span></th>
 </tr>
 
 </table>

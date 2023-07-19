@@ -32,8 +32,10 @@ class RegisterType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'choices'  => [
-                    'User' => 'ROLE_USER',
-                    'Admin' => 'ROLE_ADMIN',
+                    'USER' => 'ROLE_USER',
+                    'ADMIN' => 'ROLE_ADMIN',
+                    'SUPER_USER' => 'ROLE_SUPER_USER',
+                    
                 ],
             ])
             ->add('password', RepeatedType::class, [

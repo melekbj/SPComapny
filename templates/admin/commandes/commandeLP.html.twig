@@ -54,7 +54,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									{% for item in commandes %}
+									{% for item in commandeslp %}
 										<tr class="{% if item.etat == 'nonlivre' %}table-danger{% elseif item.etat == 'livrepaye' %}table-primary{% elseif item.etat == 'livrenonpaye' %}table-info{% endif %}">
 											<td class="py-1">
 												{{ item.ref }}

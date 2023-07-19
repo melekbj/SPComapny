@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Pays;
+use App\Entity\User;
 use App\Entity\Banques;
 use App\Entity\Commande;
 use App\Entity\Materiels;
@@ -25,7 +26,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 
-#[Route('/admin')]
 class AdminController extends AbstractController
 {
     #[Route('/', name: 'app_admin')]
@@ -342,6 +342,7 @@ class AdminController extends AbstractController
             $commande->setBanque($banque);
             $commande->setDate($date);  
             $commande->setRef($ref);
+            $commande->setUser($user);
 
 
             // Iterate over the selected Materiel IDs and create CommandMaterial entities
@@ -582,7 +583,7 @@ class AdminController extends AbstractController
     }
 
 
-    #[Route('/commandesLP', name: 'app_commandes_lp')]
+    #[Route('/commandesLP', name: 'app_show_commande_lp')]
     public function ListeCommandesLP(PersistenceManagerRegistry $doctrine, Request $request): Response
     {
         // Get the user and image information
@@ -592,7 +593,7 @@ class AdminController extends AbstractController
         // Get the Doctrine entity manager
         $em = $doctrine->getManager();
 
-        $commande = $em->getRepository(Commande::class)->findBy(['etat' => 'livrepaye']);
+        $commandelp = $em->getRepository(Commande::class)->findBy(['etat' => 'livrepaye']);
 
         // Retrieve the list of banques from the database
         $banques = $em->getRepository(Banques::class)->findAll();
@@ -608,10 +609,71 @@ class AdminController extends AbstractController
             'image' => $image,
             'materiels' => $materiels,
             'banques' => $banques,
-            'commandes' => $commande,
+            'commandeslp' => $commandelp,
         ]);
     }
 
+
+    #[Route('/liste_users', name: 'app_users')]
+    public function ListeUsers(PersistenceManagerRegistry $doctrine, Request $request): Response
+    {
+        // Get the user and image information
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        // Get the Doctrine entity manager
+        $em = $doctrine->getManager();
+
+        $users = $em->getRepository(User::class)->findBy(['roles' => 'ROLE_SUPER_USER']);
+
+        $allUsers = $em->getRepository(User::class)->findall();
+
+
+
+        return $this->render('admin/ListeUsers.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'users' => $users,
+            'allUsers' => $allUsers,
+        ]);
+    }
+
+
+    #[Route('/delete_user/{id}', name: 'app_delete_user')]
+    public function deleteUser(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+        $users = $em->getRepository(User::class)->find($id);
+
+        $em->remove($users);
+        $em->flush();
+        $this->addFlash('success', 'User supprimé avec succès');
+        return $this->redirectToRoute('app_users');
+    }
+
+
+    #[Route('/commandes_by_user/{id}', name: 'app_commandes_by_user')]
+    public function CommandesByUser(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+        // On récupère la liste des commandes de l'utilisateur en cours
+        $em = $doctrine->getManager();
+        $commande = $em->getRepository(Commande::class)->findBy(['user' => $id]);
+
+        
+       
+
+        return $this->render('admin/commandByUser.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'commandes' => $commande,
+            'Id' => $id,
+        ]);
+    }
 
   
 
