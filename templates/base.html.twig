@@ -154,7 +154,7 @@
 										{# <a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a> #}
 										<a class="shopping-cart" href="#"><i class="fas fa-shopping-cart"></i></a>
 										{% if app.user and app.user.getEtat()=='approved' %}
-										<a class="shopping-cart" href="{{path('app_country')}}"><i class="fas fa-user"></i></a>
+										<a class="shopping-cart" href="{{path('app_dashboard')}}"><i class="fas fa-user"></i></a>
 										<a class="shopping-cart" href="{{path('app_logout')}}"><i class="fas fa-sign-out-alt"></i></a>
 										{% else %}
 										<a class="shopping-cart" href="{{path('app_login')}}"><i class="fas fa-user"></i></a>	
