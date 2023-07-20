@@ -60,13 +60,28 @@
                                 {{ message }}
                                 </div>
                             {% endfor %}
-                            
+                            {% for message in app.flashes('error') %}
+                                <div class="alert alert-danger">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+
                             <h6 class="font-weight-light">Sign in to continue.</h6>
                             <form class="pt-3" method="post">
+                                
+
                                 <!-- Form content -->
                                 {% if error %}
                                 <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                                 {% endif %}
+
+
+                                {# {% if translated_error is not null %}
+                                    <div class="alert alert-danger">
+                                        {{ translated_error }}
+                                    </div>
+                                {% endif %} #}
+
 
                                 {% if app.user %}
                                 <div class="mb-3">

@@ -77,7 +77,7 @@
         <!-- main js -->
         <script src="{{ asset('assets/js/main.js')}}"></script>
 
-		<script>
+		{# <script>
                 // set a timeout of 3 seconds before removing the alerts
                 setTimeout(function() {
                     var alerts = document.querySelectorAll('.alert');
@@ -85,7 +85,7 @@
                         alerts[i].style.display = 'none';
                     }
                 }, 7000);
-            </script>
+            </script> #}
             
         {% endblock %}
     
@@ -153,7 +153,7 @@
 									<div class="header-icons">
 										{# <a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a> #}
 										<a class="shopping-cart" href="#"><i class="fas fa-shopping-cart"></i></a>
-										{% if app.user %}
+										{% if app.user and app.user.getEtat()=='approved' %}
 										<a class="shopping-cart" href="{{path('app_country')}}"><i class="fas fa-user"></i></a>
 										<a class="shopping-cart" href="{{path('app_logout')}}"><i class="fas fa-sign-out-alt"></i></a>
 										{% else %}

@@ -45,11 +45,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255,nullable:true)]
     private ?string $resetToken;
 
-    #[ORM\Column(options: ['default' => 0])]
-    private ?int $etat = 0;
+    #[ORM\Column(options: ['default' => 'approved'])]
+    private ?string $etat = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Commande::class)]
     private Collection $commandes;
+
 
     public function __construct()
     {
@@ -162,12 +163,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getEtat(): ?int
+    public function getEtat(): ?string
     {
         return $this->etat;
     }
 
-    public function setEtat(int $etat): static
+    public function setEtat(string $etat): static
     {
         $this->etat = $etat;
 
@@ -203,6 +204,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
 
 
 
