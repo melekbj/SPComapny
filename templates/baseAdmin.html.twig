@@ -332,7 +332,7 @@
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="{{(path('app_admin'))}}">
+            <a class="nav-link" href="{{(path('app_dashboard'))}}">
               <i class="icon-grid menu-icon"></i>
               <span class="menu-title">Dashboard</span>
             </a>
@@ -380,6 +380,13 @@
             <a class="nav-link" href="{{(path('app_users'))}}">
               <i class="icon-columns menu-icon"></i>
               <span class="menu-title">Liste des utilisateurs</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{(path('app_pending_users'))}}">
+              <i class="icon-columns menu-icon"></i>
+              <span class="menu-title">Liste des demandes <br> SUPER USERS</span>
             </a>
           </li>
           {% endif %}

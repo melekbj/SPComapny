@@ -46,7 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $resetToken;
 
     #[ORM\Column(options: ['default' => 'approved'])]
-    private ?string $etat = null;
+    private ?string $etat = 'approved';
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Commande::class)]
     private Collection $commandes;

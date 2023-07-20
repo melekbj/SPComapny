@@ -1,0 +1,99 @@
+{% extends "baseAdmin.html.twig" %}
+
+
+
+{% block body %}
+
+<div class="main-panel">
+	<div class="content-wrapper">
+		{# {% if app.user.getRoles()=="ROLE_SUPER_USER" %}
+			<button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#exampleModal">
+				Add country +
+			</button>
+		{% endif %} #}
+		<div class="">
+			<div class="col-lg-12 grid-margin stretch-card">
+				<div class="card">
+					{% for message in app.flashes('success') %}
+						<div class="alert alert-success">
+							{{ message }}
+						</div>
+					{% endfor %}
+					<div class="card-body">
+						<h4 class="card-title">liste des utilisateurs</h4>
+						{# <p class="card-description">
+						                    Add class <code>.table-striped</code>
+						                  </p> #}
+						<div class="table-responsive">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>
+											User photo
+										</th>
+										<th>
+											User email
+										</th>
+										<th>
+											User role
+										</th>
+										<th>
+											Etat
+										</th>
+										{% if app.user.getRoles()=='ROLE_ADMIN' %}
+											<th>
+												Actions
+											</th>
+										{% endif %}
+									</tr>
+								</thead>
+								<tbody>
+									{% for item in users %}
+										<tr>
+											<td class="py-1">
+												<img src="{{ asset(vich_uploader_asset(item, 'imageFile')) }}" alt="photo">
+											</td>
+											<td>
+												{{item.email}}
+											</td>
+											<td>
+												{{item.roles}}
+											</td>
+											<td>
+												{{item.etat}}
+											</td>
+											{% if app.user.getRoles()=='ROLE_ADMIN' %}
+												<td>
+													<form action="{{path('app_approveU',{'id':item.id})}}">
+														<button onclick="return confirm('Are you sure you want to approve this user?')" class="btn btn-success">
+															<i class='bx bxs-user-check'></i>
+															Approve
+														</button>
+													</form>
+												</td>
+											{% endif %}
+
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+{% endblock %}

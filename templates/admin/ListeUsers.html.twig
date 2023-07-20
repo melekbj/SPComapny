@@ -89,7 +89,7 @@
 						</div>
 					{% endfor %}
 					<div class="card-body">
-						<h4 class="card-title">Liste Des Super Utilisateurs</h4>
+						<h4 class="card-title">Liste Des Supers Utilisateurs</h4>
 						{# <p class="card-description">
 						                    Add class <code>.table-striped</code>
 						                  </p> #}
@@ -99,6 +99,9 @@
                             <tr>
                                 <th>
                                     User photo
+                                </th>
+								<th>
+                                    User name
                                 </th>
                                 <th>
                                     User email
@@ -118,6 +121,9 @@
                                 <tr>
                                     <td class="py-1">
                                         <img src="{{ asset(vich_uploader_asset(item, 'imageFile')) }}" alt="photo">
+                                    </td>
+									<td>
+                                        {{item.fullname}}
                                     </td>
                                     <td>
                                         {{item.email}}

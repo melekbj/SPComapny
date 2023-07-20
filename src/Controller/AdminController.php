@@ -14,7 +14,9 @@ use App\Form\MaterielType;
 use App\Form\PaysFormType;
 use App\Form\EditBanqueType;
 use App\Form\EditCommandType;
+use App\Service\SendMailService;
 use App\Entity\CommandeMateriels;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,7 +30,7 @@ use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 class AdminController extends AbstractController
 {
-    #[Route('/admin', name: 'app_admin')]
+    #[Route('/dashboard', name: 'app_dashboard')]
     public function index(): Response
     {
         $user = $this->getUser();
@@ -626,7 +628,11 @@ class AdminController extends AbstractController
 
         $users = $em->getRepository(User::class)->findBy(['roles' => 'ROLE_SUPER_USER']);
 
-        $allUsers = $em->getRepository(User::class)->findall();
+        $allUsers = $em->getRepository(User::class)->createQueryBuilder('u')
+        ->where('u <> :user')
+        ->setParameter('user', $user)
+        ->getQuery()
+        ->getResult();
 
 
 
@@ -677,10 +683,62 @@ class AdminController extends AbstractController
 
   
 
+    #[Route('/approveU/{id}', name: 'app_approveU')]
+    public function approveU($id, UserRepository $rep, PersistenceManagerRegistry $doctrine, SendMailService $mail): Response
+    {
+        // Get the user to deactivate
+        $user = $rep->find($id);
 
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+
+        // Set the user's etat to -1
+        $user->setEtat('approved');
+
+
+
+        $em = $doctrine->getManager();
+        $em->persist($user);
+        $em->flush();
+        
+        // Envoi du mail
+        $mail->sendMail(
+            'melekbejaoui29@gmail.com', 'Secure Print',
+            $user->getEmail(),
+            'Account Approval Confirmation',
+            'approve',
+            [
+                'user' => $user,
+            ]
+        );
+
+        //flash message
+        $this->addFlash('success', 'User approved successfully!');
+
+        return $this->redirectToRoute('app_pending_users');
+    }
     
 
 
+    #[Route('/liste_pending_users', name: 'app_pending_users')]
+    public function ListePendingUsers(PersistenceManagerRegistry $doctrine, Request $request): Response
+    {
+        // Get the user and image information
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        // Get the Doctrine entity manager
+        $em = $doctrine->getManager();
+
+        $users = $em->getRepository(User::class)->findBy(['etat' => 'pending']);
+
+        return $this->render('admin/ListePendingUsers.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'users' => $users,
+        ]);
+    }
 
 
 
