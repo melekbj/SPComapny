@@ -47,7 +47,7 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         }
         $user = $token->getUser();
 
-        return new RedirectResponse($this->urlGenerator->generate('app_country'));
+        return new RedirectResponse($this->urlGenerator->generate('app_admin'));
         // return new RedirectResponse($this->urlGenerator->generate('some_route'));
         throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
