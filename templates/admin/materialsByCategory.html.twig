@@ -5,9 +5,11 @@
     <div class="main-panel">
 
       <div class="content-wrapper">
+      {% if not app.user.getRoles()=="ROLE_USER" %}
         <button type="button" class="btn btn-success mb-5" data-toggle="modal" data-target="#exampleModal">
           Add material +
         </button>
+        {% endif %}
         <div class="row">
           <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
@@ -47,16 +49,19 @@
                           class="block">
                           {# <a href="{{ path('app_commandes_by_bank', {'id': item.id}) }}" > #}
                           <img src="{{ asset(vich_uploader_asset(item, 'imageFile')) }}" width="90px" alt="photo">
-                          <div>
+                          <div class="mt-3">
                             <h5 class=" text-capitalize text-center text-body text-behance ">{{ item.ref }}</h5>
                           </div>
-                          <div>
+                          <div class="mt-3">
                             <h5 class=" text-capitalize text-center text-body text-behance ">{{ item.nom }}</h5>
                           </div>
+                          {% if not app.user.getRoles()=="ROLE_USER" %}
                           <div class="mt-2">
                             <a href="{{path('app_edit_material', {'id': item.id})}}" class="btn btn-success btn-sm">Edit</a>
                             <a href="{{path('app_delete_material', {'id': item.id})}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this material?')">Delete</a>
                           </div>
+                          {% endif %}
+                          {# </a> #}
                         </div>
                         {% if loop.index is divisible by(3) %}
                           <div style="clear:both;"></div>

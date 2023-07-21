@@ -24,6 +24,8 @@
 						<h4 class="card-title">liste des commandes livré et Payé</h4>
 						<br><br>
 						<div class="table-responsive">
+						
+							{% if commandeslp|length > 0 %}
 							<table class="table table-striped">
 								<thead>
 									<tr>
@@ -105,7 +107,9 @@
 									{% endfor %}
 								</tbody>
 							</table>
-
+							{% else %}
+								<p class=" text-danger font-italic">No records for the moment</p>
+							{% endif %}
 
 
 						</div>

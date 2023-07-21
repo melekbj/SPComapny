@@ -33,16 +33,37 @@ use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 class AdminController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_dashboard')]
-    public function index(): Response
+    public function index(PersistenceManagerRegistry $doctrine): Response
     {
         $user = $this->getUser();
         $image = $user->getImage();
-        
+
+        $userRepository = $doctrine->getRepository(User::class);
+        $commandRepository = $doctrine->getRepository(Commande::class);
+
+        // Get all pending users
+        $pendingUsers = $userRepository->findBy(['etat' => 'pending']);
+
+        // Calculate the total number of users and the percentage of pending users
+        $totalUsers = count($pendingUsers);
+        $totalUsersPercentage = ($totalUsers / count($userRepository->findAll())) * 100;
+
+        // Get total number of commands
+        $totalCommands = count($commandRepository->findAll());
+
+        // Calculate the percentage of commands
+        $totalCommandsPercentage = ($totalCommands / $totalUsers) * 100;
+
         return $this->render('admin/index.html.twig', [
             'controller_name' => 'AdminController',
-            'image' => $image
+            'pendingUsersCount' => $totalUsers,
+            'pendingUsersPercentage' => $totalUsersPercentage,
+            'totalCommandsCount' => $totalCommands,
+            'totalCommandsPercentage' => $totalCommandsPercentage,
+            'image' => $image,
         ]);
     }
+
 
     #[Route('/pays', name: 'app_country')]
     public function pays(PersistenceManagerRegistry $doctrine, Request $request): Response

@@ -45,15 +45,15 @@
             <script src="{{ asset('assetsA/js/dashboard.js')}}"></script>
             <script src="{{ asset('assetsA/js/Chart.roundedBarCharts.js')}}"></script>
 
-            <script>
+            {# <script>
                 // set a timeout of 3 seconds before removing the alerts
                 setTimeout(function() {
                     var alerts = document.querySelectorAll('.alert');
                     for (var i = 0; i < alerts.length; i++) {
                         alerts[i].style.display = 'none';
                     }
-                }, 5000);
-            </script>
+                }, 9000);
+            </script> #}
         {% endblock %}
     </head>
     <body>
@@ -343,6 +343,7 @@
               <span class="menu-title">Pays</span>
             </a>
           </li>
+          {% if not app.user.getRoles()=="ROLE_USER" %}
           <li class="nav-item">
             <a class="nav-link" href="{{path('app_list_country')}}">
               <i class="icon-columns menu-icon"></i>
@@ -355,6 +356,7 @@
               <span class="menu-title">Liste des banques</span>
             </a>
           </li>
+          {% endif %}
           <li class="nav-item">
             <a class="nav-link" href="{{(path('app_materials_category'))}}">
               <i class="icon-columns menu-icon"></i>
@@ -367,14 +369,14 @@
               <span class="menu-title">liste des commandes</span>
             </a>
           </li>
-          {% if app.user.getRoles()=='ROLE_USER' %} 
-          <li class="nav-item">
+          
+          {# <li class="nav-item">
             <a class="nav-link" href="{{(path('app_show_commande_lp'))}}">
               <i class="icon-columns menu-icon"></i>
               <span class="menu-title">Commandes livrés et <br> payés</span>
             </a>
-          </li> 
-          {% endif %}
+          </li>  #}
+         
           {% if app.user.getRoles()=='ROLE_ADMIN' %}
           <li class="nav-item">
             <a class="nav-link" href="{{(path('app_users'))}}">
