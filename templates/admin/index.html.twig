@@ -7,13 +7,37 @@
             <div class="col-md-12 grid-margin">
               <div class="row">
                 <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                  <h3 class="font-weight-bold">Bienvenue {{app.user.fullname}}</h3>
+                 <h3 class="font-weight-bold mb-4 ">Bienvenue {{app.user.fullname}}</h3>
                   {% if oldCommandsCount > 0 %}
-                      <h3 class="font-weight-normal mb-0 alert alert-info">
+                      <h3 class="font-weight-normal mb-0 alert alert-info animated-text">
                           Veuillez patienter !
                           Vous avez <span class="text-primary">{{ oldCommandsCount }} commandes datant de plus de 30 jours. Veillez à les vérifier !</span>
                       </h3>
                   {% endif %}
+
+                  <style>
+                  /* Define the animation keyframes */
+                    @keyframes fadeInOut {
+                      0% {
+                        opacity: 0;
+                      }
+                      50% {
+                        opacity: 1;
+                      }
+                      100% {
+                        opacity: 0;
+                      }
+                    }
+
+                    /* Apply the pulsating animation to the element */
+                    .animated-text {
+                      animation-name: fadeInOut;
+                      animation-duration: 3s;
+                      animation-iteration-count: infinite; /* Infinite loop */
+                    }
+
+                  
+                  </style>
 
                 </div>
                 {# <div class="col-12 col-xl-4">
