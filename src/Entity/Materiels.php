@@ -36,6 +36,12 @@ class Materiels
     #[ORM\Column(nullable: true)]
     private ?float $tauxtva = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $quantite = null;
+
+    #[ORM\ManyToOne(inversedBy: 'materiels')]
+    private ?CategorieMateriel $categorie = null;
+
     
     public function __construct()
     {
@@ -122,6 +128,30 @@ class Materiels
     public function setTauxtva(?float $tauxtva): static
     {
         $this->tauxtva = $tauxtva;
+
+        return $this;
+    }
+
+    public function getQuantite(): ?int
+    {
+        return $this->quantite;
+    }
+
+    public function setQuantite(?int $quantite): static
+    {
+        $this->quantite = $quantite;
+
+        return $this;
+    }
+
+    public function getCategorie(): ?CategorieMateriel
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?CategorieMateriel $categorie): static
+    {
+        $this->categorie = $categorie;
 
         return $this;
     }

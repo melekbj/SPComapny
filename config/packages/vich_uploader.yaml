@@ -18,3 +18,7 @@ vich_uploader:
             uri_prefix: /images/banques
             upload_destination: '%kernel.project_dir%/public/images/banques'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+        categorie_materiels_image:
+            uri_prefix: /images/categorieMateriels
+            upload_destination: '%kernel.project_dir%/public/images/categorieMateriels'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer

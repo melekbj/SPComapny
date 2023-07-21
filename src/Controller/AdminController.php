@@ -15,8 +15,10 @@ use App\Form\PaysFormType;
 use App\Form\EditBanqueType;
 use App\Form\EditCommandType;
 use App\Service\SendMailService;
+use App\Entity\CategorieMateriel;
 use App\Entity\CommandeMateriels;
 use App\Repository\UserRepository;
+use App\Form\CategorieMaterielType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -178,35 +180,42 @@ class AdminController extends AbstractController
         ]);
     }
 
-
-    #[Route('/list_materials', name: 'app_materials')]
-    public function materials(PersistenceManagerRegistry $doctrine, Request $request): Response
+    #[Route('/material_by_category/{id}', name: 'app_material_by_category')]
+    public function materialsByCategory(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
     {
         $user = $this->getUser();
         $image = $user->getImage();
-
+        
         $em = $doctrine->getManager();
-        $materials = $em->getRepository(Materiels::class)->findall();
+        $materials = $em->getRepository(Materiels::class)->findBy(['categorie' => $id]);
 
-        $banques = new Materiels();
-        $form = $this->createForm(MaterielType::class, $banques);
+        $material = new Materiels();
+    
+        // Assuming you have a `Categorie` entity representing the categories
+        $categorie = $em->getRepository(CategorieMateriel::class)->find($id);
+    
+        // Set the category for the material before creating the form
+        $material->setCategorie($categorie);
+    
+        $form = $this->createForm(MaterielType::class, $material);
         $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
+    
+        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $doctrine->getManager();
-            $entityManager->persist($banques);
+            $entityManager->persist($material);
             $entityManager->flush();
             $this->addFlash('success', 'Materiel ajouté avec succès');
-            return $this->redirectToRoute('app_materials');
+            return $this->redirectToRoute('app_material_by_category', ['id' => $id]);
         }
 
-        return $this->render('admin/materiels/materials.html.twig', [
+        return $this->render('admin/materialsByCategory.html.twig', [
             'controller_name' => 'AdminController',
             'image' => $image,
             'materials' => $materials,
             'materialForm' =>$form->createView(),
         ]);
     }
+
 
     #[Route('/delete_material/{id}', name: 'app_delete_material')]
     public function deleteMaterial(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
@@ -220,7 +229,7 @@ class AdminController extends AbstractController
         $em->remove($materiels);
         $em->flush();
         $this->addFlash('success', 'Materiel supprimé avec succès');
-        return $this->redirectToRoute('app_materials');
+        return $this->redirectToRoute('app_material_by_category', ['id' => $id]);
     }
 
     #[Route('/edit_material/{id}', name: 'app_edit_material')]
@@ -240,10 +249,82 @@ class AdminController extends AbstractController
             $entityManager->persist($pays);
             $entityManager->flush();
             $this->addFlash('success', 'Materiel modifié avec succès');
-            return $this->redirectToRoute('app_materials');
+            return $this->redirectToRoute('app_material_by_category', ['id' => $id]);
         }
 
         return $this->render('admin/materiels/editMaterial.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'editForm' =>$form->createView(),
+        ]);
+    }
+
+
+    #[Route('/list_categorie_materials', name: 'app_materials_category')]
+    public function Categorymaterials(PersistenceManagerRegistry $doctrine, Request $request): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+        $categories = $em->getRepository(CategorieMateriel::class)->findall();
+
+        $banques = new CategorieMateriel();
+        $form = $this->createForm(CategorieMaterielType::class, $banques);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($banques);
+            $entityManager->flush();
+            $this->addFlash('success', 'Categorie ajouté avec succès');
+            return $this->redirectToRoute('app_materials_category');
+        }
+
+        return $this->render('admin/categorieMateriel/listeCategorie.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'categories' => $categories,
+            'CategoryForm' =>$form->createView(),
+        ]);
+    }
+
+    #[Route('/delete_category_material/{id}', name: 'app_delete_category_material')]
+    public function deleteCategorymaterial(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+        $materiels = $em->getRepository(CategorieMateriel::class)->find($id);
+
+        $em->remove($materiels);
+        $em->flush();
+        $this->addFlash('success', 'Categorie supprimé avec succès');
+        return $this->redirectToRoute('app_materials_category');
+    }
+
+    #[Route('/edit_category_material/{id}', name: 'app_edit_category_material')]
+    public function editCategorymaterial(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+        $pays = $em->getRepository(CategorieMateriel::class)->find($id);
+
+        $form = $this->createForm(CategorieMaterielType::class, $pays);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($pays);
+            $entityManager->flush();
+            $this->addFlash('success', 'Categorie modifié avec succès');
+            return $this->redirectToRoute('app_materials_category');
+        }
+
+        return $this->render('admin/categorieMateriel/editCategoryMaterial.html.twig', [
             'controller_name' => 'AdminController',
             'image' => $image,
             'editForm' =>$form->createView(),
