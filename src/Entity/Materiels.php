@@ -8,8 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 #[ORM\Entity(repositoryClass: MaterielsRepository::class)]
+#[UniqueEntity(fields: ['ref'], message: 'This ref is already exists')]
 #[Vich\Uploadable]
 class Materiels
 {
@@ -41,6 +44,9 @@ class Materiels
 
     #[ORM\ManyToOne(inversedBy: 'materiels')]
     private ?CategorieMateriel $categorie = null;
+
+    #[ORM\Column(length: 255, unique:true)]
+    private ?string $ref = null;
 
     
     public function __construct()
@@ -152,6 +158,18 @@ class Materiels
     public function setCategorie(?CategorieMateriel $categorie): static
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function getRef(): ?string
+    {
+        return $this->ref;
+    }
+
+    public function setRef(string $ref): static
+    {
+        $this->ref = $ref;
 
         return $this;
     }

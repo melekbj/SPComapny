@@ -8,8 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 #[ORM\Entity(repositoryClass: CategorieMaterielRepository::class)]
+#[UniqueEntity(fields: ['libelle'], message: 'This libelle is already exists')]
 #[Vich\Uploadable]
 class CategorieMateriel
 {
@@ -18,7 +21,7 @@ class CategorieMateriel
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique:true)]
     private ?string $libelle = null;
 
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Materiels::class, cascade:['remove'])]

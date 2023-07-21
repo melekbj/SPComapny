@@ -14,6 +14,7 @@ class MaterielType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('ref')
             ->add('nom')
             // ->add('photo')
             ->add('imageFile', VichFileType::class, [
