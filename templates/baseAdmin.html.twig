@@ -343,7 +343,7 @@
               <span class="menu-title">Pays</span>
             </a>
           </li>
-          {% if not app.user.getRoles()=="ROLE_USER" %}
+          {% if app.user.getRoles()=="ROLE_ADMIN" or app.user.getRoles()=="ROLE_SUPER_USER" %}
           <li class="nav-item">
             <a class="nav-link" href="{{path('app_list_country')}}">
               <i class="icon-columns menu-icon"></i>
@@ -388,7 +388,7 @@
           <li class="nav-item">
             <a class="nav-link" href="{{(path('app_pending_users'))}}">
               <i class="icon-columns menu-icon"></i>
-              <span class="menu-title">Liste des demandes <br> SUPER USERS</span>
+              <span class="menu-title">Liste des demandes <br> super utilisateurs</span>
             </a>
           </li>
           {% endif %}

@@ -167,12 +167,12 @@ class Commande
         return $this;
     }
 
-    public function getRef(): ?int
+    public function getRef(): ?string
     {
         return $this->ref;
     }
 
-    public function setRef(int $ref): static
+    public function setRef(string $ref): static
     {
         $this->ref = $ref;
 

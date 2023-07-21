@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use DateTime;
+use DateInterval;
 use App\Entity\Pays;
 use App\Entity\User;
 use App\Entity\Banques;
@@ -54,6 +56,18 @@ class AdminController extends AbstractController
         // Calculate the percentage of commands
         $totalCommandsPercentage = ($totalCommands / $totalUsers) * 100;
 
+        // Get commands older than 30 days
+        $thirtyDaysAgo = new DateTime();
+        $thirtyDaysAgo->sub(new DateInterval('P30D'));
+        $oldCommands = $commandRepository->createQueryBuilder('c')
+            ->where('c.date < :thirtyDaysAgo')
+            ->setParameter('thirtyDaysAgo', $thirtyDaysAgo)
+            ->getQuery()
+            ->getResult();
+
+        // Count the number of old commands
+        $oldCommandsCount = count($oldCommands);
+
         return $this->render('admin/index.html.twig', [
             'controller_name' => 'AdminController',
             'pendingUsersCount' => $totalUsers,
@@ -61,6 +75,7 @@ class AdminController extends AbstractController
             'totalCommandsCount' => $totalCommands,
             'totalCommandsPercentage' => $totalCommandsPercentage,
             'image' => $image,
+            'oldCommandsCount' => $oldCommandsCount,
         ]);
     }
 

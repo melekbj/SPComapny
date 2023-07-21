@@ -8,7 +8,13 @@
               <div class="row">
                 <div class="col-12 col-xl-8 mb-4 mb-xl-0">
                   <h3 class="font-weight-bold">Bienvenue {{app.user.fullname}}</h3>
-                  <h6 class="font-weight-normal mb-0 alert alert-info">All systems are running smoothly! You have <span class="text-primary">3 unread alerts!</span></h6>
+                  {% if oldCommandsCount > 0 %}
+                      <h3 class="font-weight-normal mb-0 alert alert-info">
+                          Veuillez patienter !
+                          Vous avez <span class="text-primary">{{ oldCommandsCount }} commandes datant de plus de 30 jours. Veillez à les vérifier !</span>
+                      </h3>
+                  {% endif %}
+
                 </div>
                 {# <div class="col-12 col-xl-4">
                  <div class="justify-content-end d-flex">
@@ -31,10 +37,10 @@
           <div class="row">
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card tale-bg">
-                <div class="">
+                <div class="card-people">
                   <img src="{{ asset('assetsA/images/dashboard/weather.jpeg')}}" alt="people">
                   <div class="weather-info">
-                    <div class="d-flex" style="background-color:white;padding:12px;border-radius:70px;" id="weather-data">
+                    <div class="d-flex" style="background-color:white;padding:12px;border-radius:10px;" id="weather-data">
                         <div>
                             <h2 class="mb-0 font-weight-normal" style="color:#F28123"><i class="icon-sun mr-2"></i><span id="temperature">Loading...</span><sup>C</sup></h2>
                         </div>
