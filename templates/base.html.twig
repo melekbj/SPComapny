@@ -76,6 +76,7 @@
         <script src="{{ asset('assets/js/sticker.js')}}"></script>
         <!-- main js -->
         <script src="{{ asset('assets/js/main.js')}}"></script>
+		
 
 		{# <script>
                 // set a timeout of 3 seconds before removing the alerts
@@ -131,7 +132,7 @@
 								<li class="current-list-item"><a href="{{path('app_home')}}">Home</a>
 								</li>
 								<li><a href="{{path('app_about')}}">Société</a></li>
-								<li><a href="#">Sécurité</a>
+								<li><a href="{{path('app_securite')}}">Sécurité</a>
 									<ul class="sub-menu">
 										<li><a href="{{path('app_securite_cheques')}}">Chèque</a></li>
 										<li><a href="{{path('app_securite_document')}}">Document sécurisé</a></li>
@@ -145,7 +146,7 @@
 										</li>
 									</ul>
 								</li>
-								<li><a href="#">Nos travaux</a>
+								<li><a href="{{path('app_nos_travaux')}}">Nos travaux</a>
 									<ul class="sub-menu">
 										<li><a href="{{path('app_travaux_solution')}}">Nos solutions</a></li>
 										<li><a href="{{path('app_travaux_perso')}}">Personnalisation</a></li>

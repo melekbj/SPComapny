@@ -1,0 +1,42 @@
+{% extends "base.html.twig" %}
+
+
+{% block body %}
+
+
+
+<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<h1>Nos travaux</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+   <!-- shop banner -->
+	<section class="shop-banner ">
+    	<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card p-4 bg-white">
+                {# <h5 class="card-title">Links</h5> #}
+                <div class="list-group p-5">
+                    <a href="{{path('app_travaux_solution')}}" class="list-group-item list-group-item-action">Nos solutions</a>
+                    <a href="{{path('app_travaux_perso')}}" class="list-group-item list-group-item-action">Personnalisation</a>
+                    <a href="{{path('app_travaux_exemple')}}" class="list-group-item list-group-item-action">Exemples</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </section>
+	<!-- end shop banner -->
+
+
+{% endblock %}

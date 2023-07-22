@@ -55,6 +55,14 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/securité', name: 'app_securite')]
+    public function Securite(): Response
+    {
+        return $this->render('home/securite/securite.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
     #[Route('/securite/cheques', name: 'app_securite_cheques')]
     public function cheques(): Response
     {
@@ -95,6 +103,13 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/nos_travaux', name: 'app_nos_travaux')]
+    public function nosTravaux(): Response
+    {
+        return $this->render('home/travaux/nosTravaux.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
 
     #[Route('/travaux/solution', name: 'app_travaux_solution')]
     public function solution(): Response

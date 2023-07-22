@@ -1,0 +1,42 @@
+{% extends "base.html.twig" %}
+
+
+{% block body %}
+
+
+
+<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<h1>Sécurité</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+   <!-- shop banner -->
+	<section class="shop-banner ">
+    	<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card p-4 bg-white">
+                {# <h5 class="card-title">Links</h5> #}
+                <div class="list-group p-5">
+                    <a href="{{path('app_securite_cheques')}}" class="list-group-item list-group-item-action">La sécurité du chéque</a>
+                    <a href="{{path('app_securite_document')}}" class="list-group-item list-group-item-action">Papier sécurisé</a>
+                    <a href="{{path('app_copie_scan')}}" class="list-group-item list-group-item-action">Papier anticopie</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </section>
+	<!-- end shop banner -->
+
+
+{% endblock %}

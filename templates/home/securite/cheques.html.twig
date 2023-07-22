@@ -6,47 +6,58 @@
 {% block body %}
 
 
+
 <!-- breadcrumb-section -->
-	<div class="breadcrumb-section breadcrumb-bg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8 offset-lg-2 text-center">
-					<div class="breadcrumb-text">
-						{# <p>Get 24/7 Support</p> #}
-						<h1>Chéque</h1>
-					</div>
+<div class="breadcrumb-section breadcrumb-bg">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 offset-lg-2 text-center">
+				<div
+					class="breadcrumb-text">
+					{# <p>Get 24/7 Support</p> #}
+					<h1>Chéque</h1>
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- end breadcrumb section -->
+</div>
+<!-- end breadcrumb section -->
+
+
 <!-- Start page content --> 
 
+<div class="container col-10">
 <div class="ml-5 mt-4">
-	<div class="col-12 col-md-16">
-		<div class="image-container">
-			<img width = 50%  src="{{ asset('assets/img/chequ.png')}}" alt="Fables Template" class="img-fluid">
+	<div class="row">
+		<div class="col-12 col-md-16">
+			<div class="row img-zoom-container">
+				<img id="myimage" width="50%" src="{{ asset('assets/img/chequ.png')}}" alt="Fables Template" class="img-fluid" id="zoomImage">
+				<div id="myresult" class="img-zoom-result col-4 ml-5"></div>
+			</div>
 		</div>
 	</div>
-	<div class="col-12 col-md-4">
-		<div class="image-container">
-			<img src="{{ asset('assets/img/tt1.png')}}" alt="Fables Template" class="img-fluid">
-		</div>
-	</div>
-	<div class="col-12 col-md-4">
-		<div class="image-container">
-			<img src="{{ asset('assets/img/tt2.png')}}" alt="Fables Template" class="img-fluid">
-		</div>
-	</div>
-
 </div>
 
-<div class="container mt-3 mb-3">
-<div class="card">
-<p> mots clés : </p> 
-
-Hologramme 2D – Hologramme 3D – Encre anticopie – Encre photochromique – Encre iridescente – Encre thermochromique – Micro texte – Guilloche – Les fibres – Les filigranes
+<div class="col-12 col-md-4">
+	<div class="image-container">
+		<img src="{{ asset('assets/img/tt1.png')}}"  alt="Fables Template" class="img-fluid">
+	</div>
 </div>
+<div class="col-12 col-md-4">
+	<div class="image-container"><img src="{{ asset('assets/img/tt2.png')}}"  alt="Fables Template" class="img-fluid">
+	</div>
+</div>
+
+
+
+	<div class="card p-3 mb-5">
+		<p>
+			mots clés :
+		</p>
+
+		Hologramme 2D – Hologramme 3D – Encre anticopie – Encre photochromique – Encre iridescente – Encre thermochromique – Micro texte – Guilloche – Les fibres – Les filigranes
+	</div>
+
 
 </div>
 
@@ -55,5 +66,6 @@ Hologramme 2D – Hologramme 3D – Encre anticopie – Encre photochromique –
 <!-- /End page content -->
 
 
+<script src="{{ asset('assets/js/zoom.js') }}"></script>
 
 {% endblock %}
