@@ -174,57 +174,34 @@ p:last-child {
   z-index: 1111;
   background: #fff;
   overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.cube {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) rotateX(45deg) rotateY(45deg);
-  width: 8vmax;
+.loader img {
+  width: 8vmax; /* Adjust the size of the image */
   height: 8vmax;
-  animation: spinCube 2s linear infinite;
+  animation: spinImage 2s linear infinite;
 }
 
-.face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border: 2px solid #F28123;
+.secure-print {
+  font-size: 2vmax;
+  color: #F28123;
+  font-weight: bold;
+  margin-top: 1vmax;
 }
 
-.front {
-  transform: translateZ(4vmax);
-}
-
-.back {
-  transform: translateZ(-4vmax);
-}
-
-.left {
-  transform: rotateY(-90deg) translateZ(4vmax);
-}
-
-.right {
-  transform: rotateY(90deg) translateZ(4vmax);
-}
-
-.top {
-  transform: rotateX(-90deg) translateZ(4vmax);
-}
-
-.bottom {
-  transform: rotateX(90deg) translateZ(4vmax);
-}
-
-@keyframes spinCube {
+@keyframes spinImage {
   from {
-    transform: translate(-50%, -50%) rotateX(45deg) rotateY(45deg);
+    transform: rotate(0deg);
   }
   to {
-    transform: translate(-50%, -50%) rotateX(45deg) rotateY(45deg) rotateZ(360deg);
+    transform: rotate(360deg);
   }
 }
+
 
 
 .mt-80 {

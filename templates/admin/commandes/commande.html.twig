@@ -81,7 +81,7 @@
 										<td rowspan="{{ numRows }}">{{ item.date | date('d-m-Y') }}</td>
 										<td rowspan="{{ numRows }}">{{ item.user.fullname }}</td>
 										<td rowspan="{{ numRows }}">
-											{% if item.etat == NULL %}
+											{% if item.etat == 'pending' %}
 											<span class="text-info font-italic font-weight-500 font-weight-bold">In progress...</span>
 											{% elseif item.etat == 'nonlivre' %}
 											<span class="" style="font-size:15px;">

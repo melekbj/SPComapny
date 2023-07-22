@@ -9,7 +9,7 @@
         <div class="content-wrapper">
           <div class="card mb-3">
           <div class="card-body col-lg-12">
-            <form action="{{ path('app_commandes_by_bank', {'id': Id}) }}" method="get" class="form-inline">
+            <form action="{{ path('app_commandes_by_user', {'id': Id}) }}" method="get" class="form-inline">
               
               <div class="form-group col-mx-8">
                 <h5 class="mt-2"><strong>Filter by : </strong></h5>
@@ -21,6 +21,7 @@
                   <option value="livrenonpaye">Livré non payé</option>
                   <option value="livrepaye">Livré et payé</option>
                   <option value="nonlivre">Non livré</option>
+				  <option value="pending">En cours</option>
                 </select>
               </div>
               
@@ -102,7 +103,7 @@
 										<td rowspan="{{ numRows }}">{{ item.date | date('d-m-Y') }}</td>
 										<td rowspan="{{ numRows }}">{{ item.user.fullname }}</td>
 										<td rowspan="{{ numRows }}">
-											{% if item.etat == NULL %}
+											{% if item.etat == 'pending' %}
 											<span class="text-info font-italic font-weight-500 font-weight-bold">In progress...</span>
 											{% elseif item.etat == 'nonlivre' %}
 											<span class="" style="font-size:15px;">

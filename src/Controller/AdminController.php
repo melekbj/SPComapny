@@ -501,7 +501,6 @@ class AdminController extends AbstractController
 
 
     #[Route('/edit_commande/{id}', name: 'app_edit_commande')]
-   
     public function editCommande($id, PersistenceManagerRegistry $doctrine, Request $request): Response
     {
 
@@ -587,7 +586,6 @@ class AdminController extends AbstractController
             'materiels' => $materiels,
         ]);
     }
-
 
 
     #[Route('/delete_commande/{id}', name: 'app_delete_commande')]
@@ -780,23 +778,36 @@ class AdminController extends AbstractController
 
     #[Route('/commandes_by_user/{id}', name: 'app_commandes_by_user')]
     public function CommandesByUser(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
-    {
-        $user = $this->getUser();
-        $image = $user->getImage();
-        // On récupère la liste des commandes de l'utilisateur en cours
-        $em = $doctrine->getManager();
-        $commande = $em->getRepository(Commande::class)->findBy(['user' => $id]);
+{
+    $user = $this->getUser();
+    $image = $user->getImage();
+    // On récupère la liste des commandes de l'utilisateur en cours
+    $em = $doctrine->getManager();
 
-        
-       
+    $etat = $request->query->get('etat'); // Retrieve the "etat" value from the query parameters
 
-        return $this->render('admin/commandByUser.html.twig', [
-            'controller_name' => 'AdminController',
-            'image' => $image,
-            'commandes' => $commande,
-            'Id' => $id,
-        ]);
+    $commandeRepository = $em->getRepository(Commande::class);
+
+    // Perform the filtering based on the selected "etat" value and user ID
+    if ($etat) {
+        $commande = $commandeRepository->createQueryBuilder('c')
+            ->where('c.user = :id')
+            ->andWhere('c.etat = :etat')
+            ->setParameters(['id' => $id, 'etat' => $etat])
+            ->getQuery()
+            ->getResult();
+    } else {
+        $commande = $commandeRepository->findBy(['user' => $id]);
     }
+
+    return $this->render('admin/commandByUser.html.twig', [
+        'controller_name' => 'AdminController',
+        'image' => $image,
+        'commandes' => $commande,
+        'Id' => $id,
+    ]);
+}
+
 
   
 

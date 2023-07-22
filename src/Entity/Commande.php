@@ -34,7 +34,7 @@ class Commande
     private ?int $avance = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $etat = null;
+    private ?string $etat = 'pending';
 
     #[ORM\ManyToOne(inversedBy: 'commandes', cascade:['remove'])]
     private ?Banques $banque = null;
