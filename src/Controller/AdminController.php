@@ -31,10 +31,10 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
-
+#[Route('/dashboard')]
 class AdminController extends AbstractController
 {
-    #[Route('/dashboard', name: 'app_dashboard')]
+    #[Route('/', name: 'app_dashboard')]
     public function index(PersistenceManagerRegistry $doctrine): Response
     {
         $user = $this->getUser();
@@ -45,7 +45,9 @@ class AdminController extends AbstractController
 
         // Get all pending users
         $pendingUsers = $userRepository->findBy(['etat' => 'pending']);
-
+        $allUsers = $userRepository->findAll();
+        
+        $totalAllUsers = count($allUsers);
         // Calculate the total number of users and the percentage of pending users
         $totalUsers = count($pendingUsers);
         $totalUsersPercentage = ($totalUsers / count($userRepository->findAll())) * 100;
@@ -54,7 +56,7 @@ class AdminController extends AbstractController
         $totalCommands = count($commandRepository->findAll());
 
         // Calculate the percentage of commands
-        $totalCommandsPercentage = ($totalCommands / $totalUsers) * 100;
+        $totalCommandsPercentage = ($totalCommands / $totalAllUsers) * 100;
 
         // Get commands older than 30 days
         $thirtyDaysAgo = new DateTime();
