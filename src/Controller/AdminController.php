@@ -872,6 +872,41 @@ class AdminController extends AbstractController
 
 
 
+    #[Route('/commandes_expired', name: 'app_commandes_expiration')]
+    public function CommandesExpired(PersistenceManagerRegistry $doctrine, Request $request): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+
+
+        $commandeRepository = $em->getRepository(Commande::class);
+
+        // Get commands older than 30 days
+        $thirtyDaysAgo = new DateTime();
+        $thirtyDaysAgo->sub(new DateInterval('P30D'));
+        $commande = $commandeRepository->createQueryBuilder('c')
+            ->where('c.date < :thirtyDaysAgo')
+            ->setParameter('thirtyDaysAgo', $thirtyDaysAgo)
+            ->getQuery()
+            ->getResult();
+
+        
+
+
+        
+
+       
+
+        return $this->render('admin/commandes/commandeExpired.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'commandes' => $commande,
+        ]);
+    }
+
+
 
 
 }

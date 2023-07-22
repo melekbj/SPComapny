@@ -18,6 +18,13 @@ services:
     # App\Security\CustomAccessDeniedHandler:
     #     tags:
     #         - { name: 'monolog.logger', channel: 'security' }
+    App\Repository\CommandRepository: ~
+    App\Twig\AppExtension:
+        public: false
+        arguments:
+            $commandRepository: '@App\Repository\CommandeRepository'
+        tags:
+            - { name: twig.extension }
    
 
 
