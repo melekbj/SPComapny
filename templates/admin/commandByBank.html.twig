@@ -21,6 +21,7 @@
                   <option value="livrenonpaye">Livré non payé</option>
                   <option value="livrepaye">Terminé</option>
                   <option value="nonlivre">Non livré</option>
+				  <option value="pending">En progression</option>
                 </select>
               </div>
               
@@ -195,19 +196,13 @@
 										<td rowspan="{{ numRows }}">{{ item.user.fullname }}</td>
 										<td rowspan="{{ numRows }}">
 											{% if item.etat == 'pending' %}
-											<span class="text-info font-italic font-weight-500 font-weight-bold">In progress...</span>
+											<span class="text-info font-italic font-weight-500 font-weight-bold">En progression...</span>
 											{% elseif item.etat == 'nonlivre' %}
-											<span class="badge badge-danger font-weight-medium ">
-												Non livré
-											</span>
+												<span class="text-danger font-italic font-weight-500 font-weight-bold">Non livré</span>
 											{% elseif item.etat == 'livrepaye' %}
-											<span class="badge badge-success font-weight-medium text-white">
-												Terminé
-											</span>
+												<span class="text-success font-italic font-weight-500 font-weight-bold">Livré et payé</span>
 											{% elseif item.etat == 'livrenonpaye' %}
-											<span class="badge badge-warning font-weight-medium">
-												Livré non payé
-											</span>
+												<span class="text-primary font-italic font-weight-500 font-weight-bold">Livré non payé</span>
 											{% endif %}
 										</td>
 										<td rowspan="{{ numRows }}">

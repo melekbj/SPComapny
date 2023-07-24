@@ -64,19 +64,13 @@
 										<td rowspan="{{ numRows }}">{{ item.user.fullname }}</td>
 										<td rowspan="{{ numRows }}">
 											{% if item.etat == 'pending' %}
-											<span class="text-info font-italic font-weight-500 font-weight-bold">In progress...</span>
+											<span class="text-info font-italic font-weight-500 font-weight-bold">En progression...</span>
 											{% elseif item.etat == 'nonlivre' %}
-											<span class="" style="font-size:15px;">
-												<strong>Non livré</strong>
-											</span>
+												<span class="text-danger font-italic font-weight-500 font-weight-bold">Non livré</span>
 											{% elseif item.etat == 'livrepaye' %}
-											<span class="" style="font-size:15px;">
-												<strong>Livré et payé</strong>
-											</span>
+												<span class="text-success font-italic font-weight-500 font-weight-bold">Livré et payé</span>
 											{% elseif item.etat == 'livrenonpaye' %}
-											<span class="" style="font-size:15px;">
-												<strong>Livré non payé</strong>
-											</span>
+												<span class="text-primary font-italic font-weight-500 font-weight-bold">Livré non payé</span>
 											{% endif %}
 										</td>
 										<td rowspan="{{ numRows }}">
