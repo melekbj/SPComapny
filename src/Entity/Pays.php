@@ -34,9 +34,13 @@ class Pays
     #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Banques::class,  cascade:['remove'])]
     private Collection $banques;
 
+    #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Tresorie::class)]
+    private Collection $tresories;
+
     public function __construct()
     {
         $this->banques = new ArrayCollection();
+        $this->tresories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,6 +96,36 @@ class Pays
             // set the owning side to null (unless already changed)
             if ($banque->getPays() === $this) {
                 $banque->setPays(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tresorie>
+     */
+    public function getTresories(): Collection
+    {
+        return $this->tresories;
+    }
+
+    public function addTresory(Tresorie $tresory): static
+    {
+        if (!$this->tresories->contains($tresory)) {
+            $this->tresories->add($tresory);
+            $tresory->setPays($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTresory(Tresorie $tresory): static
+    {
+        if ($this->tresories->removeElement($tresory)) {
+            // set the owning side to null (unless already changed)
+            if ($tresory->getPays() === $this) {
+                $tresory->setPays(null);
             }
         }
 

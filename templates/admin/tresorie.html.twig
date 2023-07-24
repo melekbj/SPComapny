@@ -1,0 +1,76 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block body %}
+
+
+<div class="main-panel">
+
+	<div class="content-wrapper">
+
+		<div class="row">
+			<div class="col-lg-12 grid-margin stretch-card">
+				<div class="card">
+					{% for message in app.flashes('success') %}
+						<div class="alert alert-success">
+							{{ message }}
+						</div>
+					{% endfor %}
+					<div class="card-body">
+						<h4 class="card-title"></h4>
+						<div class="table-responsive">
+
+							<style>
+								.block {
+									flex: 0 0 33%;
+									text-align: center;
+									border: 1px solid #ccc;
+									padding: 10px;
+									margin: 1px; /* Add margin space */
+								}
+
+								.block img {
+									max-width: 100%;
+									height: auto;
+								}
+
+								.flex-container {
+									display: flex;
+									flex-wrap: wrap;
+								}
+							</style>
+
+							<div class="flex-container">
+								{% for item in etats %}
+									<a href="{{ path('app_tresorie_banque', {'id': item.id}) }}" class="block">
+										<div class="d-flex align-items-center">
+											<img src="{{ asset(vich_uploader_asset(item, 'imageFile')) }}" width="90px" alt="photo" class="mr-2">
+											<div class="text-body text-capitalize text-bold">{{ item.nom }}</div>
+										</div>
+									</a>
+
+									{% if loop.index is divisible by(3) %}
+										<div style="clear:both;"></div>
+									{% endif %}
+								{% endfor %}
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- content-wrapper ends -->
+<!-- partial:../../partials/_footer.html -->
+
+	<!-- partial -->
+</div>
+
+
+<!-- Button trigger modal -->
+
+
+
+{% endblock %}

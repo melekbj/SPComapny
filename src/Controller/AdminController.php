@@ -8,12 +8,14 @@ use App\Entity\Pays;
 use App\Entity\User;
 use App\Entity\Banques;
 use App\Entity\Commande;
+use App\Entity\Tresorie;
 use App\Entity\Materiels;
 use App\Form\BanquesType;
 use App\Form\CommandeType;
 use App\Form\EditPaysType;
 use App\Form\MaterielType;
 use App\Form\PaysFormType;
+use App\Form\TresorieType;
 use App\Form\EditBanqueType;
 use App\Form\EditCommandType;
 use App\Service\SendMailService;
@@ -928,7 +930,74 @@ class AdminController extends AbstractController
     //     return $this->redirectToRoute('app_commandes_expiration');
     // }
 
+    
 
+    #[Route('/tresorie', name: 'app_tresorie')]
+    public function tresorie(PersistenceManagerRegistry $doctrine, Request $request): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+        $pays = $em->getRepository(Pays::class)->findAll();
+
+        return $this->render('admin/tresorie.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'etats' => $pays,
+            
+        ]);
+    }
+
+    #[Route('/liste_tresorie_banque/{id}', name: 'app_tresorie_banque')]
+    public function TresorieBanque(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+        $pays = $em->getRepository(Pays::class)->find($id);
+        $tresoriee = $em->getRepository(Tresorie::class)->findBy(['pays' => $id]);
+
+        $paysId = $id;
+        $tresorie = new Tresorie();
+        $tresorie->setPays($pays);
+        $form = $this->createForm(TresorieType::class, $tresorie, ['pays_id' => $paysId]);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($tresorie);
+            $entityManager->flush();
+            $this->addFlash('success', 'tresorie ajouté avec succès');
+            return $this->redirectToRoute('app_tresorie_banque', ['id' => $id]);
+        }
+
+        return $this->render('admin/tresorieBanques.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'tresories' => $tresoriee,
+            'tresorieForm' =>$form->createView(),
+        ]);
+    }
+
+
+   //generate function tresorieByPays
+    // #[Route('/tresorie_by_pays/{id}', name: 'app_tresorie_by_pays')]
+    // public function tresorieByPays(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    // {
+    //     $user = $this->getUser();
+    //     $image = $user->getImage();
+        
+    //     $em = $doctrine->getManager();
+    //     $tresorie = $em->getRepository(Tresorie::class)->findBy(['pays' => $id]);
+
+    //     return $this->render('admin/tresorieByPays.html.twig', [
+    //         'controller_name' => 'AdminController',
+    //         'image' => $image,
+    //         'tresories' => $tresorie,
+    //     ]);
+    // }
 
 
 }

@@ -37,9 +37,13 @@ class Banques
     #[ORM\OneToMany(mappedBy: 'banque', targetEntity: Commande::class, cascade:['remove'])]
     private Collection $commandes;
 
+    #[ORM\OneToMany(mappedBy: 'banque', targetEntity: Tresorie::class)]
+    private Collection $tresories;
+
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
+        $this->tresories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -129,6 +133,35 @@ class Banques
         }
     }
 
+    /**
+     * @return Collection<int, Tresorie>
+     */
+    public function getTresories(): Collection
+    {
+        return $this->tresories;
+    }
+
+    public function addTresory(Tresorie $tresory): static
+    {
+        if (!$this->tresories->contains($tresory)) {
+            $this->tresories->add($tresory);
+            $tresory->setBanque($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTresory(Tresorie $tresory): static
+    {
+        if ($this->tresories->removeElement($tresory)) {
+            // set the owning side to null (unless already changed)
+            if ($tresory->getBanque() === $this) {
+                $tresory->setBanque(null);
+            }
+        }
+
+        return $this;
+    }
 
 
 }
