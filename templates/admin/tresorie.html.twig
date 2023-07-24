@@ -43,7 +43,7 @@
 								{% for item in etats %}
 									<a href="{{ path('app_tresorie_banque', {'id': item.id}) }}" class="block">
 										<div class="d-flex align-items-center">
-											<img src="{{ asset(vich_uploader_asset(item, 'imageFile')) }}" width="90px" alt="photo" class="mr-2">
+											{# <img src="{{ asset(vich_uploader_asset(item, 'imageFile')) }}" width="90px" alt="photo" class="mr-2"> #}
 											<div class="text-body text-capitalize text-bold">{{ item.nom }}</div>
 										</div>
 									</a>

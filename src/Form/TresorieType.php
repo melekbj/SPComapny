@@ -15,9 +15,15 @@ class TresorieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('solde_r')
-            ->add('entree')
-            ->add('sortie')
+            ->add('solde_r', null, [
+                'label' => 'Solde réel',
+            ])
+            ->add('entree', null, [
+                'label' => 'Montant entrée',
+            ])
+            ->add('sortie', null, [
+                'label' => 'Montant sortie',
+            ])
             // ->add('banque')
             ->add('banque', EntityType::class, [
                 'class' => Banques::class,
@@ -32,6 +38,9 @@ class TresorieType extends AbstractType
                         ->where('b.pays = :paysId')
                         ->setParameter('paysId', $paysId);
                 },
+                'attr' => [
+                    'class' => 'form-control '
+                ]
             ])
             ->add('Add', SubmitType::class, [
                 'attr' => [

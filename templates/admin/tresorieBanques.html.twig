@@ -20,7 +20,7 @@
 						</div>
 					{% endfor %}
 					<div class="card-body">
-						<h4 class="card-title">liste des utilisateurs</h4>
+						<h4 class="card-title">Liste des tresories</h4>
 						{# <p class="card-description">
 						                    Add class <code>.table-striped</code>
 						                  </p> #}
@@ -29,16 +29,19 @@
 								<thead>
 									<tr>
 										<th>
-											tre
+											Banque nom
 										</th>
 										<th>
-											sr
+											Solde réel
 										</th>
 										<th>
-											entr
+											Montant entrée
 										</th>
 										<th>
-											sort
+											Montant sortie
+										</th>
+										<th>
+											Solde après mouvement
 										</th>
 										{# {% if app.user.getRoles()=='ROLE_ADMIN' %}
 											<th>
@@ -50,10 +53,10 @@
 								<tbody>
 									{% for item in tresories %}
 										<tr>
-											<td class="py-1">
-												{{item.id}}											
+											<td>
+												{{item.banque.nom}}
 											</td>
-											<td class="py-1">
+											<td>
 												{{item.solder}}											
 											</td>
 											<td>
@@ -62,12 +65,13 @@
 											<td>
 												{{item.sortie}}
 											</td>
-											<td>
-												{{item.banque.nom}}
+											 <td>
+												{{ item.solder + item.entree - item.sortie }}
 											</td>
-											<td>
+											
+											{# <td>
 												{{item.banque.pays.nom}}
-											</td>
+											</td> #}
 											{# {% if app.user.getRoles()=='ROLE_ADMIN' %}
 												<td>
 													<a href="{{path('app_edit_user', {'id': item.id})}}" class="btn btn-success btn-sm">Edit</a>
