@@ -28,6 +28,15 @@ class CommandeMateriels
     #[ORM\Column(nullable: true)]
     private ?float $remise = null;
 
+    // Constructor
+    public function __construct()
+    {
+        // Set the default value for prixV as pu from Materiels class
+        if ($this->materiel !== null) {
+            $this->prixV = $this->materiel->getPu();
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;

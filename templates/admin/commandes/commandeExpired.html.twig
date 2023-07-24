@@ -47,7 +47,8 @@
 										<th>Etat</th>
 										<th>Actions</th>
 										{% if app.user.getRoles()=='ROLE_SUPER_USER' %}
-										<th>Gérer etat</th>
+										{# <th>Gérer etat</th> #}
+										{# <th>Send message</th> #}
 										{% endif %}
 									</tr>
 								</thead>
@@ -97,6 +98,14 @@
 												<a href="{{ path('app_show_commande', {'id': item.id}) }}" class="btn btn-info btn-sm">Show</a>
 											{% endif %}
 										</td>
+										{# <td rowspan="{{ numRows }}">
+											<form action="{{path('app_info_user',{'id':item.id})}}">
+												<button type="submit" class=" btn btn-success">
+													<i class='bx bxs-user-check'></i>
+													Send
+												</button>
+											</form>
+										</td> #}
 										{# {% if app.user.getRoles()=='ROLE_SUPER_USER' %}
 										<td rowspan="{{ numRows }}">
 											{% if app.user and app.user.commandes.contains(item) %}

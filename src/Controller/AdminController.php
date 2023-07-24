@@ -470,11 +470,13 @@ class AdminController extends AbstractController
             foreach ($materielIds as $materielId) {
                 $materiel = $em->getRepository(Materiels::class)->find($materielId);
                 $quantity = $request->request->get('textarea'.$materielId);
+                $prixV = $request->request->get('price'.$materielId);
                 // Create a new CommandMaterial instance
                 $commandMaterial = new CommandeMateriels();
                 $commandMaterial->setCommande($commande);
                 $commandMaterial->setMateriel($materiel);
                 $commandMaterial->setQuantite($quantity);
+                $commandMaterial->setPrixV($prixV);
 
                 // Persist the CommandMaterial entity
                 $em->persist($commandMaterial);
@@ -576,7 +578,7 @@ class AdminController extends AbstractController
             $em->flush();
 
             // Redirect
-            $this->addFlash('success', 'Commande mise à jour avec succès');
+            $this->addFlash('success', 'Commande mis à jour avec succès');
             return $this->redirectToRoute('app_commandes');
         }
 
@@ -780,35 +782,35 @@ class AdminController extends AbstractController
 
     #[Route('/commandes_by_user/{id}', name: 'app_commandes_by_user')]
     public function CommandesByUser(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
-{
-    $user = $this->getUser();
-    $image = $user->getImage();
-    // On récupère la liste des commandes de l'utilisateur en cours
-    $em = $doctrine->getManager();
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+        // On récupère la liste des commandes de l'utilisateur en cours
+        $em = $doctrine->getManager();
 
-    $etat = $request->query->get('etat'); // Retrieve the "etat" value from the query parameters
+        $etat = $request->query->get('etat'); // Retrieve the "etat" value from the query parameters
 
-    $commandeRepository = $em->getRepository(Commande::class);
+        $commandeRepository = $em->getRepository(Commande::class);
 
-    // Perform the filtering based on the selected "etat" value and user ID
-    if ($etat) {
-        $commande = $commandeRepository->createQueryBuilder('c')
-            ->where('c.user = :id')
-            ->andWhere('c.etat = :etat')
-            ->setParameters(['id' => $id, 'etat' => $etat])
-            ->getQuery()
-            ->getResult();
-    } else {
-        $commande = $commandeRepository->findBy(['user' => $id]);
+        // Perform the filtering based on the selected "etat" value and user ID
+        if ($etat) {
+            $commande = $commandeRepository->createQueryBuilder('c')
+                ->where('c.user = :id')
+                ->andWhere('c.etat = :etat')
+                ->setParameters(['id' => $id, 'etat' => $etat])
+                ->getQuery()
+                ->getResult();
+        } else {
+            $commande = $commandeRepository->findBy(['user' => $id]);
+        }
+
+        return $this->render('admin/commandByUser.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'commandes' => $commande,
+            'Id' => $id,
+        ]);
     }
-
-    return $this->render('admin/commandByUser.html.twig', [
-        'controller_name' => 'AdminController',
-        'image' => $image,
-        'commandes' => $commande,
-        'Id' => $id,
-    ]);
-}
 
 
   
@@ -892,19 +894,39 @@ class AdminController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        
-
-
-        
-
-       
-
         return $this->render('admin/commandes/commandeExpired.html.twig', [
             'controller_name' => 'AdminController',
             'image' => $image,
             'commandes' => $commande,
         ]);
     }
+
+    // #[Route('/info/{id}', name: 'app_info_user')]
+    // public function infoUser($id, UserRepository $rep, PersistenceManagerRegistry $doctrine, SendMailService $mail): Response
+    // {
+    //     // Get the user to deactivate
+    //     $user = $rep->find($id);
+
+    //     if (!$user) {
+    //         throw $this->createNotFoundException('User not found');
+    //     }
+
+    //     // Envoi du mail
+    //     $mail->sendMail(
+    //         'melekbejaoui29@gmail.com', 'Secure Print',
+    //         $user->getEmail(),
+    //         'Account Approval Confirmation',
+    //         'info',
+    //         [
+    //             'user' => $user,
+    //         ]
+    //     );
+
+    //     //flash message
+    //     $this->addFlash('success', 'Mail envoyé avec succés !');
+
+    //     return $this->redirectToRoute('app_commandes_expiration');
+    // }
 
 
 

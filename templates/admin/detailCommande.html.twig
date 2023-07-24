@@ -46,7 +46,7 @@
                             </div>
                         {% endfor %}
                         <div class="card-body">
-                            <h4 class="card-title">Command num
+                            <h4 class="card-title">Command №
                                 {{ commande.ref}}</h4>
                             <div class="table-responsive">
 
@@ -58,6 +58,7 @@
                                         <th>Banque</th>
                                         <th>Materiel</th>
                                         <th>Quantity</th>
+                                        <th>TTM</th>
                                         <th>Taux TVA</th>
                                         <th>PRIX UNIT. HT</th>
                                         <th>MONTANT HT</th>
@@ -75,11 +76,12 @@
                                                 <td>{{ commandeMateriel.materiel.nom }}</td>
                                                 <td>{{ commandeMateriel.quantite }}</td>
                                                 <td>{{ commandeMateriel.materiel.tauxtva }}</td>
-                                                <td>{{ commandeMateriel.materiel.pu }}</td>
-                                                <td>{{ commandeMateriel.quantite * commandeMateriel.materiel.pu }}</td>
+                                                <td>{{ commandeMateriel.commande.tauxtva * 100 }}%</td>
+                                                <td>{{ commandeMateriel.prixV }}</td>
+                                                <td>{{ commandeMateriel.quantite * commandeMateriel.prixV }}</td>
 
                                             </tr>
-                                            {% set totalHT = totalHT + (commandeMateriel.quantite * commandeMateriel.materiel.pu) %}
+                                            {% set totalHT = totalHT + (commandeMateriel.quantite * commandeMateriel.prixV) %}
                                         {% endfor %}
                                 </tbody>
                             </table>
