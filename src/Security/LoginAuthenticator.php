@@ -39,17 +39,20 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
         $user = $this->userProvider->loadUserByIdentifier($email);
+
         if ($user) {
             if (!$user->isVerified()) {
                 throw new CustomUserMessageAuthenticationException('You need to verify your email first.');
             }
         }
+
         if ($user) {
             if ($user->getRoles() == 'ROLE_SUPER_USER' && $user->getEtat() == 'pending') {
                 throw new CustomUserMessageAuthenticationException('Account pending approval. Please check your email for further instructions.');
+            }elseif ($user->getEtat() == 'blocked') {
+                throw new CustomUserMessageAuthenticationException('Account Restricted. Please check your email for further instructions.');
             }
         }
-
         
 
         return new Passport(

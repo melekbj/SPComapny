@@ -6,11 +6,15 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
 
 
 class RegisterType extends AbstractType
@@ -26,7 +30,8 @@ class RegisterType extends AbstractType
                 'download_uri' => true,
                 'attr' => ['class' => 'square-image-input'],
             ])
-            ->add('email')
+            ->add('email', EmailType::class, [
+            ])
             ->add('roles', ChoiceType::class, [
                 'required' => true,
                 'multiple' => false,
@@ -42,8 +47,20 @@ class RegisterType extends AbstractType
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields must match.',
                 'required' => true,
-                'first_options'  => ['label' => 'Password'],
+                'first_options' => ['label' => 'Password'],
                 'second_options' => ['label' => 'Confirm Password'],
+                'constraints' => [
+                    new Length([
+                        'min' => 8,
+                        'max' => 64,
+                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'maxMessage' => 'Your password should be at most {{ limit }} characters',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+                        'message' => 'Your password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character (@$!%*?&)',
+                    ]),
+                ],
             ])
             ->add('save', SubmitType::class, [
                 'attr' => [

@@ -13,6 +13,7 @@ use App\Entity\Materiels;
 use App\Form\BanquesType;
 use App\Form\CommandeType;
 use App\Form\EditPaysType;
+use App\Form\EditUserType;
 use App\Form\MaterielType;
 use App\Form\PaysFormType;
 use App\Form\TresorieType;
@@ -768,20 +769,61 @@ class AdminController extends AbstractController
         ]);
     }
 
-
-    #[Route('/delete_user/{id}', name: 'app_delete_user')]
-    public function deleteUser(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
-    {
+    //genrate edit user
+    #[Route('/edit_user/{id}', name: 'app_edit_user')]
+    public function EditUserAction(Request $request, PersistenceManagerRegistry $doctrine): Response{
         $user = $this->getUser();
         $image = $user->getImage();
+        $em = $doctrine->getManager();
+        $user = $em->getRepository(User::class)->find($request->get('id'));
+        $form = $this->createForm(EditUserType::class, $user);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $em->persist($user);
+            $em->flush();
+            $this->addFlash('success', 'User modifié avec succès');
+            return $this->redirectToRoute('app_users');
+        }
+        return $this->render('admin/editUser.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'editForm' =>$form->createView(),
+        ]);
+    }
+
+
+    #[Route('/bloquer/{id}', name: 'app_block_user')]
+    public function BlockU($id, UserRepository $rep, PersistenceManagerRegistry $doctrine, SendMailService $mail): Response
+    {
+        // Get the user to deactivate
+        $user = $rep->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+
+        // Set the user's etat to -1
+        $user->setEtat('blocked');
 
         $em = $doctrine->getManager();
-        $users = $em->getRepository(User::class)->find($id);
-
-        $em->remove($users);
+        $em->persist($user);
         $em->flush();
-        $this->addFlash('success', 'User supprimé avec succès');
-        return $this->redirectToRoute('app_users');
+        
+        // Envoi du mail
+        $mail->sendMail(
+            'melekbejaoui29@gmail.com', 'Secure Print',
+            $user->getEmail(),
+            'Account Restriction',
+            'block',
+            [
+                'user' => $user,
+            ]
+        );
+
+        //flash message
+        $this->addFlash('success', 'User approved successfully!');
+
+        return $this->redirectToRoute('app_pending_users');
     }
 
 

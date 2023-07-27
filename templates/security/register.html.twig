@@ -5,6 +5,8 @@
 
 {% block body %}
 
+
+
 <!-- breadcrumb-section -->
 	<div class="breadcrumb-section breadcrumb-bg">
 		<div class="container">
@@ -36,8 +38,12 @@
                               {{ form_row(registerForm.fullname, {'attr': {'class': 'form-control '}}) }}
                               {{ form_row(registerForm.imageFile, {'attr': {'class': 'form-control'}}) }}
                               {{ form_row(registerForm.email, {'attr': {'class': 'form-control'}}) }}
-                              {{ form_row(registerForm.password.first, {'attr': {'class': 'form-control'}}) }}
+                              <div class="password-toggle">
+                                {{ form_row(registerForm.password.first, {'attr': {'class': 'form-control', 'id': 'inputPassword'}}) }}
+                                {# <i class="fas fa-eye" id="togglePassword"></i> #}
+                              </div>
                               {{ form_row(registerForm.password.second, {'attr': {'class': 'form-control'}}) }}
+
                               {{ form_row(registerForm.save) }}
                               {{ form_end(registerForm) }}                        
                                 
@@ -54,5 +60,18 @@
     <!-- page-body-wrapper ends -->
 </div>
 <br><br><br>
+<script>
+    const passwordToggle = document.querySelector('.password-toggle');
+    const passwordInput = passwordToggle.querySelector('input[type="password"]');
+    const toggleIcon = passwordToggle.querySelector('#togglePassword');
+
+    toggleIcon.addEventListener('click', function() {
+        const currentType = passwordInput.getAttribute('type');
+        passwordInput.setAttribute('type', currentType === 'password' ? 'text' : 'password');
+        toggleIcon.classList.toggle('fa-eye', currentType === 'password');
+        toggleIcon.classList.toggle('fa-eye-slash', currentType !== 'password');
+    });
+</script>
+
 
   {% endblock %}
