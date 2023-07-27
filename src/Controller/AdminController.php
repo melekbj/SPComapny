@@ -508,6 +508,35 @@ class AdminController extends AbstractController
         ]);
     }
 
+    #[Route('/ajout_commande', name: 'app_ajout_bon_commande')]
+    public function ajoutCommande(PersistenceManagerRegistry $doctrine,): Response
+    {
+        // $em = $doctrine->getManager();
+        // $banques = $em->getRepository(Banques::class)->findAll();
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+        $commande = $em->getRepository(Commande::class)->findall();
+
+        // Retrieve the list of banques from the database
+        $banques = $em->getRepository(Banques::class)->findAll();
+        
+        // Retrieve the list of materiels from the database
+        $materiels = $em->getRepository(Materiels::class)->findAll();
+
+        return $this->render('admin/ajoutCommande.html.twig', [
+            'controller_name' => 'HomeController',
+            'banques' => $banques,
+            'materiels' => $materiels,
+            'commandes' => $commande,
+            
+            'image' => $image,
+        ]);
+    }
+
+
+
 
 
     #[Route('/edit_commande/{id}', name: 'app_edit_commande')]

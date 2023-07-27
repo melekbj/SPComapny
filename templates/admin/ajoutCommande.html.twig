@@ -1,0 +1,360 @@
+{% extends "baseAdmin.html.twig" %}
+
+
+{% block body %}
+
+<style>
+
+
+.btn:focus {
+        outline: none;
+      }
+      .hidden {
+        display: none;
+      }
+      .listed {
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+      .p-top {
+        padding-top: 7px;
+      }
+      .td-padding {
+        padding-top: 15px !important;
+      }
+      .container {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        min-width: 480px;
+        max-width: 768px;
+      }
+      .container-fluid {
+        padding-bottom: 10px;
+        margin-top: 1px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .paddingLF {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+      .inactiveLink {
+        pointer-events: none;
+        cursor: default;
+      }
+      .buttons-wrapper {
+        display: inline-block;
+      }
+
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container">
+<!-- TOP TABS -->
+  <ul id="tabs" class="nav nav-pills nav-justified">
+    <li class="active">
+      <a href="#tab1" data-toggle="tab" class="inactiveLink">
+        Order Summary
+        <span id="ok-icon" class="glyphicon glyphicon-ok hidden"></span>
+      </a>
+    </li>
+    <li>
+      <a href="#tab2" data-toggle="tab" class="inactiveLink">Confirmation</a>
+    </li>
+  </ul>
+
+<div class="tab-content">
+<!-- FIRST TAB -->
+
+
+<div class="tab-pane active" id="tab1">
+  <div class="container-fluid">
+    <h3>Confirm your order:</h3>
+    <hr>
+    		<form action="{{ path('app_commandes') }}" method="POST">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="ref">Réference</label>
+								<input type="text" class="form-control" id="ref" name="ref" required unique>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="description">Description</label>
+								<input type="text" class="form-control" id="description" name="description" required>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="banque">Banque</label>
+								<select class="form-control" id="banque" name="banque" required>
+									<option value="">Choose a banque</option>
+									{% for banque in banques %}
+										<option value="{{ banque.id }}">{{ banque.nom }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="tauxtva">Taux TVA ( 10% = 0.1 )</label>
+								<input type="text" class="form-control" id="tauxtva" name="tauxtva" pattern="\d+(\.\d+)?" title="Please enter a valid float number" required>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="avance">Avance</label>
+								<input type="text" class="form-control" id="avance" name="avance" pattern="[0-9]+" title="Please enter an integer number">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="date">Date</label>
+								<input type="date" class="form-control" id="date" name="date" required>
+							</div>
+						</div>
+
+
+					</div>
+
+
+				
+
+
+    <hr>
+
+    <div class="text-right">
+      <button id="continue" class="btn btn-success"> CONTINUE </button>
+    </div>
+    
+
+
+  </div> <!-- end container-fluid -->
+</div> <!-- end tab-content -->
+<div class="tab-pane" id="tab2">
+  <div class="container-fluid">
+    <h3>Your order:</h3>
+    {# <table class="table">
+      <tbody>
+        <tr>
+          <td class="td-padding">360 Pass</td>
+          <td class="td-padding"><span>100 &euro;</span></td>
+          <td class="text-center td-padding"><span id="t1_pocet">0</span></td>
+          <td class="text-right">
+            <button class="btn" id="t1_minus" onclick="calculate(t1,'minus')">-</button>
+            <button class="btn" id="t1_plus" onclick="calculate(t1,'plus')">+</button>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-padding">Summit Pass</td>
+          <td class="td-padding"><span>350 &euro;</span></td>
+          <td class="text-center td-padding"><span id="t2_pocet">0</span></td>
+          <td class="text-right">
+            <button class="btn" id="t2_minus" onclick="calculate(t2,'minus')">-</button>
+            <button class="btn" id="t2_plus" onclick="calculate(t2,'plus')">+</button>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-padding">VIP Summit Pass</td>
+          <td class="td-padding"><span>800 &euro;</span></td>
+          <td class="text-center td-padding"><span id="t3_pocet">0</span></td>
+          <td class="text-right">
+            <button class="btn" id="t3_minus" onclick="calculate(t3,'minus')">-</button>
+            <button class="btn" id="t3_plus" onclick="calculate(t3,'plus')">+</button>
+          </td>
+        </tr>
+      </tbody>
+    </table> #}
+
+{# <button type="submit" id="dropdownButton">+ Selectionner un produit</button>
+
+<!-- Hidden dropdown list initially -->
+<div id="dropdownList" style="display: none;">
+  <select id="materialDropdown">
+    {% for materiel in materiels %}
+      <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
+    {% endfor %}
+  </select>
+</div> #}
+
+
+{# <button type="button" id="dropdownButton">+ Selectionner un produit</button>
+
+<!-- Dropdown list -->
+<div id="dropdownList" style="display: none;">
+  <select>
+    {% for materiel in materiels %}
+      <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
+    {% endfor %}
+  </select>
+</div> #}
+
+
+
+
+<div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="display: none;">
+  <select class="form-control" id="materialDropdown">
+    {% for materiel in materiels %}
+      <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<!-- Show the select element directly without the need to click -->
+<select id="materialSelect" class="form-control">
+  {% for materiel in materiels %}
+    <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
+  {% endfor %}
+</select>
+
+
+
+
+
+
+
+
+				</form>
+
+
+
+
+
+
+
+    <hr>
+    <b>Total amount: <span id="amount"></span> &euro;</b>
+    <hr>
+    <div class="row paddingLF">
+      <div class="text-left buttons-wrapper pull-left">
+        <button id="back" type="button" class="btn btn-warning">BACK</button>
+      </div>
+      <div class="text-right buttons-wrapper pull-right">
+        <button id="submit_details" type="submit" class="btn btn-success">SEND</button>
+      </div>
+    </div>
+
+  </div> <!-- end container fluid -->
+</div> <!-- end Tab1 content -->
+
+
+
+
+
+
+
+
+
+
+
+</div><!--  end container -->
+
+
+
+
+<!-- Include jQuery library if not already included -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+<script>
+ 
+</script>
+
+
+
+<script>
+  $(document).ready(function() {
+    // Add click event handler to the "CONTINUE" button
+    $("#continue").click(function() {
+      // Hide Tab 1 and show Tab 2
+      $("#tab1").removeClass("active");
+      $("#tab2").addClass("active");
+
+      // Scroll to Tab 2 if it's not in the visible area
+      $('html, body').animate({
+        scrollTop: $("#tab2").offset().top
+      }, 500);
+    });
+
+    // Add click event handler to the "BACK" button in Tab 2
+    $("#back").click(function() {
+      // Hide Tab 2 and show Tab 1
+      $("#tab2").removeClass("active");
+      $("#tab1").addClass("active");
+
+      // Scroll to Tab 1 if it's not in the visible area
+      $('html, body').animate({
+        scrollTop: $("#tab1").offset().top
+      }, 500);
+    });
+  });
+</script>
+
+
+<script>
+
+	$(document).ready(function () {
+$('input[type="checkbox"]').change(function () {
+var checkboxId = $(this).attr('id');
+var textareaId = checkboxId.replace('materiel', 'textarea');
+var priceId = checkboxId.replace('materiel', 'price');
+var textAreaContainer = $('#' + textareaId).closest('.text-area-container');
+var priceContainer = $('#' + priceId).closest('.text-area-container');
+if ($(this).is(':checked')) {
+textAreaContainer.show();
+priceContainer.show()
+} else {
+textAreaContainer.hide();
+priceContainer.hide()
+
+}
+});
+});
+
+
+ 
+</script>
+<script>
+  // When the page is ready, hide the #materialSelect and show the #materialDropdown
+  $(document).ready(function() {
+    //$("#materialSelect").hide();
+    $("#materialDropdown").show();
+  });
+</script>
+{# <script>
+
+
+$(document).ready(function() {
+    // Show/hide the dropdown list when the button is clicked
+    $("#dropdownButton").click(function() {
+      $("#dropdownList").toggle();
+    });
+  });
+
+
+</script> #}
+
+{% endblock %}
