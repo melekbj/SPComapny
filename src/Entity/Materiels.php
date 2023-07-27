@@ -28,7 +28,7 @@ class Materiels
     public ?File $imageFile = null;
 
     #[ORM\Column(length: 255, nullable:true)]
-    private ?string $photo = null;
+    private ?string $photo = 'photo';
 
     #[ORM\Column]
     private ?float $pu = null;

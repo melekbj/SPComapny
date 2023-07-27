@@ -10,6 +10,13 @@ captcha_route:
     path: /login
     controller: Gregwar\CaptchaBundle\Controller\CaptchaController::generateAction
 
+app_verify_account:
+    path: /verify-account
+    controller: App\Controller\SecurityController::verifyEmail
+    host: 127.0.0.1 # Replace 'example.com' with your actual domain name
+    schemes: [https]
+    methods: GET 
+
 # liste_users:
 #   path: /listeUsers/{userId}
 #   controller: App\Controller\AdminController::getUserAction

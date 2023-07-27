@@ -1,0 +1,15 @@
+{% autoescape false %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Account Verification</title>
+</head>
+<body>
+    <p>Hello,</p>
+    <p>Thank you for registering. Please click the link below to verify your account:</p>
+    <p><a href="{{ url('app_verify_account', { 'token': verification_token|url_encode }) }}">Verify Account</a></p>
+    <p>If you did not request this verification, you can safely ignore this email.</p>
+</body>
+</html>
+{% endautoescape %}

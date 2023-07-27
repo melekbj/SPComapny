@@ -27,6 +27,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable:true)]
     private ?string $roles = null;
 
+    //     /**
+    //  * @ORM\Column(type="string", length=255, nullable=true)
+    //  */
+    #[ORM\Column(length:255,nullable:true)]
+    private ?string $token;
+
     /**
      * @var string The hashed password
      */
@@ -39,7 +45,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Vich\UploadableField(mapping: 'user_image', fileNameProperty: 'image')]
     public ?File $imageFile = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,nullable:true)]
     private ?string $image = null;  
 
     #[ORM\Column(length: 255,nullable:true)]
@@ -50,6 +56,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Commande::class)]
     private Collection $commandes;
+
+    #[ORM\Column(nullable: false)]
+    private ?bool $verified = false;
 
 
     public function __construct()
@@ -208,7 +217,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
 
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
 
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function isVerified(): ?bool
+    {
+        return $this->verified;
+    }
+
+    public function setVerified(?bool $verified): static
+    {
+        $this->verified = $verified;
+
+        return $this;
+    }
 
 
 

@@ -31,8 +31,8 @@ class Banques
     #[Vich\UploadableField(mapping: 'banque_image', fileNameProperty: 'photo')]
     public ?File $imageFile = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $photo = null;
+    #[ORM\Column(length: 255,nullable:true)]
+    private ?string $photo = 'photo';
 
     #[ORM\OneToMany(mappedBy: 'banque', targetEntity: Commande::class, cascade:['remove'])]
     private Collection $commandes;

@@ -28,7 +28,7 @@ class Pays
     #[Vich\UploadableField(mapping: 'etat_image', fileNameProperty: 'photo')]
     public ?File $imageFile = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,nullable:true)]
     private ?string $photo = null;
 
     #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Banques::class,  cascade:['remove'])]

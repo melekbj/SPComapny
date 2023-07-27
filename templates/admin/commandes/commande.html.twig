@@ -51,7 +51,7 @@
 										<th>Description</th>
 										<th>Materiel</th>
 										<th>Quantity</th>
-										<th>Prix d'achat</th>
+										{# <th>Prix d'achat</th> #}
 										<th>Prix de vente</th>
 										<th>Nom du banque</th>
 										<th>Taux tva</th>
@@ -75,7 +75,7 @@
 										{% endif %}
 										<td>{{ commande_materiel.materiel.nom }}</td>
 										<td>{{ commande_materiel.quantite }}</td>
-										<td>{{ commande_materiel.materiel.pu }}</td>
+										{# <td>{{ commande_materiel.materiel.pu }}</td> #}
 										<td>{{ commande_materiel.prixV }}</td>
 										{% if loop.first %}
 										<td rowspan="{{ numRows }}">{{ item.banque.nom }}</td>
@@ -84,7 +84,7 @@
 										<td rowspan="{{ numRows }}">{{ item.user.fullname }}</td>
 										<td rowspan="{{ numRows }}">
 											{% if item.etat == 'pending' %}
-											<span class="text-info font-italic font-weight-500 font-weight-bold">En progression...</span>
+											<span class="text-info font-italic font-weight-500 font-weight-bold">En cours</span>
 											{% elseif item.etat == 'nonlivre' %}
 												<span class="text-danger font-italic font-weight-500 font-weight-bold">Non livré</span>
 											{% elseif item.etat == 'livrepaye' %}

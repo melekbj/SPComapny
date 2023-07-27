@@ -72,12 +72,12 @@
 											{# <td>
 												{{item.banque.pays.nom}}
 											</td> #}
-											{# {% if app.user.getRoles()=='ROLE_ADMIN' %}
+											{# {% if app.user.getRoles()=='ROLE_ADMIN' %} #}
 												<td>
-													<a href="{{path('app_edit_user', {'id': item.id})}}" class="btn btn-success btn-sm">Edit</a>
-													<a href="{{ path('app_delete_user', {'id': item.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
+													<a href="{{path('app_edit_tresorie', {'id': item.id})}}" class="btn btn-success btn-sm">Edit</a>
+													{# <a href="{{ path('app_delete_user', {'id': item.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a> #}
 												</td>
-											{% endif %} #}
+											{# {% endif %} #}
 
 										</tr>
 									{% endfor %}

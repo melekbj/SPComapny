@@ -22,7 +22,7 @@ class BanquesType extends AbstractType
             ->add('nom')
             ->add('imageFile', VichFileType::class, [
                 'label' => 'Photo de banque',
-                'required' => true,
+                'required' => false,
                 'allow_delete' => false,
                 'download_uri' => true,
             ])

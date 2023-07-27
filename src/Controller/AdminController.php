@@ -18,6 +18,7 @@ use App\Form\PaysFormType;
 use App\Form\TresorieType;
 use App\Form\EditBanqueType;
 use App\Form\EditCommandType;
+use App\Form\EditTresorieType;
 use App\Service\SendMailService;
 use App\Entity\CategorieMateriel;
 use App\Entity\CommandeMateriels;
@@ -71,6 +72,7 @@ class AdminController extends AbstractController
 
         // Count the number of old commands
         $oldCommandsCount = count($oldCommands);
+        // dd($oldCommandsCount);
 
         return $this->render('admin/index.html.twig', [
             'controller_name' => 'AdminController',
@@ -80,6 +82,7 @@ class AdminController extends AbstractController
             'totalCommandsPercentage' => $totalCommandsPercentage,
             'image' => $image,
             'oldCommandsCount' => $oldCommandsCount,
+
         ]);
     }
 
@@ -269,7 +272,7 @@ class AdminController extends AbstractController
         $em->remove($materiels);
         $em->flush();
         $this->addFlash('success', 'Materiel supprimé avec succès');
-        return $this->redirectToRoute('app_material_by_category', ['id' => $id]);
+        return $this->redirectToRoute('app_materials_category');
     }
 
     #[Route('/edit_material/{id}', name: 'app_edit_material')]
@@ -289,7 +292,7 @@ class AdminController extends AbstractController
             $entityManager->persist($pays);
             $entityManager->flush();
             $this->addFlash('success', 'Materiel modifié avec succès');
-            return $this->redirectToRoute('app_material_by_category', ['id' => $id]);
+            return $this->redirectToRoute('app_materials_category');
         }
 
         return $this->render('admin/materiels/editMaterial.html.twig', [
@@ -978,6 +981,34 @@ class AdminController extends AbstractController
             'image' => $image,
             'tresories' => $tresoriee,
             'tresorieForm' =>$form->createView(),
+        ]);
+    }
+
+    // generate app_edit_tresorie
+    #[Route('/edit_tresorie/{id}', name: 'app_edit_tresorie')]
+    public function editTresorie(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+        
+        $em = $doctrine->getManager();
+        $tresorie = $em->getRepository(Tresorie::class)->find($id);
+
+        $form = $this->createForm(TresorieType::class, $tresorie);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($tresorie);
+            $entityManager->flush();
+            $this->addFlash('success', 'Tresorie modifié avec succès');
+            return $this->redirectToRoute('app_tresorie_banque', ['id' => $id]);
+        }
+
+        return $this->render('admin/editTresorie.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'editForm' =>$form->createView(),
         ]);
     }
 

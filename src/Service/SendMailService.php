@@ -14,19 +14,19 @@ class SendMailService
         $this->mailer = $mailer;
     }
 
-    public function send(string $fromEmail,string $fromName, string $to, string $subject, string $template, array $context): void
-    {
-        // On crée le mail
-        $email = (new TemplatedEmail())
-        ->from(new Address('truvision_tn@truvisionco.com', $fromName))
-        ->to($to)
-        ->subject($subject)
-        ->htmlTemplate('emails/' . $template .'.html.twig')
-        ->context($context);
+    // public function send(string $fromEmail,string $fromName, string $to, string $subject, string $template, array $context): void
+    // {
+    //     // On crée le mail
+    //     $email = (new TemplatedEmail())
+    //     ->from(new Address('truvision_tn@truvisionco.com', $fromName))
+    //     ->to($to)
+    //     ->subject($subject)
+    //     ->htmlTemplate('emails/' . $template .'.html.twig')
+    //     ->context($context);
 
-        // On envoie le mail
-        $this->mailer->send($email);
-    }
+    //     // On envoie le mail
+    //     $this->mailer->send($email);
+    // }
 
     public function sendMail(string $fromEmail,string $fromName, string $to, string $subject, string $template, array $data = []): void
     {

@@ -59,8 +59,19 @@ class JWTService
     }
 
     // On récupère le Payload
-    public function getPayload(string $token): array
-    {
+    // public function getPayload(string $token): array
+    // {
+    //     // On démonte le token
+    //     $array = explode('.', $token);
+
+    //     // On décode le Payload
+    //     $payload = json_decode(base64_decode($array[1]), true);
+
+    //     return $payload;
+    // }
+    public function getPayload(string $token): ?array
+{
+    try {
         // On démonte le token
         $array = explode('.', $token);
 
@@ -68,7 +79,11 @@ class JWTService
         $payload = json_decode(base64_decode($array[1]), true);
 
         return $payload;
+    } catch (\Exception $e) {
+        return null;
     }
+}
+
 
     // On récupère le Header
     public function getHeader(string $token): array
@@ -103,5 +118,22 @@ class JWTService
         $verifToken = $this->generate($header, $payload, $secret, 0);
 
         return $token === $verifToken;
+    }
+
+
+    /**
+     * Generate a verification token.
+     * @return string
+     */
+    public function generateVerificationToken(): string
+    {
+        // You can generate a unique verification token here using any method you prefer,
+        // for example, using random_bytes, uniqid, or any other secure method.
+        // Ensure the token is unique and hard to guess.
+
+        // For example, using random_bytes to generate a 32-character token:
+        $token = bin2hex(random_bytes(16));
+
+        return $token;
     }
 }

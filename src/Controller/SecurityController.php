@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegisterType;
+use App\Service\JWTService;
 use App\Service\SendMailService;
 use App\Repository\UserRepository;
 use App\Form\ResetPasswordFormType;
@@ -12,6 +13,7 @@ use App\Form\ResetPasswordRequestFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,60 +28,193 @@ class SecurityController extends AbstractController
 {
 
     #[Route('/register', name: 'app_registration')]
-    public function registration(Request $request, PersistenceManagerRegistry $doctrine, UserPasswordHasherInterface $passwordHashed): Response
-    {
-        $user = new User();
-        $form = $this->createForm(RegisterType::class, $user);
-        $form->handleRequest($request);
+    // public function registration(Request $request, PersistenceManagerRegistry $doctrine, UserPasswordHasherInterface $passwordHashed, JWTService $jwtService, SendMailService $mailer): Response
+    // {
+    //     $user = new User();
+    //     $form = $this->createForm(RegisterType::class, $user);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword(
-                $passwordHashed->hashPassword(
-                    $user,
-                    $form->get('password')->getData()
-                )
-            );
-            if ($user->getRoles() == 'ROLE_SUPER_USER') {
-                $user->setEtat('pending');
-            }
-            $entityManager = $doctrine->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
-            $request->getSession()->getFlashBag()->add('success', 'Account created successfully.');
-            return $this->redirectToRoute('app_login');
-        }
-        return $this->render('security/register.html.twig', [
-            'registerForm' => $form->createView(),
-        ]);
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $user->setPassword(
+    //             $passwordHashed->hashPassword(
+    //                 $user,
+    //                 $form->get('password')->getData()
+    //             )
+    //         );
+    //         if ($user->getRoles() == 'ROLE_SUPER_USER') {
+    //             $user->setEtat('pending');
+    //         }
+
+    //         $entityManager = $doctrine->getManager();
+    //         $user->setToken($token);
+    //         $entityManager->persist($user);
+    //         $entityManager->flush();
+
+            
+
+    //         // Send the verification email
+    //         $mailer->sendMail(
+    //             'truvision_tn@truvisionco.com', // Replace with your sender email
+    //             'Secure Print', // Replace with your sender name
+    //             $user->getEmail(),
+    //             'Account Verification',
+    //             'verification_email', // Create a Twig template for the verification email
+    //             ['verification_token' => $verificationToken] // Add any necessary data for the email template
+    //         );
+
+    //         $request->getSession()->getFlashBag()->add('success', 'Account created successfully. Please check your email for verification.');
+    //         return $this->redirectToRoute('app_login');
+    //     }
+
+    //     return $this->render('security/register.html.twig', [
+    //         'registerForm' => $form->createView(),
+    //     ]);
+    // }
+
+
+
+#[Route('/register', name: 'app_registration')]
+public function registration(
+    Request $request,
+    PersistenceManagerRegistry $doctrine,
+    UserPasswordHasherInterface $passwordHashed,
+    JWTService $jwtService,
+    SendMailService $mailer
+): Response {
+    $user = new User();
+    $form = $this->createForm(RegisterType::class, $user);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $user->setPassword(
+            $passwordHashed->hashPassword(
+                $user,
+                $form->get('password')->getData()
+            )
+        );
+
+        // Set user's roles and state based on your requirements
+
+        // Generate the verification token using the JWTService
+        $verificationToken = $jwtService->generateVerificationToken();
+
+        // Save the verification token in the user's 'token' field
+        $user->setToken($verificationToken);
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        // Send the verification email
+        $mailer->sendMail(
+            'truvision_tn@truvisionco.com', // Replace with your sender email
+            'Secure Print', // Replace with your sender name
+            $user->getEmail(),
+            'Account Verification',
+            'verification_email', // Create a Twig template for the verification email
+            ['verification_token' => $verificationToken] // Add any necessary data for the email template
+        );
+
+        $request->getSession()->getFlashBag()->add('success', 'Account created successfully. Please check your email for verification.');
+        return $this->redirectToRoute('app_login');
     }
 
+    return $this->render('security/register.html.twig', [
+        'registerForm' => $form->createView(),
+    ]);
+}
 
-    
+
+
+
+    // #[Route('/verify-account/{token}', name: 'app_verify_account')]
+    // public function verifyAccount(string $token, JWTService $jwtService, PersistenceManagerRegistry $doctrine): RedirectResponse
+    // {
+    //     // Check if the token is valid and retrieve the payload
+    //     $payload = $jwtService->getPayload($token);
+
+    //     if (!$payload) {
+    //         // Invalid token or unable to retrieve payload
+    //         $this->addFlash('error', 'Invalid verification token.');
+    //         return $this->redirectToRoute('app_login');
+    //     }
+
+    //     // Retrieve the user based on the email from the payload
+    //     $email = $payload['email'];
+    //     $user = $doctrine->getRepository(User::class)->findOneBy(['email' => $email]);
+
+    //     if (!$user) {
+    //         // User not found in the database
+    //         $this->addFlash('error', 'Invalid verification token.');
+    //         return $this->redirectToRoute('app_login');
+    //     }
+
+    //     // Check if the user's account is already verified
+    //     if ($user->getEtat() === 'verified') {
+    //         $this->addFlash('success', 'Account already verified. You can log in.');
+    //         return $this->redirectToRoute('app_login');
+    //     }
+
+    //     // Check if the token has expired
+    //     if ($jwtService->isExpired($token)) {
+    //         $this->addFlash('error', 'Verification token has expired.');
+    //         return $this->redirectToRoute('app_login');
+    //     }
+
+    //     // Update the user's account status (set 'etat' to 'verified' or similar)
+    //     $user->setEtat('verified');
+    //     $user->setToken(null); // Remove the verification token after successful verification
+
+    //     $entityManager = $doctrine->getManager();
+    //     $entityManager->persist($user);
+    //     $entityManager->flush();
+
+    //     $this->addFlash('success', 'Account verified successfully. You can now log in.');
+
+    //     return $this->redirectToRoute('app_login');
+    // }
+
     #[Route(path: '/login', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils, TranslatorInterface $translator): Response
+    public function login(PersistenceManagerRegistry $doctrine, AuthenticationUtils $authenticationUtils, TranslatorInterface $translator, JWTService $jwtService, Request $request): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
+        // // Check if the user came from the verification link in the email
+        // $token = $request->query->get('token');
+        // if ($token && $jwtService->isValid($token)) {
+        //     $payload = $jwtService->getPayload($token);
+        //     if ($payload) {
+        //         $email = $payload['email'];
+        //         $user = $doctrine->getRepository(User::class)->findOneBy(['email' => $email]);
+
+        //         if ($user && $user->getEtat() === 'verified') {
+        //             // Redirect the user to the login page with a success message
+        //             $this->addFlash('success', 'Your account has been verified. You can now log in.');
+        //             return $this->redirectToRoute('app_login');
+        //         } else {
+        //             // User's account is not verified, show an error message or redirect to the verification page
+        //             $this->addFlash('error', 'Your account is not verified. Please check your email for verification or request a new verification link.');
+        //             return $this->redirectToRoute('app_verify_account', ['token' => $token]);
+        //         }
+        //     }
         // }
-    
-        // get the login error if there is one
+
+        // Continue with the login process as before
+
         $error = $authenticationUtils->getLastAuthenticationError();
         $translatedError = null;
-    
-        // Custom error message for "pending" accounts
+
         if ($error instanceof CustomUserMessageAuthenticationException) {
             $translatedError = $translator->trans($error->getMessageKey(), $error->getMessageData(), 'security');
         }
-    
-        // last username entered by the user
+
         $lastUsername = $authenticationUtils->getLastUsername();
-    
+
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
             'translated_error' => $translatedError, // Pass the translated error to the template
         ]);
     }
+
     
 
     #[Route(path: '/logout', name: 'app_logout')]
@@ -114,7 +249,7 @@ class SecurityController extends AbstractController
                 $context = compact('url', 'user');
                 
                 // Envoi du mail
-                $mail->send(
+                $mail->sendMail(
                     'melekbejaoui29@gmail.com', 'Secure print',
                     $user->getEmail(),
                     'Réinitialisation de mot de passe',
@@ -178,6 +313,35 @@ class SecurityController extends AbstractController
 
 
 
+
+
+    #[Route('/verify-account', name: 'app_verify_account')]
+    public function verifyEmail(Request $request, PersistenceManagerRegistry $doctrine): Response
+{
+    $token = $request->query->get('token');
+
+    // Find the user by the verification token
+    $userRepository = $doctrine->getRepository(User::class);
+    $user = $userRepository->findOneBy(['token' => $token]);
+
+    if (!$user) {
+        // Handle invalid or expired token
+        // You can display an error message or redirect to an error page.
+    } else {
+        // Mark the user as verified (or update any other necessary information)
+        $user->setVerified(true);
+        $user->setToken(null); // Clear the token after verification (optional)
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->flush();
+
+        // Redirect to the login page or display a success message
+        // For example, redirect to the login page:
+        $this->addFlash('success', 'Email verified successfully. You can now log in.');
+        return $this->redirectToRoute('app_login');
+    }
+
+}
 
 
 

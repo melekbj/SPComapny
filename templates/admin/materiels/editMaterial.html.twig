@@ -16,11 +16,20 @@
                     Basic form elements
                   </p> #}
                     {{ form_start(editForm) }}
+                     <div class="form-group">
+                            {{ form_row(editForm.ref, {'attr': {'class': 'form-control'}}) }}
+                    </div>
                     <div class="form-group">
                             {{ form_row(editForm.nom, {'attr': {'class': 'form-control'}}) }}
                     </div>
                     <div class="form-group">
                         {{ form_row(editForm.imageFile, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                       <div class="form-group">
+                            {{ form_row(editForm.quantite, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                     <div class="form-group">
+                            {{ form_row(editForm.tauxtva, {'attr': {'class': 'form-control'}}) }}
                     </div>
                     <div class="form-group">
                         {{ form_row(editForm.pu, {'attr': {'class': 'form-control'}}) }}

@@ -45,7 +45,7 @@
             <script src="{{ asset('assetsA/js/dashboard.js')}}"></script>
             <script src="{{ asset('assetsA/js/Chart.roundedBarCharts.js')}}"></script>
 
-            {# <script>
+            <script>
                 // set a timeout of 3 seconds before removing the alerts
                 setTimeout(function() {
                     var alerts = document.querySelectorAll('.alert');
@@ -53,7 +53,7 @@
                         alerts[i].style.display = 'none';
                     }
                 }, 9000);
-            </script> #}
+            </script>
         {% endblock %}
     </head>
     <body>
@@ -124,20 +124,18 @@
                 </a>
 
               {% else %}
-                <a class="dropdown-item preview-item">
+                {# <a class="dropdown-item preview-item">
 
                   <div
                     class="preview-item-content">
-                    {# <h6 class="preview-subject font-weight-normal">Commande Expired</h6> #}
 
                     <p class="font-weight-light small-text text-muted font-italic">
-
                       Pas de notifications
                     </p>
 
 
                   </div>
-                </a>
+                </a> #}
               {% endif %}
 
 

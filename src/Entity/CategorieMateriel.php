@@ -30,7 +30,7 @@ class CategorieMateriel
     #[Vich\UploadableField(mapping: 'categorie_materiels_image', fileNameProperty: 'photo')]
     public ?File $imageFile = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable:true)]
     private ?string $photo = null;
 
     public function __construct()
