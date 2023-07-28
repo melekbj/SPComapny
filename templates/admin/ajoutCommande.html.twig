@@ -3,7 +3,7 @@
 
 {% block body %}
 
-<style>
+{# <style>
 
 
 .btn:focus {
@@ -47,7 +47,7 @@
       }
 
 
-</style>
+</style> #}
 
 
 
@@ -67,28 +67,16 @@
 
 
 <div class="container">
-<!-- TOP TABS -->
-  <ul id="tabs" class="nav nav-pills nav-justified">
-    <li class="active">
-      <a href="#tab1" data-toggle="tab" class="inactiveLink">
-        Order Summary
-        <span id="ok-icon" class="glyphicon glyphicon-ok hidden"></span>
-      </a>
-    </li>
-    <li>
-      <a href="#tab2" data-toggle="tab" class="inactiveLink">Confirmation</a>
-    </li>
-  </ul>
-
-<div class="tab-content">
-<!-- FIRST TAB -->
 
 
-<div class="tab-pane active" id="tab1">
-  <div class="container-fluid">
-    <h3>Confirm your order:</h3>
-    <hr>
-    		<form action="{{ path('app_commandes') }}" method="POST">
+	<div class="tab-content">
+
+
+		<div class="tab-pane active">
+			<div class="container-fluid">
+				<h3>Confirm your order:</h3>
+				<hr>
+				<form action="{{ path('app_commandes') }}" method="POST">
 					<div class="row">
 						<div class="col-md-4">
 							<div class="form-group">
@@ -139,137 +127,58 @@
 
 					</div>
 
+					<div class="row">
 
-				
+          <div id="materialContainers">
+  <div class="row material-container">
+    <!-- The first select dropdown -->
+    <select class="form-control col-8 materialSelect" onchange="showSelectedMaterial()">
+      {% for materiel in materiels %}
+        <option value="">Choisir matériel</option>
+        <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
+      {% endfor %}
+    </select>
 
-
-    <hr>
-
-    <div class="text-right">
-      <button id="continue" class="btn btn-success"> CONTINUE </button>
+    <div class="" style="display: none;">
+      <label for="quabite">Quantité</label>
+      <input class="form-control col-lg-12 quantity" id="quabite" name="quabite"></input>
+      <label for="price">Prix de vente</label>
+      <input class="form-control col-lg-12 price" type="text" id="price" name="price">
     </div>
-    
 
-
-  </div> <!-- end container-fluid -->
-</div> <!-- end tab-content -->
-<div class="tab-pane" id="tab2">
-  <div class="container-fluid">
-    <h3>Your order:</h3>
-    {# <table class="table">
-      <tbody>
-        <tr>
-          <td class="td-padding">360 Pass</td>
-          <td class="td-padding"><span>100 &euro;</span></td>
-          <td class="text-center td-padding"><span id="t1_pocet">0</span></td>
-          <td class="text-right">
-            <button class="btn" id="t1_minus" onclick="calculate(t1,'minus')">-</button>
-            <button class="btn" id="t1_plus" onclick="calculate(t1,'plus')">+</button>
-          </td>
-        </tr>
-        <tr>
-          <td class="td-padding">Summit Pass</td>
-          <td class="td-padding"><span>350 &euro;</span></td>
-          <td class="text-center td-padding"><span id="t2_pocet">0</span></td>
-          <td class="text-right">
-            <button class="btn" id="t2_minus" onclick="calculate(t2,'minus')">-</button>
-            <button class="btn" id="t2_plus" onclick="calculate(t2,'plus')">+</button>
-          </td>
-        </tr>
-        <tr>
-          <td class="td-padding">VIP Summit Pass</td>
-          <td class="td-padding"><span>800 &euro;</span></td>
-          <td class="text-center td-padding"><span id="t3_pocet">0</span></td>
-          <td class="text-right">
-            <button class="btn" id="t3_minus" onclick="calculate(t3,'minus')">-</button>
-            <button class="btn" id="t3_plus" onclick="calculate(t3,'plus')">+</button>
-          </td>
-        </tr>
-      </tbody>
-    </table> #}
-
-{# <button type="submit" id="dropdownButton">+ Selectionner un produit</button>
-
-<!-- Hidden dropdown list initially -->
-<div id="dropdownList" style="display: none;">
-  <select id="materialDropdown">
-    {% for materiel in materiels %}
-      <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
-    {% endfor %}
-  </select>
-</div> #}
-
-
-{# <button type="button" id="dropdownButton">+ Selectionner un produit</button>
-
-<!-- Dropdown list -->
-<div id="dropdownList" style="display: none;">
-  <select>
-    {% for materiel in materiels %}
-      <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
-    {% endfor %}
-  </select>
-</div> #}
-
-
-
-
-<div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="display: none;">
-  <select class="form-control" id="materialDropdown">
-    {% for materiel in materiels %}
-      <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
-    {% endfor %}
-  </select>
+    <!-- The "+" button for the first select dropdown -->
+    <button class="ml-4 addMaterial" type="button">+</button>
+  </div>
 </div>
 
-<!-- Show the select element directly without the need to click -->
-<select id="materialSelect" class="form-control">
-  {% for materiel in materiels %}
-    <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
-  {% endfor %}
-</select>
+
+
+         
 
 
 
+					</div>
 
-
-
-
+					<div class="row paddingLF">
+						<div class="text-left buttons-wrapper pull-left">
+							<button id="back" type="button" class="btn btn-warning">BACK</button>
+						</div>
+						<div class="text-right buttons-wrapper pull-right">
+							<button type="submit" class="btn btn-primary">Confirm</button>
+						</div>
+					</div>
 
 				</form>
 
 
+			</div>
+		</div>
+
+	</div>
+</div>
 
 
 
-
-
-    <hr>
-    <b>Total amount: <span id="amount"></span> &euro;</b>
-    <hr>
-    <div class="row paddingLF">
-      <div class="text-left buttons-wrapper pull-left">
-        <button id="back" type="button" class="btn btn-warning">BACK</button>
-      </div>
-      <div class="text-right buttons-wrapper pull-right">
-        <button id="submit_details" type="submit" class="btn btn-success">SEND</button>
-      </div>
-    </div>
-
-  </div> <!-- end container fluid -->
-</div> <!-- end Tab1 content -->
-
-
-
-
-
-
-
-
-
-
-
-</div><!--  end container -->
 
 
 
@@ -277,15 +186,179 @@
 <!-- Include jQuery library if not already included -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+{# <script>
+  // Get the container for material select dropdowns
+  const materialContainers = document.getElementById('materialContainers');
 
+  // Event listener for the "+" button click
+  materialContainers.addEventListener('click', function(event) {
+    const clickedElement = event.target;
+    
+    // Check if the clicked element is a button with the class "addMaterial"
+    if (clickedElement.classList.contains('addMaterial')) {
+      // Clone the material container (including select dropdown and button)
+      const clonedMaterialContainer = clickedElement.closest('.material-container').cloneNode(true);
+      
+      // Get the select dropdown from the cloned container
+      const clonedSelect = clonedMaterialContainer.querySelector('.materialSelect');
+      
+      // Remove the "+" button from the cloned container
+      clonedMaterialContainer.querySelector('.addMaterial').remove();
+
+      // Append the cloned material container to the "materialContainers" div
+      materialContainers.appendChild(clonedMaterialContainer);
+      
+      // Reset the value of the cloned select dropdown
+      clonedSelect.value = '';
+
+      // Hide the "+" button from the original material container
+      clickedElement.style.display = 'none';
+
+      // Add a new "+" button to the last material container
+      const lastMaterialContainer = materialContainers.lastElementChild;
+      const addButton = document.createElement('button');
+      addButton.className = 'ml-4 addMaterial';
+      addButton.type = 'button';
+      addButton.innerText = '+';
+      lastMaterialContainer.appendChild(addButton);
+    }
+  });
+</script> #}
 
 <script>
- 
+  // Function to show/hide the quantity and price div based on material selection
+  function showSelectedMaterial() {
+    const materialSelects = document.querySelectorAll('.materialSelect');
+    materialSelects.forEach((select) => {
+      const divToShowHide = select.nextElementSibling;
+      if (select.value !== '') {
+        divToShowHide.style.display = 'block';
+      } else {
+        divToShowHide.style.display = 'none';
+      }
+    });
+  }
+
+  // Get the container for material select dropdowns
+  const materialContainers = document.getElementById('materialContainers');
+
+  // Event listener for the "+" button click
+  materialContainers.addEventListener('click', function (event) {
+    const clickedElement = event.target;
+
+    // Check if the clicked element is a button with the class "addMaterial"
+    if (clickedElement.classList.contains('addMaterial')) {
+      // Clone the material container (including select dropdown and button)
+      const clonedMaterialContainer = clickedElement.closest('.material-container').cloneNode(true);
+
+      // Get the select dropdown from the cloned container
+      const clonedSelect = clonedMaterialContainer.querySelector('.materialSelect');
+
+      // Reset the value of the cloned select dropdown
+      clonedSelect.value = '';
+
+      // Hide the quantity and price div in the cloned container
+      const clonedDivToShowHide = clonedMaterialContainer.querySelector('.quantity').parentElement;
+      clonedDivToShowHide.style.display = 'none';
+
+      // Append the cloned material container to the "materialContainers" div
+      materialContainers.appendChild(clonedMaterialContainer);
+
+      // Hide the "+" button from the original material container
+      clickedElement.style.display = 'none';
+
+      // Add a new "+" button to the last material container
+      const lastMaterialContainer = materialContainers.lastElementChild;
+      const addButton = document.createElement('button');
+      addButton.className = 'ml-4 addMaterial';
+      addButton.type = 'button';
+      addButton.innerText = '+';
+      lastMaterialContainer.appendChild(addButton);
+    }
+  });
+</script>
+
+<script>
+  // When the page is ready, hide the #materialSelect and show the #materialDropdown
+  $(document).ready(function() {
+    //$("#materialSelect").hide();
+    $("#materialDropdown").show();
+  });
 </script>
 
 
 
-<script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{# <script>
+  // Get the select element
+  const materialSelect = document.getElementById('materialSelect');
+  
+  // Get the text-area-container div
+  const textAreaContainer = document.querySelector('.text-area-container');
+
+  // Event listener for when the select option changes
+  materialSelect.addEventListener('change', function() {
+    // Check if an option is selected
+    if (this.value !== '') {
+      // Display the text-area-container div
+      textAreaContainer.style.display = 'block';
+    } else {
+      // Hide the text-area-container div if no option is selected
+      textAreaContainer.style.display = 'none';
+    }
+  });
+</script> #}
+
+
+{# <script>
+  // Get the "+" button
+  const addButton = document.getElementById('addMaterial');
+
+  // Get the container for material select dropdowns
+  const materialContainers = document.getElementById('materialContainers');
+
+  // Event listener for the "+" button click
+  addButton.addEventListener('click', function() {
+    // Clone the first select element
+    const clonedSelect = document.querySelector('.materialSelect').cloneNode(true);
+
+    // Clear the selected value in the cloned select
+    clonedSelect.value = '';
+
+    // Append the cloned select to the container
+    materialContainers.appendChild(clonedSelect);
+  });
+</script> #}
+
+
+{# <script>
   $(document).ready(function() {
     // Add click event handler to the "CONTINUE" button
     $("#continue").click(function() {
@@ -311,10 +384,10 @@
       }, 500);
     });
   });
-</script>
+</script> #}
 
 
-<script>
+{# <script>
 
 	$(document).ready(function () {
 $('input[type="checkbox"]').change(function () {
@@ -336,14 +409,19 @@ priceContainer.hide()
 
 
  
-</script>
-<script>
-  // When the page is ready, hide the #materialSelect and show the #materialDropdown
-  $(document).ready(function() {
-    //$("#materialSelect").hide();
-    $("#materialDropdown").show();
-  });
-</script>
+</script> #}
+
+
+
+
+
+
+
+
+
+
+
+
 {# <script>
 
 
@@ -355,6 +433,28 @@ $(document).ready(function() {
   });
 
 
+</script> #}
+
+
+{# <script>
+
+	$(document).ready(function () {
+$('input[type="checkbox"]').change(function () {
+var checkboxId = $(this).attr('id');
+var textareaId = checkboxId.replace('materiel', 'textarea');
+var priceId = checkboxId.replace('materiel', 'price');
+var textAreaContainer = $('#' + textareaId).closest('.text-area-container');
+var priceContainer = $('#' + priceId).closest('.text-area-container');
+if ($(this).is(':checked')) {
+textAreaContainer.show();
+priceContainer.show()
+} else {
+textAreaContainer.hide();
+priceContainer.hide()
+
+}
+});
+});
 </script> #}
 
 {% endblock %}
