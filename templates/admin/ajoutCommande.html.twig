@@ -130,26 +130,26 @@
 					<div class="row">
 
           <div id="materialContainers">
-  <div class="row material-container">
-    <!-- The first select dropdown -->
-    <select class="form-control col-8 materialSelect" onchange="showSelectedMaterial()">
-      {% for materiel in materiels %}
-        <option value="">Choisir matériel</option>
-        <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
-      {% endfor %}
-    </select>
+            <div class="row material-container">
+              <!-- The first select dropdown -->
+              <select class="form-control col-6 materialSelect" onchange="showSelectedMaterial()">
+                <option value="">Choisir matériel</option>
+                {% for materiel in materiels %}
+                  <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
+                {% endfor %}
+              </select>
 
-    <div class="" style="display: none;">
-      <label for="quabite">Quantité</label>
-      <input class="form-control col-lg-12 quantity" id="quabite" name="quabite"></input>
-      <label for="price">Prix de vente</label>
-      <input class="form-control col-lg-12 price" type="text" id="price" name="price">
-    </div>
+              <div class="" style="display: none;">
+                <label for="quantite">Quantité</label>
+                <input class="form-control col-lg-4 quantity" id="quantite" name="quantite"></input>
+                <label for="price">Prix de vente</label>
+                <input class="form-control col-lg-4 price" type="text" id="price" name="price">
+              </div>
 
-    <!-- The "+" button for the first select dropdown -->
-    <button class="ml-4 addMaterial" type="button">+</button>
-  </div>
-</div>
+              <!-- The "+" button for the first select dropdown -->
+              <button class="ml-4 addMaterial" type="button">+</button>
+            </div>
+          </div>
 
 
 
@@ -186,51 +186,14 @@
 <!-- Include jQuery library if not already included -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-{# <script>
-  // Get the container for material select dropdowns
-  const materialContainers = document.getElementById('materialContainers');
-
-  // Event listener for the "+" button click
-  materialContainers.addEventListener('click', function(event) {
-    const clickedElement = event.target;
-    
-    // Check if the clicked element is a button with the class "addMaterial"
-    if (clickedElement.classList.contains('addMaterial')) {
-      // Clone the material container (including select dropdown and button)
-      const clonedMaterialContainer = clickedElement.closest('.material-container').cloneNode(true);
-      
-      // Get the select dropdown from the cloned container
-      const clonedSelect = clonedMaterialContainer.querySelector('.materialSelect');
-      
-      // Remove the "+" button from the cloned container
-      clonedMaterialContainer.querySelector('.addMaterial').remove();
-
-      // Append the cloned material container to the "materialContainers" div
-      materialContainers.appendChild(clonedMaterialContainer);
-      
-      // Reset the value of the cloned select dropdown
-      clonedSelect.value = '';
-
-      // Hide the "+" button from the original material container
-      clickedElement.style.display = 'none';
-
-      // Add a new "+" button to the last material container
-      const lastMaterialContainer = materialContainers.lastElementChild;
-      const addButton = document.createElement('button');
-      addButton.className = 'ml-4 addMaterial';
-      addButton.type = 'button';
-      addButton.innerText = '+';
-      lastMaterialContainer.appendChild(addButton);
-    }
-  });
-</script> #}
 
 <script>
   // Function to show/hide the quantity and price div based on material selection
   function showSelectedMaterial() {
-    const materialSelects = document.querySelectorAll('.materialSelect');
-    materialSelects.forEach((select) => {
-      const divToShowHide = select.nextElementSibling;
+    const materialContainers = document.querySelectorAll('.material-container');
+    materialContainers.forEach((container) => {
+      const select = container.querySelector('.materialSelect');
+      const divToShowHide = container.querySelector('.quantity').parentElement;
       if (select.value !== '') {
         divToShowHide.style.display = 'block';
       } else {
@@ -264,19 +227,12 @@
       // Append the cloned material container to the "materialContainers" div
       materialContainers.appendChild(clonedMaterialContainer);
 
-      // Hide the "+" button from the original material container
+      // Disable the "+" button in the current container
       clickedElement.style.display = 'none';
-
-      // Add a new "+" button to the last material container
-      const lastMaterialContainer = materialContainers.lastElementChild;
-      const addButton = document.createElement('button');
-      addButton.className = 'ml-4 addMaterial';
-      addButton.type = 'button';
-      addButton.innerText = '+';
-      lastMaterialContainer.appendChild(addButton);
     }
   });
 </script>
+
 
 <script>
   // When the page is ready, hide the #materialSelect and show the #materialDropdown
