@@ -4,7 +4,7 @@
 {% block body %}
 
 
-<div class="container">
+<div class="container mt-5">
 
 
 	<div class="tab-content">
@@ -12,7 +12,7 @@
 
 		<div class="tab-pane active">
 			
-				<h3>Confirm your order:</h3>
+				<h3>Ajouter bon de commande :</h3>
 				<hr>
 
 				<form method="POST" id="commandForm">
@@ -66,33 +66,38 @@
 
 					</div>
 
-					<div class="row">
+					
+          <div class="row">
+            <div id="materialContainers" class="col-md-12">
+              <div class="row material-container">
+                <div class="col-md-4">
+                  <select class="form-control materialSelect mt-3" onchange="showSelectedMaterial()" name="materialSelect[]">
+                    <option value="">Choisir matériel</option>
+                    {% for materiel in materiels %}
+                      <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div style="display: none;">
+                  {# <label for="quantite">Quantité</label> #}
+                  <input class="form-control quantity" name="quantite[]" pattern="[0-9]+" title="Please enter an integer number"/>
+                  {# <label for="price">Prix de vente</label> #}
+                  <input class="form-control price" type="text" name="price[]" pattern="\d+(\.\d+)?" title="Please enter a valid float number"/>
+                  <button class="mt-3 addMaterial btn btn-info" type="button"><span style="font-size:16px;">+</span></button>
+                </div>
+                
+              </div>
+            </div>
+          </div>
 
-						<div id="materialContainers">
-							<div class="row material-container">
-								<select class="form-control col-6 materialSelect" onchange="showSelectedMaterial()" name="materialSelect[]">
-									<option value="">Choisir matériel</option>
-									{% for materiel in materiels %}
-										<option value="{{ materiel.id }}">{{ materiel.nom }}</option>
-									{% endfor %}
-								</select>
 
-								<div class="" style="display: none;">
-									<label for="quantite">Quantité</label>
-									<input class="form-control col-lg-4 quantity" name="quantite[]"></input>
-								<label for="price">Prix de vente</label>
-								<input class="form-control col-lg-4 price" type="text" name="price[]">
-							</div>
-
-							<button class="ml-4 addMaterial" type="button">+</button>
-						</div>
-					</div>
+					
 
 
 
 
 
-          <div class="">
+          <div class="mt-3">
             <button type="submit" class="btn btn-primary">Confirm</button>
           </div>
 
@@ -125,11 +130,12 @@
         let selectDropdown = document.createElement('select');
         selectDropdown.className = 'form-control col-6 materialSelect';
         selectDropdown.onchange = showSelectedMaterial;
-
+        
         let defaultOption = document.createElement('option');
         defaultOption.value = '';
         defaultOption.text = 'Choisir matériel';
         selectDropdown.appendChild(defaultOption);
+        
 
         // Add options from the 'materiels' variable here
         {% for materiel in materiels %}
