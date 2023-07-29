@@ -11,99 +11,100 @@
 
 
 		<div class="tab-pane active">
-			<div class="container-fluid">
+			
 				<h3>Confirm your order:</h3>
 				<hr>
 
+				<form method="POST" id="commandForm">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="ref">Réference</label>
+								<input type="text" class="form-control" id="ref" name="ref" required unique>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="description">Description</label>
+								<input type="text" class="form-control" id="description" name="description" required>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="banque">Banque</label>
+								<select class="form-control" id="banque" name="banque" required>
+									<option value="">Choose a banque</option>
+									{% for banque in banques %}
+										<option value="{{ banque.id }}">{{ banque.nom }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
 
-        <form method="POST"  id="commandForm"> 
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="ref">Réference</label>
-                <input type="text" class="form-control" id="ref" name="ref" required unique>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="description">Description</label>
-                <input type="text" class="form-control" id="description" name="description" required>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="banque">Banque</label>
-                <select class="form-control" id="banque" name="banque" required>
-                  <option value="">Choose a banque</option>
-                  {% for banque in banques %}
-                    <option value="{{ banque.id }}">{{ banque.nom }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
+					</div>
 
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="tauxtva">Taux TVA ( 10% = 0.1 )</label>
+								<input type="text" class="form-control" id="tauxtva" name="tauxtva" pattern="\d+(\.\d+)?" title="Please enter a valid float number" required>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="avance">Avance</label>
+								<input type="text" class="form-control" id="avance" name="avance" pattern="[0-9]+" title="Please enter an integer number">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="date">Date</label>
+								<input type="date" class="form-control" id="date" name="date" required>
+							</div>
+						</div>
+
+
+					</div>
+
+					<div class="row">
+
+						<div id="materialContainers">
+							<div class="row material-container">
+								<select class="form-control col-6 materialSelect" onchange="showSelectedMaterial()" name="materialSelect[]">
+									<option value="">Choisir matériel</option>
+									{% for materiel in materiels %}
+										<option value="{{ materiel.id }}">{{ materiel.nom }}</option>
+									{% endfor %}
+								</select>
+
+								<div class="" style="display: none;">
+									<label for="quantite">Quantité</label>
+									<input class="form-control col-lg-4 quantity" name="quantite[]"></input>
+								<label for="price">Prix de vente</label>
+								<input class="form-control col-lg-4 price" type="text" name="price[]">
+							</div>
+
+							<button class="ml-4 addMaterial" type="button">+</button>
+						</div>
+					</div>
+
+
+
+
+
+          <div class="">
+            <button type="submit" class="btn btn-primary">Confirm</button>
           </div>
 
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="tauxtva">Taux TVA ( 10% = 0.1 )</label>
-                <input type="text" class="form-control" id="tauxtva" name="tauxtva" pattern="\d+(\.\d+)?" title="Please enter a valid float number" required>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="avance">Avance</label>
-                <input type="text" class="form-control" id="avance" name="avance" pattern="[0-9]+" title="Please enter an integer number">
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="date">Date</label>
-                <input type="date" class="form-control" id="date" name="date" required>
-              </div>
-            </div>
+			  </form>
 
 
-          </div>
-
-              <div class="row">
-
-                <div id="materialContainers">
-                  <div class="row material-container">
-                    <select class="form-control col-6 materialSelect" onchange="showSelectedMaterial()" name="materialSelect[]">
-    <option value="">Choisir matériel</option>
-    {% for materiel in materiels %}
-        <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
-    {% endfor %}
-</select>
-
-                    <div class="" style="display: none;">
-                      <label for="quantite">Quantité</label>
-                      <input class="form-control col-lg-4 quantity" name="quantite[]"></input>
-                    <label for="price">Prix de vente</label>
-                    <input class="form-control col-lg-4 price" type="text" name="price[]">
-                  </div>
-
-                  <button class="ml-4 addMaterial" type="button">+</button>
-                </div>
-              </div></div>
-
-
-            <div class="">
-              <button type="submit" class="btn btn-primary">Confirm</button>
-            </div>
-
-        </form>
-
-
-
-
-			</div>
 		</div>
-
 	</div>
+
 </div>
+
+
 
 
 
@@ -116,70 +117,72 @@
 
 <script>
     // Function to add a new material row
-    function addNewMaterialRow() {
-    let materialContainer = document.createElement('div');
-    materialContainer.className = 'row material-container';
+      function addNewMaterialRow() 
+      {
+        let materialContainer = document.createElement('div');
+        materialContainer.className = 'row material-container';
 
-    let selectDropdown = document.createElement('select');
-    selectDropdown.className = 'form-control col-6 materialSelect';
-    selectDropdown.onchange = showSelectedMaterial;
+        let selectDropdown = document.createElement('select');
+        selectDropdown.className = 'form-control col-6 materialSelect';
+        selectDropdown.onchange = showSelectedMaterial;
 
-    let defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.text = 'Choisir matériel';
-    selectDropdown.appendChild(defaultOption);
+        let defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.text = 'Choisir matériel';
+        selectDropdown.appendChild(defaultOption);
 
-    // Add options from the 'materiels' variable here
-    {% for materiel in materiels %}
-        let option = document.createElement('option');
-        option.value = "{{ materiel.id }}";
-        option.text = "{{ materiel.nom }}";
-        selectDropdown.appendChild(option);
-    {% endfor %}
+        // Add options from the 'materiels' variable here
+        {% for materiel in materiels %}
+            let option = document.createElement('option');
+            option.value = "{{ materiel.id }}";
+            option.text = "{{ materiel.nom }}";
+            selectDropdown.appendChild(option);
+        {% endfor %}
 
-    let quantityPriceDiv = document.createElement('div');
-    quantityPriceDiv.style.display = 'none';
-    let quantityLabel = document.createElement('label');
-    quantityLabel.textContent = 'Quantité';
-    let quantityInput = document.createElement('input');
-    quantityInput.className = 'form-control col-lg-4 quantity';
-    quantityInput.name = 'quantite[]';
-    quantityPriceDiv.appendChild(quantityLabel);
-    quantityPriceDiv.appendChild(quantityInput);
+        let quantityPriceDiv = document.createElement('div');
+        quantityPriceDiv.style.display = 'none';
+        let quantityLabel = document.createElement('label');
+        quantityLabel.textContent = 'Quantité';
+        let quantityInput = document.createElement('input');
+        quantityInput.className = 'form-control col-lg-4 quantity';
+        quantityInput.name = 'quantite[]';
+        quantityPriceDiv.appendChild(quantityLabel);
+        quantityPriceDiv.appendChild(quantityInput);
 
-    let priceLabel = document.createElement('label');
-    priceLabel.textContent = 'Prix de vente';
-    let priceInput = document.createElement('input');
-    priceInput.className = 'form-control col-lg-4 price';
-    priceInput.type = 'text';
-    priceInput.name = 'price[]';
-    quantityPriceDiv.appendChild(priceLabel);
-    quantityPriceDiv.appendChild(priceInput);
+        let priceLabel = document.createElement('label');
+        priceLabel.textContent = 'Prix de vente';
+        let priceInput = document.createElement('input');
+        priceInput.className = 'form-control col-lg-4 price';
+        priceInput.type = 'text';
+        priceInput.name = 'price[]';
+        quantityPriceDiv.appendChild(priceLabel);
+        quantityPriceDiv.appendChild(priceInput);
 
-    let addButton = document.createElement('button');
-    addButton.className = 'ml-4 addMaterial';
-    addButton.type = 'button';
-    addButton.textContent = '+';
-    addButton.onclick = addNewMaterialRow;
+        let addButton = document.createElement('button');
+        addButton.className = 'ml-4 addMaterial';
+        addButton.type = 'button';
+        addButton.textContent = '+';
+        addButton.onclick = addNewMaterialRow;
 
-    materialContainer.appendChild(selectDropdown);
-    materialContainer.appendChild(quantityPriceDiv);
-    materialContainer.appendChild(addButton);
+        materialContainer.appendChild(selectDropdown);
+        materialContainer.appendChild(quantityPriceDiv);
+        materialContainer.appendChild(addButton);
 
-    document.getElementById('materialContainers').appendChild(materialContainer);
-}
+        document.getElementById('materialContainers').appendChild(materialContainer);
+      }
 
-    // Event listener for the existing "+" buttons
-    let addMaterialButtons = document.getElementsByClassName('addMaterial');
-    for (let i = 0; i < addMaterialButtons.length; i++) {
-        addMaterialButtons[i].onclick = addNewMaterialRow;
-    }
+      // Event listener for the existing "+" buttons
+      let addMaterialButtons = document.getElementsByClassName('addMaterial');
+      for (let i = 0; i < addMaterialButtons.length; i++) {
+          addMaterialButtons[i].onclick = addNewMaterialRow;
+      }
 </script>
 
 
 <script>
   // Function to show/hide the quantity and price div based on material selection
-  function showSelectedMaterial() {
+  function showSelectedMaterial() 
+  {
     const materialContainers = document.querySelectorAll('.material-container');
     materialContainers.forEach((container) => {
       const select = container.querySelector('.materialSelect');
@@ -192,34 +195,35 @@
     });
   }
 
-  // Get the container for material select dropdowns
-  const materialContainers = document.getElementById('materialContainers');
+    // Get the container for material select dropdowns
+    const materialContainers = document.getElementById('materialContainers');
 
-  materialContainers.addEventListener('click', function (event) {
-    const clickedElement = event.target;
+    materialContainers.addEventListener('click', function (event) {
+      const clickedElement = event.target;
 
-    // Check if the clicked element is a button with the class "addMaterial"
-    if (clickedElement.classList.contains('addMaterial')) {
-        // Clone the material container (including select dropdown and button)
-        const clonedMaterialContainer = clickedElement.closest('.material-container').cloneNode(true);
+      // Check if the clicked element is a button with the class "addMaterial"
+      if (clickedElement.classList.contains('addMaterial')) {
+          // Clone the material container (including select dropdown and button)
+          const clonedMaterialContainer = clickedElement.closest('.material-container').cloneNode(true);
 
-        // Get the select dropdown from the cloned container
-        const clonedSelect = clonedMaterialContainer.querySelector('.materialSelect');
+          // Get the select dropdown from the cloned container
+          const clonedSelect = clonedMaterialContainer.querySelector('.materialSelect');
 
-        // Reset the value of the cloned select dropdown
-        clonedSelect.value = '';
+          // Reset the value of the cloned select dropdown
+          clonedSelect.value = '';
 
-        // Hide the quantity and price div in the cloned container
-        const clonedDivToShowHide = clonedMaterialContainer.querySelector('.quantity').parentElement;
-        clonedDivToShowHide.style.display = 'none';
+          // Hide the quantity and price div in the cloned container
+          const clonedDivToShowHide = clonedMaterialContainer.querySelector('.quantity').parentElement;
+          clonedDivToShowHide.style.display = 'none';
 
-        // Append the cloned material container to the "materialContainers" div
-        materialContainers.appendChild(clonedMaterialContainer);
+          // Append the cloned material container to the "materialContainers" div
+          materialContainers.appendChild(clonedMaterialContainer);
 
-        // Disable the "+" button in the current container
-        clickedElement.style.display = 'none';
-    }
-});
+          // Disable the "+" button in the current container
+          clickedElement.style.display = 'none';
+      }
+  });
+
 </script>
 
 
