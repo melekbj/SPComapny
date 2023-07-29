@@ -30,6 +30,9 @@
 										<th>
 											User role
 										</th>
+										<th>
+											Etat
+										</th>
 										{% if app.user.getRoles()=='ROLE_ADMIN' %}
 											<th>
 												Actions
@@ -49,11 +52,14 @@
 											<td>
 												{{item.roles}}
 											</td>
+											<td>
+												{{item.etat}}
+											</td>
 											{% if app.user.getRoles()=='ROLE_ADMIN' %}
 												<td>
 													<a href="{{path('app_edit_user', {'id': item.id})}}" class="btn btn-success btn-sm">Modifier</a>
 													<a href="{{ path('app_block_user', {'id': item.id}) }}" class="btn btn-dark btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir bloquer cet utilisateur ?')">Bloquer</a>
-													<a href="{{ path('app_approveU', {'id': item.id}) }}" class="btn btn-info btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir débloquer cet utilisateur ?')">Débloquer</a>
+													<a href="{{ path('app_deBlock_user', {'id': item.id}) }}" class="btn btn-info btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir débloquer cet utilisateur ?')">Débloquer</a>
 												</td>
 											{% endif %}
 

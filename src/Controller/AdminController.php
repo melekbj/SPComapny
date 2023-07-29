@@ -444,18 +444,47 @@ class AdminController extends AbstractController
         $materiels = $em->getRepository(Materiels::class)->findAll();
         
 
+        
+
+        return $this->render('admin/commandes/commande.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'materiels' => $materiels,
+            'banques' => $banques,
+            'commandes' => $commande,
+        ]);
+    }
+
+    #[Route('/ajout_commande', name: 'app_ajout_bon_commande')]
+    public function ajoutCommandes(PersistenceManagerRegistry $doctrine, Request $request): Response
+    {
+        // Get the user and image information
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        // Get the Doctrine entity manager
+        $em = $doctrine->getManager();
+
+        $commande = $em->getRepository(Commande::class)->findall();
+
+        // Retrieve the list of banques from the database
+        $banques = $em->getRepository(Banques::class)->findAll();
+        
+        // Retrieve the list of materiels from the database
+        $materiels = $em->getRepository(Materiels::class)->findAll();
+        
+
         if ($request->isMethod('POST')) {
             // Get the submitted data
-            $description = $request->request->get('description');
-            $tauxtva = $request->request->get('tauxtva');
-            $avance = $request->request->get('avance');
-            $ref = $request->request->get('ref');
-            $dateString = $request->request->get('date');
+            $formData = $request->request->all();
+            // dd($formData);
+            $ref = $formData['ref'];
+            $description = $formData['description'];
+            $banqueId = $formData['banque'];
+            $tauxtva = $formData['tauxtva'];
+            $avance = $formData['avance'];
+            $dateString = $formData['date'];
             $date = \DateTime::createFromFormat('Y-m-d', $dateString); // Assuming the date format is "YYYY-MM-DD"
-            $banqueId = $request->request->get('banque');
-            $materielIds = $request->request->all('materiel');
-            
-
 
             // Retrieve the selected Banque entity
             $banque = $em->getRepository(Banques::class)->find($banqueId);
@@ -471,25 +500,34 @@ class AdminController extends AbstractController
             $commande->setRef($ref);
             $commande->setUser($user);
 
+            $em->persist($commande);
+
+             // Get the selected materials data
+             $selectedMaterials = $formData['materialSelect'];
+             $quantities = $formData['quantite'];
+             $prices = $formData['price'];
+
 
             // Iterate over the selected Materiel IDs and create CommandMaterial entities
-            foreach ($materielIds as $materielId) {
+            foreach ($selectedMaterials as $index => $materielId) {
+                // Retrieve the selected Materiel entity
                 $materiel = $em->getRepository(Materiels::class)->find($materielId);
-                $quantity = $request->request->get('textarea'.$materielId);
-                $prixV = $request->request->get('price'.$materielId);
+
+                // Get the quantity and price for the current Materiel
+                $quantity = $quantities[$index];
+                $price = $prices[$index];
+
                 // Create a new CommandMaterial instance
                 $commandMaterial = new CommandeMateriels();
                 $commandMaterial->setCommande($commande);
                 $commandMaterial->setMateriel($materiel);
                 $commandMaterial->setQuantite($quantity);
-                $commandMaterial->setPrixV($prixV);
+                $commandMaterial->setPrixV($price);
 
                 // Persist the CommandMaterial entity
                 $em->persist($commandMaterial);
             }
-
             // Persist the Commande entity
-            $em->persist($commande);
             $em->flush();
 
             // Redirect
@@ -499,7 +537,9 @@ class AdminController extends AbstractController
             
         }
 
-        return $this->render('admin/commandes/commande.html.twig', [
+
+
+        return $this->render('admin/ajoutCommande.html.twig', [
             'controller_name' => 'AdminController',
             'image' => $image,
             'materiels' => $materiels,
@@ -508,32 +548,6 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/ajout_commande', name: 'app_ajout_bon_commande')]
-    public function ajoutCommande(PersistenceManagerRegistry $doctrine,): Response
-    {
-        // $em = $doctrine->getManager();
-        // $banques = $em->getRepository(Banques::class)->findAll();
-        $user = $this->getUser();
-        $image = $user->getImage();
-
-        $em = $doctrine->getManager();
-        $commande = $em->getRepository(Commande::class)->findall();
-
-        // Retrieve the list of banques from the database
-        $banques = $em->getRepository(Banques::class)->findAll();
-        
-        // Retrieve the list of materiels from the database
-        $materiels = $em->getRepository(Materiels::class)->findAll();
-
-        return $this->render('admin/ajoutCommande.html.twig', [
-            'controller_name' => 'HomeController',
-            'banques' => $banques,
-            'materiels' => $materiels,
-            'commandes' => $commande,
-            
-            'image' => $image,
-        ]);
-    }
 
 
 
@@ -850,9 +864,46 @@ class AdminController extends AbstractController
         );
 
         //flash message
-        $this->addFlash('success', 'User approved successfully!');
+        $this->addFlash('success', 'User blocked successfully!');
 
-        return $this->redirectToRoute('app_pending_users');
+        return $this->redirectToRoute('app_users');
+    }
+
+
+    #[Route('/debloquer/{id}', name: 'app_deBlock_user')]
+    public function unBlockU($id, UserRepository $rep, PersistenceManagerRegistry $doctrine, SendMailService $mail): Response
+    {
+        // Get the user to deactivate
+        $user = $rep->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+
+        // Set the user's etat to -1
+        $user->setEtat('debloqué');
+
+
+
+        $em = $doctrine->getManager();
+        $em->persist($user);
+        $em->flush();
+        
+        // Envoi du mail
+        $mail->sendMail(
+            'melekbejaoui29@gmail.com', 'Secure Print',
+            $user->getEmail(),
+            'Account deblocked',
+            'approve',
+            [
+                'user' => $user,
+            ]
+        );
+
+        //flash message
+        $this->addFlash('success', 'User deblocked successfully!');
+
+        return $this->redirectToRoute('app_users');
     }
 
 
