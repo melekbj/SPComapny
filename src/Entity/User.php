@@ -46,7 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public ?File $imageFile = null;
 
     #[ORM\Column(length: 255,nullable:true)]
-    private ?string $image = null;  
+    private ?string $image = 'photo';  
 
     #[ORM\Column(length: 255,nullable:true)]
     private ?string $resetToken;
@@ -153,7 +153,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->image;
     }
 
-    public function setImage(string $image): static
+    public function setImage(?string $image): static
     {
         $this->image = $image;
 

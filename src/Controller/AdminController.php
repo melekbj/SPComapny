@@ -11,6 +11,7 @@ use App\Entity\Commande;
 use App\Entity\Tresorie;
 use App\Entity\Materiels;
 use App\Form\BanquesType;
+use App\Form\AddAdminType;
 use App\Form\CommandeType;
 use App\Form\EditPaysType;
 use App\Form\EditUserType;
@@ -20,6 +21,7 @@ use App\Form\TresorieType;
 use App\Form\EditBanqueType;
 use App\Form\EditCommandType;
 use App\Form\EditTresorieType;
+use App\Entity\TresorieHistory;
 use App\Service\SendMailService;
 use App\Entity\CategorieMateriel;
 use App\Entity\CommandeMateriels;
@@ -34,6 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/dashboard')]
 class AdminController extends AbstractController
@@ -549,10 +552,6 @@ class AdminController extends AbstractController
     }
 
 
-
-
-
-
     #[Route('/edit_commande/{id}', name: 'app_edit_commande')]
     public function editCommande($id, PersistenceManagerRegistry $doctrine, Request $request): Response
     {
@@ -785,7 +784,7 @@ class AdminController extends AbstractController
 
 
     #[Route('/liste_users', name: 'app_users')]
-    public function ListeUsers(PersistenceManagerRegistry $doctrine, Request $request): Response
+    public function ListeUsers(PersistenceManagerRegistry $doctrine, Request $request, UserPasswordHasherInterface $passwordHashed): Response
     {
         // Get the user and image information
         $user = $this->getUser();
@@ -802,6 +801,21 @@ class AdminController extends AbstractController
         ->getQuery()
         ->getResult();
 
+        //generate add user form
+        $newUser = new User();
+        $form = $this->createForm(AddAdminType::class, $newUser);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $newUser->setPassword($passwordHashed->hashPassword($newUser, $newUser->getPassword()));
+            $newUser->setVerified(1);
+            $em->persist($newUser);
+            $em->flush();
+            $this->addFlash('success', 'User ajouté avec succès');
+            return $this->redirectToRoute('app_users');
+        }
+
+
+
 
 
         return $this->render('admin/ListeUsers.html.twig', [
@@ -809,6 +823,8 @@ class AdminController extends AbstractController
             'image' => $image,
             'users' => $users,
             'allUsers' => $allUsers,
+            'addUser' =>$form->createView(),
+
         ]);
     }
 
@@ -1081,12 +1097,18 @@ class AdminController extends AbstractController
         $image = $user->getImage();
 
         $em = $doctrine->getManager();
+
         $pays = $em->getRepository(Pays::class)->find($id);
-        $tresoriee = $em->getRepository(Tresorie::class)->findBy(['pays' => $id]);
+        
+        $tresoriee = $em->getRepository(Tresorie::class)->findBy(['pays' => $pays]);
+        $tresorieHistory = $em->getRepository(TresorieHistory::class)->findAll();
 
         $paysId = $id;
+
+
         $tresorie = new Tresorie();
         $tresorie->setPays($pays);
+        $tresorie->setDate(new \DateTime());
         $form = $this->createForm(TresorieType::class, $tresorie, ['pays_id' => $paysId]);
         $form->handleRequest($request);
 
@@ -1103,10 +1125,31 @@ class AdminController extends AbstractController
             'image' => $image,
             'tresories' => $tresoriee,
             'tresorieForm' =>$form->createView(),
+            'tresorieHistory' => $tresorieHistory,
         ]);
     }
 
-    // generate app_edit_tresorie
+    //generate app_historique_tresorie_by_bank
+    // #[Route('/historique_tresorie/{id}', name: 'app_historique_tresorie_by_bank')]
+    // public function showTresorieHistoryByBank(int $bankId, PersistenceManagerRegistry $doctrine): Response
+    // {
+    //     $bank = $doctrine->getRepository(Bank::class)->find($bankId);
+
+    //     if (!$bank) {
+    //         throw $this->createNotFoundException('Bank not found');
+    //     }
+
+    //     // Assuming you have a repository method to find historique by bank id
+    //     $historiques = $doctrine->getRepository(TresorieHistory::class)->findBy(['banque' => $bank]);
+
+    //     return $this->render('admin/histoTresoByBanque.html.twig', [
+    //         'bank' => $bank,
+    //         'historiques' => $historiques,
+    //     ]);
+    // }
+    
+    
+
     #[Route('/edit_tresorie/{id}', name: 'app_edit_tresorie')]
     public function editTresorie(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
     {
@@ -1115,24 +1158,41 @@ class AdminController extends AbstractController
         
         $em = $doctrine->getManager();
         $tresorie = $em->getRepository(Tresorie::class)->find($id);
+        
 
-        $form = $this->createForm(TresorieType::class, $tresorie);
+        // Store the country ID before modifying the form
+        $paysId = $tresorie->getPays()->getId();
+
+        $form = $this->createForm(EditTresorieType::class, $tresorie);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
             $entityManager = $doctrine->getManager();
             $entityManager->persist($tresorie);
+
+            $tresorieHistory = new TresorieHistory();
+            $tresorieHistory->setSoldeR($tresorie->getSoldeR());
+            $tresorieHistory->setEntree($tresorie->getEntree());
+            $tresorieHistory->setSortie($tresorie->getSortie());
+            $tresorieHistory->setBanque($tresorie->getBanque());
+            $tresorieHistory->setUpdatedAt(); 
+            $entityManager->persist($tresorieHistory);
+
             $entityManager->flush();
             $this->addFlash('success', 'Tresorie modifié avec succès');
-            return $this->redirectToRoute('app_tresorie_banque', ['id' => $id]);
+
+            // Redirect to the 'app_tresorie_banque' route with the country ID
+            return $this->redirectToRoute('app_tresorie_banque', ['id' => $paysId]);
         }
 
         return $this->render('admin/editTresorie.html.twig', [
             'controller_name' => 'AdminController',
             'image' => $image,
             'editForm' =>$form->createView(),
+            
         ]);
     }
+
 
 
    //generate function tresorieByPays

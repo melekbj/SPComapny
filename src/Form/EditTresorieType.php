@@ -25,23 +25,23 @@ class EditTresorieType extends AbstractType
                 'label' => 'Montant sortie',
             ])
             // ->add('banque')
-            ->add('banque', EntityType::class, [
-                'class' => Banques::class,
-                'choice_label' => 'nom',
-                'label' => 'Banque',
-                'placeholder' => 'Choose a type',
-                'required' => true,
-                'query_builder' => function ($repository) use ($options) {
-                    $paysId = $options['pays_id'];
+            // ->add('banque', EntityType::class, [
+            //     'class' => Banques::class,
+            //     'choice_label' => 'nom',
+            //     'label' => 'Banque',
+            //     'placeholder' => 'Choose a type',
+            //     'required' => true,
+            //     'query_builder' => function ($repository) use ($options) {
+            //         $paysId = $options['pays_id'];
 
-                    return $repository->createQueryBuilder('b')
-                        ->where('b.pays = :paysId')
-                        ->setParameter('paysId', $paysId);
-                },
-                'attr' => [
-                    'class' => 'form-control '
-                ]
-            ])
+            //         return $repository->createQueryBuilder('b')
+            //             ->where('b.pays = :paysId')
+            //             ->setParameter('paysId', $paysId);
+            //     },
+            //     'attr' => [
+            //         'class' => 'form-control '
+            //     ]
+            // ])
             ->add('Add', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-primary mt-3 '
