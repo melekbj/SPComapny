@@ -17,6 +17,7 @@ use App\Form\EditPaysType;
 use App\Form\EditUserType;
 use App\Form\MaterielType;
 use App\Form\PaysFormType;
+use App\Form\PaysInfoType;
 use App\Form\TresorieType;
 use App\Form\EditBanqueType;
 use App\Form\EditCommandType;
@@ -213,18 +214,31 @@ class AdminController extends AbstractController
     
 
     #[Route('/banks_by_country/{id}', name: 'app_banks_by_country')]
-    public function banksByCountry(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    public function banksByCountry(Pays $pays, PersistenceManagerRegistry $doctrine, Request $request, $id): Response
     {
         $user = $this->getUser();
         $image = $user->getImage();
 
         $em = $doctrine->getManager();
         $banks = $em->getRepository(Banques::class)->findBy(['pays' => $id]);
-
+        //editpays
+        $pays = $em->getRepository(Pays::class)->find($id);
+        $form = $this->createForm(PaysInfoType::class, $pays);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $em->persist($pays);
+            $em->flush();
+            $this->addFlash('success', 'Pays modifié avec succès');
+            return $this->redirectToRoute('app_banks_by_country', ['id' => $id]);
+        }
+        
         return $this->render('admin/banksByCountry.html.twig', [
             'controller_name' => 'AdminController',
             'image' => $image,
             'banks' => $banks,
+            'pays' => $pays,
+            'editForm' =>$form->createView(),
         ]);
     }
 

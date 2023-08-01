@@ -37,6 +37,18 @@ class Pays
     #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Tresorie::class)]
     private Collection $tresories;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $responsable = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $mail = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $adesse = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
     public function __construct()
     {
         $this->banques = new ArrayCollection();
@@ -128,6 +140,54 @@ class Pays
                 $tresory->setPays(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getResponsable(): ?string
+    {
+        return $this->responsable;
+    }
+
+    public function setResponsable(?string $responsable): static
+    {
+        $this->responsable = $responsable;
+
+        return $this;
+    }
+
+    public function getMail(): ?string
+    {
+        return $this->mail;
+    }
+
+    public function setMail(?string $mail): static
+    {
+        $this->mail = $mail;
+
+        return $this;
+    }
+
+    public function getAdesse(): ?string
+    {
+        return $this->adesse;
+    }
+
+    public function setAdesse(?string $adesse): static
+    {
+        $this->adesse = $adesse;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }

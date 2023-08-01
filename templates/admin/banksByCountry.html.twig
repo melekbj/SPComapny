@@ -65,6 +65,29 @@
               </div>
             </div>
           </div>
+          <div class="card text-center">
+            <div class="card-header">
+             <h6 class="card-title"> Informations sur le pays</h6>
+            </div>
+            <div class="card-body">
+              <h5 class="">Responsable</h5>
+              <h6 class="card-title">{{pays.responsable}}</h6>
+              <h5 class="">Adresse</h5>
+              <h6 class="card-title">{{pays.adesse}}</h6>
+              <h5 class="">Mail</h5>
+              <h6 class="card-title">{{pays.mail}}</h6>
+              <p class="card-text">{{pays.description}}</p>
+              <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Modifier les informations</a>
+            </div>
+            <div class="card-footer text-muted">
+              {# 2 days ago #}
+            </div>
+          </div>
+
+
+          
+
+
         </div>
 
       </div>
@@ -72,52 +95,26 @@
       <!-- partial -->
     </div>
 
-
-<!-- Button trigger modal -->
-
-
 <!-- Modal -->
-{# <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" >
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ajouter nouveau pays</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Pays Information</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
+        {{form(editForm)}}
+      </div>
+      {# <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> #}
     </div>
   </div>
-</div> #}
+</div>
 
-
-{# <script>
-  // Function to extract the 'id' parameter from the URL
-  function getParamFromURL(name) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(name);
-  }
-
-  // Function to fetch the 'pays' name based on the 'id'
-  function fetchPaysName(id) {
-    // Replace this with your data source, e.g., an array or an API call
-    const paysData = {
-      3: 'Country 3 Name',
-      // Add more entries for other countries if needed
-    };
-    return paysData[id] || 'Unknown Country';
-  }
-
-  // Code to update the 'h6' element with the 'pays' name
-  document.addEventListener('DOMContentLoaded', function () {
-    const id = getParamFromURL('id');
-    const paysName = fetchPaysName(id);
-    const h6Element = document.querySelector('h6.text-sm-right');
-    if (h6Element) {
-      h6Element.textContent = `dashboard > pays > ${paysName}`;
-    }
-  });
-</script> #}
 
 {% endblock %}
