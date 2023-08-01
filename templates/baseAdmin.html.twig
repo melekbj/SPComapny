@@ -54,6 +54,53 @@
                     }
                 }, 9000);
             </script>
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+            {# <script>
+              // Function to add a visited link to the local storage
+              function addVisitedLink(link) {
+                if (typeof(Storage) !== "undefined") {
+                  // Retrieve existing visited links from local storage (if any)
+                  let visitedLinks = JSON.parse(localStorage.getItem('visited_links')) || [];
+                  
+                  // Add the new link to the list
+                  if (!visitedLinks.includes(link)) {
+                    visitedLinks.push(link);
+                    // Save the updated list to local storage
+                    localStorage.setItem('visited_links', JSON.stringify(visitedLinks));
+                  }
+                }
+              }
+              
+              // Function to populate the visited links
+              function populateVisitedLinks() {
+                if (typeof(Storage) !== "undefined") {
+                  let visitedLinks = JSON.parse(localStorage.getItem('visited_links')) || [];
+                  let visitedLinksDiv = document.getElementById('visited-links');
+                  
+                  // Clear the existing content of visited links div
+                  visitedLinksDiv.innerHTML = '';
+                  
+                  // Add each visited link to the div
+                  for (let i = 0; i < visitedLinks.length; i++) {
+                    let link = document.createElement('a');
+                    link.href = visitedLinks[i];
+                    link.textContent = visitedLinks[i];
+                    visitedLinksDiv.appendChild(link);
+                    visitedLinksDiv.appendChild(document.createElement('br'));
+                  }
+                }
+              }
+              
+              // Call the function to populate visited links when the page loads
+              window.onload = function() {
+                populateVisitedLinks();
+              };
+            </script> #}
+
+
+
         {% endblock %}
     </head>
     <body>
@@ -104,7 +151,7 @@
                     </div>
                   </div>
                   <div class="preview-item-content">
-                    <h6 class="preview-subject font-weight-normal">Commande Expired</h6>
+                    <h6 class="preview-subject font-weight-normal">Date limite dépassée</h6>
 
                     <p class="font-weight-light small-text text-muted">
 
@@ -172,7 +219,7 @@
 
           <li class="nav-item nav-profile dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-            <img src="{{ asset('images/users/' ~ image) }}" alt="user-avatar">
+            <img src="{{ asset('images/users/' ~ image) }}" alt="photo">
 
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">

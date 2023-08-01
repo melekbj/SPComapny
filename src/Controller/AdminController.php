@@ -27,6 +27,7 @@ use App\Entity\CategorieMateriel;
 use App\Entity\CommandeMateriels;
 use App\Repository\UserRepository;
 use App\Form\CategorieMaterielType;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -806,8 +807,43 @@ class AdminController extends AbstractController
         $form = $this->createForm(AddAdminType::class, $newUser);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
+            $newUser->setRoles('ROLE_ADMIN');
             $newUser->setPassword($passwordHashed->hashPassword($newUser, $newUser->getPassword()));
             $newUser->setVerified(1);
+
+
+            $publicDir = $this->getParameter('kernel.project_dir') . '/public';
+
+            // The source path of the image
+            $sourceImagePath = $publicDir . '/assetsA/images/favicon.png';
+
+            // Replace 'YourTargetDirectory' with the actual path to store user photos
+            // (e.g., 'public/uploads/user_photos' or any directory you prefer)
+            $targetDirectory = $publicDir . '/uploads/user_photos';
+
+            // Create the target directory if it doesn't exist
+            $filesystem = new Filesystem();
+            $filesystem->mkdir($targetDirectory);
+
+            // Generate a unique filename for the user's photo (to avoid conflicts)
+            $filename = uniqid() . '.png';
+
+            // The target path for the user's photo
+            $targetImagePath = $targetDirectory . '/' . $filename;
+
+            // Copy the image from the public folder to the user's photo location
+            $filesystem->copy($sourceImagePath, $targetImagePath);
+
+            // Set the user's photo path in the entity (assuming you have a 'photo' property)
+            // Make sure to store the relative path to the photo (e.g., 'uploads/user_photos/filename.png')
+            $newUser->setImage('uploads/user_photos/' . $filename);
+
+
+
+
+
+
+
             $em->persist($newUser);
             $em->flush();
             $this->addFlash('success', 'User ajouté avec succès');

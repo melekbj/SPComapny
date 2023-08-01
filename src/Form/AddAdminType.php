@@ -20,17 +20,17 @@ class AddAdminType extends AbstractType
     {
         $builder
             ->add('fullname')
-            ->add('roles', ChoiceType::class, [
-                'required' => true,
-                'multiple' => false,
-                'expanded' => false,
-                'choices'  => [
-                    // 'USER' => 'ROLE_USER',
-                    'ADMIN' => 'ROLE_ADMIN',
-                    // 'SUPER_USER' => 'ROLE_SUPER_USER',
+            // ->add('roles', ChoiceType::class, [
+            //     'required' => true,
+            //     'multiple' => false,
+            //     'expanded' => false,
+            //     'choices'  => [
+            //         // 'USER' => 'ROLE_USER',
+            //         'ADMIN' => 'ROLE_ADMIN',
+            //         // 'SUPER_USER' => 'ROLE_SUPER_USER',
                     
-                ],
-            ])
+            //     ],
+            // ])
             ->add('email', EmailType::class, [
                 ])
             // ->add('token')
