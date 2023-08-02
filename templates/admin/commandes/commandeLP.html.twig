@@ -64,7 +64,7 @@
 										<td rowspan="{{ numRows }}">{{ item.user.fullname }}</td>
 										<td rowspan="{{ numRows }}">
 											{% if item.etat == 'pending' %}
-											<span class="text-info font-italic font-weight-500 font-weight-bold">En cours</span>
+											<span class="text-info font-italic font-weight-500 font-weight-bold">En cours...</span>
 											{% elseif item.etat == 'nonlivre' %}
 												<span class="text-danger font-italic font-weight-500 font-weight-bold">Non livré</span>
 											{% elseif item.etat == 'livrepaye' %}

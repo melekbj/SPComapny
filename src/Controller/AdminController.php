@@ -1016,7 +1016,7 @@ class AdminController extends AbstractController
     {
         $user = $this->getUser();
         $image = $user->getImage();
-        // On récupère la liste des commandes de l'utilisateur en cours
+        // On récupère la liste des commandes de l'utilisateur En cours...
         $em = $doctrine->getManager();
 
         $etat = $request->query->get('etat'); // Retrieve the "etat" value from the query parameters
