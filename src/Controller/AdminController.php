@@ -20,6 +20,7 @@ use App\Form\PaysFormType;
 use App\Form\PaysInfoType;
 use App\Form\TresorieType;
 use App\Form\EditBanqueType;
+use App\Form\AddMaterialType;
 use App\Form\EditCommandType;
 use App\Form\EditTresorieType;
 use App\Entity\TresorieHistory;
@@ -28,12 +29,15 @@ use App\Entity\CategorieMateriel;
 use App\Entity\CommandeMateriels;
 use App\Repository\UserRepository;
 use App\Form\CategorieMaterielType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Repository\CategorieMaterielRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -242,6 +246,32 @@ class AdminController extends AbstractController
         ]);
     }
 
+    
+    #[Route('/add_material', name: 'add_material_route', methods: ['POST', 'GET'])]
+    public function ajoutMaterials(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $materiel = new Materiels();
+        $form = $this->createForm(AddMaterialType::class, $materiel);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+           
+            $entityManager->persist($materiel);
+            $entityManager->flush();
+            $this->addFlash('success', 'Materiel ajouté avec succès');
+            return $this->redirectToRoute('app_ajout_bon_commande');
+        }
+
+        return $this->render('admin/ajoutMateriel.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'ajoutMaterialForm' =>$form->createView(),
+        ]);
+    }
+
     #[Route('/material_by_category/{id}', name: 'app_material_by_category')]
     public function materialsByCategory(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
     {
@@ -331,13 +361,13 @@ class AdminController extends AbstractController
         $em = $doctrine->getManager();
         $categories = $em->getRepository(CategorieMateriel::class)->findall();
 
-        $banques = new CategorieMateriel();
-        $form = $this->createForm(CategorieMaterielType::class, $banques);
+        $categorie = new CategorieMateriel();
+        $form = $this->createForm(CategorieMaterielType::class, $categorie);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
             $entityManager = $doctrine->getManager();
-            $entityManager->persist($banques);
+            $entityManager->persist($categorie);
             $entityManager->flush();
             $this->addFlash('success', 'Categorie ajouté avec succès');
             return $this->redirectToRoute('app_materials_category');
@@ -490,6 +520,8 @@ class AdminController extends AbstractController
         
         // Retrieve the list of materiels from the database
         $materiels = $em->getRepository(Materiels::class)->findAll();
+
+        $catMateriels = $em->getRepository(CategorieMateriel::class)->findAll();
         
 
         if ($request->isMethod('POST')) {
@@ -561,6 +593,7 @@ class AdminController extends AbstractController
             'controller_name' => 'AdminController',
             'image' => $image,
             'materiels' => $materiels,
+            'categories' => $catMateriels,
             'banques' => $banques,
             'commandes' => $commande,
         ]);

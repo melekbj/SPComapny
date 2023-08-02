@@ -11,9 +11,31 @@
 
 
 		<div class="tab-pane active">
-			
+
+
+    {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                  {{ message }}
+                </div>
+             {% endfor %}
+
+    <div class="row m-2 mb-3 justify-content-between">
+			<div>
 				<h3>Ajouter bon de commande :</h3>
+			</div>
+			<div>
+				<a href="{{path('add_material_route')}}" class="btn btn-dark">
+          Ajouter materiel +
+        </a>
+			</div>
+		</div>
+			
+				
+        
 				<hr>
+        
+
+
 
 				<form method="POST" id="commandForm">
 					<div class="row">
@@ -76,6 +98,7 @@
                     {% for materiel in materiels %}
                       <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
                     {% endfor %}
+                     {# <option value="{{ path('add_material_route') }}">Add New Material</option> #}
                   </select>
                 </div>
                 <div style="display: none;">
@@ -117,8 +140,12 @@
 
 
 
+
+
 <!-- Include jQuery library if not already included -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
 
 <script>
     // Function to add a new material row
@@ -240,6 +267,8 @@
     $("#materialDropdown").show();
   });
 </script>
+
+
 
 
 

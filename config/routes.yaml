@@ -17,6 +17,11 @@ app_verify_account:
     schemes: [https]
     methods: GET 
 
+fetch_categories_route:
+    path: /fetch-categories
+    controller: App\Controller\MaterialController::fetchCategories
+    methods: [GET]
+
 # liste_users:
 #   path: /listeUsers/{userId}
 #   controller: App\Controller\AdminController::getUserAction
