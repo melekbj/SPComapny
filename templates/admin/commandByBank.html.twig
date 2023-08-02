@@ -217,7 +217,7 @@
 												<a href="{{ path('app_show_commande', {'id': item.id}) }}" class="btn btn-info btn-sm">Show</a>
 											{% endif %}
 										</td>
-										{# {% if app.user.getRoles()=='ROLE_SUPER_USER' %}
+										{% if app.user.getRoles()=='ROLE_SUPER_USER' %}
 										<td rowspan="{{ numRows }}">
 											{% if app.user and app.user.commandes.contains(item) %}
 												<div class="dropdown">
@@ -231,8 +231,8 @@
 													</div>
 												</div>
 											{% endif %}
-										</td> #}
-										{# {% endif %} #}
+										</td>
+										{% endif %}
 
 
 

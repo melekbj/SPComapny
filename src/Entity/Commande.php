@@ -51,6 +51,9 @@ class Commande
     #[ORM\ManyToOne(inversedBy: 'commandes')]
     private ?User $user = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $devise = null;
+
 
     public function __construct()
     {
@@ -211,6 +214,18 @@ public function getUser(): ?User
 public function setUser(?User $user): static
 {
     $this->user = $user;
+
+    return $this;
+}
+
+public function getDevise(): ?string
+{
+    return $this->devise;
+}
+
+public function setDevise(?string $devise): static
+{
+    $this->devise = $devise;
 
     return $this;
 }

@@ -522,6 +522,8 @@ class AdminController extends AbstractController
         $materiels = $em->getRepository(Materiels::class)->findAll();
 
         $catMateriels = $em->getRepository(CategorieMateriel::class)->findAll();
+
+        $devises = ['USD', 'EUR', 'GBP', 'JPY'];
         
 
         if ($request->isMethod('POST')) {
@@ -529,6 +531,7 @@ class AdminController extends AbstractController
             $formData = $request->request->all();
             // dd($formData);
             $ref = $formData['ref'];
+            $devise = $formData['devise'];
             $description = $formData['description'];
             $banqueId = $formData['banque'];
             $tauxtva = $formData['tauxtva'];
@@ -548,6 +551,7 @@ class AdminController extends AbstractController
             $commande->setBanque($banque);
             $commande->setDate($date);  
             $commande->setRef($ref);
+            $commande->setDevise($devise);
             $commande->setUser($user);
 
             $em->persist($commande);
@@ -596,6 +600,7 @@ class AdminController extends AbstractController
             'categories' => $catMateriels,
             'banques' => $banques,
             'commandes' => $commande,
+            'devises' => $devises,
         ]);
     }
 
