@@ -73,7 +73,9 @@
                                             <tr>
                                                 {% if loop.first %}
                                                     <td rowspan="{{ commande.commandeMateriels|length }}">{{ commande.description }}</td>
-                                                    <td rowspan="{{ commande.commandeMateriels|length }}">{{ commande.banque.nom }}</td>
+                                                    <td rowspan="{{ commande.commandeMateriels|length }}">
+                                                        <a href="#" data-toggle="modal" data-target="#banquePopup">{{ commande.banque.nom }}</a>
+                                                    </td>
                                                 {% endif %}
                                                 <td>{{ commandeMateriel.materiel.nom }}</td>
                                                 <td>{{ commandeMateriel.quantite }}</td>
@@ -81,7 +83,6 @@
                                                 <td>{{ commandeMateriel.commande.tauxtva * 100 }}%</td>
                                                 <td>{{ commandeMateriel.prixV }}</td>
                                                 <td>{{ commandeMateriel.quantite * commandeMateriel.prixV }}  {{devise}}</td>
-
                                             </tr>
                                             {% set totalHT = totalHT + (commandeMateriel.quantite * commandeMateriel.prixV) %}
                                             
@@ -106,8 +107,6 @@
                                         </th>
                                     </tr>
                                 </table>
-                                {# <p> <span class=" mr-lg-5"></span> {{ totalHT }}</p>
-                                                            <p> <span class=" mr-lg-5">TVA: </span>{{ totalHT * commande.tauxtva }}</p> #}
                             </div>
 
                             <table class="table table-bordered col-xl-12">
@@ -127,6 +126,47 @@
     </div>
 
 
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="banquePopup" tabindex="-1" role="dialog" aria-labelledby="banquePopupLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="banquePopupLabel">Informations sur le banque</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-primary">
+                    <tr>
+                        <th>Nom du banque</th>
+                        <td>{{ commande.banque.nom }}</td>
+                    </tr>
+                    <tr>
+                        <th>Adresse</th>
+                        <td>{{ commande.banque.address }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ commande.banque.mail }}</td>
+                    </tr>
+                    <tr>
+                        <th>Numéro de tel</th>
+                        <td>{{ commande.banque.tel }}</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ commande.banque.descr }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

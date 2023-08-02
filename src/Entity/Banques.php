@@ -43,6 +43,18 @@ class Banques
     #[ORM\OneToMany(mappedBy: 'banque', targetEntity: TresorieHistory::class)]
     private Collection $tresorieHistories;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $address = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $tel = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $mail = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $descr = null;
+
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
@@ -193,6 +205,54 @@ class Banques
                 $tresorieHistory->setBanque(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): static
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getTel(): ?string
+    {
+        return $this->tel;
+    }
+
+    public function setTel(?string $tel): static
+    {
+        $this->tel = $tel;
+
+        return $this;
+    }
+
+    public function getMail(): ?string
+    {
+        return $this->mail;
+    }
+
+    public function setMail(string $mail): static
+    {
+        $this->mail = $mail;
+
+        return $this;
+    }
+
+    public function getDescr(): ?string
+    {
+        return $this->descr;
+    }
+
+    public function setDescr(?string $descr): static
+    {
+        $this->descr = $descr;
 
         return $this;
     }
