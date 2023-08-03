@@ -114,7 +114,8 @@ class AdminController extends AbstractController
         ]);
     }
 
-
+// *************************************Gestion des pays********************************************************
+    
     #[Route('/list_country', name: 'app_list_country')]
     public function listPays(PersistenceManagerRegistry $doctrine, Request $request): Response
     {
@@ -186,6 +187,7 @@ class AdminController extends AbstractController
         ]);
     }
 
+// *************************************Gestion des banques********************************************************
 
     #[Route('/banques', name: 'app_banks')]
     public function Banques(PersistenceManagerRegistry $doctrine, Request $request): Response
@@ -213,6 +215,48 @@ class AdminController extends AbstractController
             'image' => $image,
             'banks' => $banks,
             'bankForm' =>$form->createView(),
+        ]);
+    }
+
+    #[Route('/delete_banque/{id}', name: 'app_delete_banque')]
+    public function deleteBanque(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+        $banques = $em->getRepository(Banques::class)->find($id);
+
+        $em->remove($banques);
+        $em->flush();
+        $this->addFlash('success', 'Banque supprimé avec succès');
+        return $this->redirectToRoute('app_banks');
+    }
+
+    #[Route('/edit_banque/{id}', name: 'app_edit_banque')]
+    public function editBanque(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+        $banques = $em->getRepository(Banques::class)->find($id);
+
+        $form = $this->createForm(EditBanqueType::class, $banques);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($banques);
+            $entityManager->flush();
+            $this->addFlash('success', 'Banque modifié avec succès');
+            return $this->redirectToRoute('app_banks');
+        }
+
+        return $this->render('admin/banques/editBanque.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'editForm' =>$form->createView(),
         ]);
     }
     
@@ -246,7 +290,9 @@ class AdminController extends AbstractController
         ]);
     }
 
-    
+
+// *************************************Gestion des materiels********************************************************
+
     #[Route('/add_material', name: 'add_material_route', methods: ['POST', 'GET'])]
     public function ajoutMaterials(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -308,7 +354,6 @@ class AdminController extends AbstractController
         ]);
     }
 
-
     #[Route('/delete_material/{id}', name: 'app_delete_material')]
     public function deleteMaterial(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
     {
@@ -351,6 +396,7 @@ class AdminController extends AbstractController
         ]);
     }
 
+// *************************************Gestion des categories materiels********************************************************
 
     #[Route('/list_categorie_materials', name: 'app_materials_category')]
     public function Categorymaterials(PersistenceManagerRegistry $doctrine, Request $request): Response
@@ -423,55 +469,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-
-
-    #[Route('/delete_banque/{id}', name: 'app_delete_banque')]
-    public function deleteBanque(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
-    {
-        $user = $this->getUser();
-        $image = $user->getImage();
-
-        $em = $doctrine->getManager();
-        $banques = $em->getRepository(Banques::class)->find($id);
-
-        $em->remove($banques);
-        $em->flush();
-        $this->addFlash('success', 'Banque supprimé avec succès');
-        return $this->redirectToRoute('app_banks');
-    }
-
-    #[Route('/edit_banque/{id}', name: 'app_edit_banque')]
-    public function editBanque(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
-    {
-        $user = $this->getUser();
-        $image = $user->getImage();
-
-        $em = $doctrine->getManager();
-        $banques = $em->getRepository(Banques::class)->find($id);
-
-        $form = $this->createForm(EditBanqueType::class, $banques);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
-            $entityManager = $doctrine->getManager();
-            $entityManager->persist($banques);
-            $entityManager->flush();
-            $this->addFlash('success', 'Banque modifié avec succès');
-            return $this->redirectToRoute('app_banks');
-        }
-
-        return $this->render('admin/banques/editBanque.html.twig', [
-            'controller_name' => 'AdminController',
-            'image' => $image,
-            'editForm' =>$form->createView(),
-        ]);
-    }
-
-    
-
-
-    //gestion des commandes
- 
+// *************************************Gestion des commandes********************************************************
 
     #[Route('/commandes', name: 'app_commandes')]
     public function addCommandes(PersistenceManagerRegistry $doctrine, Request $request): Response
@@ -716,8 +714,6 @@ class AdminController extends AbstractController
     }
 
 
-
-    // add a route app_commands_by_bank
     #[Route('/commandes_by_bank/{id}', name: 'app_commandes_by_bank')]
     public function CommandesByBank(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
     {
@@ -752,37 +748,8 @@ class AdminController extends AbstractController
         ]);
     }
 
-
-    #[Route("/set-etat/{id}/{etat}", name: 'app_set_etat')]
-    public function setEtat($id, $etat,PersistenceManagerRegistry $doctrine)
-    {
-        // Handle the logic to set the "etat" value for the given command ID
-        
-        // Assuming you have an Entity class for the command, you can fetch the entity
-        // and update its "etat" property based on the provided value.
-        $entityManager = $doctrine->getManager();
-        $command = $entityManager->getRepository(Commande::class)->find($id);
-        
-        if (!$command) {
-            throw $this->createNotFoundException('Command not found.');
-        }
-        
-        // Set the new "etat" value
-        $command->setEtat($etat);
-        
-        // Persist the changes to the database
-        $entityManager->flush();
-        
-        // Optionally, you can add a flash message to indicate successful update
-        
-        // Redirect the user to a relevant page (e.g., the command details page)
-        return $this->redirectToRoute('app_commandes');
-    }
-
-
-
     #[Route('/commande_materiel/{id}', name: 'app_show_commande')]
-    public function showCommandeMateriel($id, PersistenceManagerRegistry $doctrine): Response
+    public function showDetailCommande($id, PersistenceManagerRegistry $doctrine): Response
     {
         $user = $this->getUser();
         $image = $user->getImage();
@@ -836,6 +803,97 @@ class AdminController extends AbstractController
     }
 
 
+    #[Route('/commandes_by_user/{id}', name: 'app_commandes_by_user')]
+    public function CommandesByUser(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+        // On récupère la liste des commandes de l'utilisateur En cours...
+        $em = $doctrine->getManager();
+
+        $etat = $request->query->get('etat'); // Retrieve the "etat" value from the query parameters
+
+        $commandeRepository = $em->getRepository(Commande::class);
+
+        // Perform the filtering based on the selected "etat" value and user ID
+        if ($etat) {
+            $commande = $commandeRepository->createQueryBuilder('c')
+                ->where('c.user = :id')
+                ->andWhere('c.etat = :etat')
+                ->setParameters(['id' => $id, 'etat' => $etat])
+                ->getQuery()
+                ->getResult();
+        } else {
+            $commande = $commandeRepository->findBy(['user' => $id]);
+        }
+
+        return $this->render('admin/commandByUser.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'commandes' => $commande,
+            'Id' => $id,
+        ]);
+    }
+
+// *************************************Gestion etat du commande********************************************************
+
+    #[Route("/set-etat/{id}/{etat}", name: 'app_set_etat')]
+    public function setEtat($id, $etat,PersistenceManagerRegistry $doctrine)
+    {
+        // Handle the logic to set the "etat" value for the given command ID
+        
+        // Assuming you have an Entity class for the command, you can fetch the entity
+        // and update its "etat" property based on the provided value.
+        $entityManager = $doctrine->getManager();
+        $command = $entityManager->getRepository(Commande::class)->find($id);
+        
+        if (!$command) {
+            throw $this->createNotFoundException('Command not found.');
+        }
+        
+        // Set the new "etat" value
+        $command->setEtat($etat);
+        
+        // Persist the changes to the database
+        $entityManager->flush();
+        
+        // Optionally, you can add a flash message to indicate successful update
+        
+        // Redirect the user to a relevant page (e.g., the command details page)
+        return $this->redirectToRoute('app_commandes');
+    }
+
+    #[Route('/commandes_expired', name: 'app_commandes_expiration')]
+    public function CommandesExpired(PersistenceManagerRegistry $doctrine, Request $request): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+
+
+        $commandeRepository = $em->getRepository(Commande::class);
+
+        // Get commands older than 30 days
+        $thirtyDaysAgo = new DateTime();
+        $thirtyDaysAgo->sub(new DateInterval('P30D'));
+        $commande = $commandeRepository->createQueryBuilder('c')
+            ->where('c.date < :thirtyDaysAgo')
+            ->setParameter('thirtyDaysAgo', $thirtyDaysAgo)
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('admin/commandes/commandeExpired.html.twig', [
+            'controller_name' => 'AdminController',
+            'image' => $image,
+            'commandes' => $commande,
+        ]);
+    }
+
+
+// *************************************Gestion des utilisateurs********************************************************
+
+    
     #[Route('/liste_users', name: 'app_users')]
     public function ListeUsers(PersistenceManagerRegistry $doctrine, Request $request, UserPasswordHasherInterface $passwordHashed): Response
     {
@@ -916,7 +974,6 @@ class AdminController extends AbstractController
         ]);
     }
 
-    //genrate edit user
     #[Route('/edit_user/{id}', name: 'app_edit_user')]
     public function EditUserAction(Request $request, PersistenceManagerRegistry $doctrine): Response{
         $user = $this->getUser();
@@ -1010,42 +1067,6 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('app_users');
     }
 
-
-    #[Route('/commandes_by_user/{id}', name: 'app_commandes_by_user')]
-    public function CommandesByUser(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
-    {
-        $user = $this->getUser();
-        $image = $user->getImage();
-        // On récupère la liste des commandes de l'utilisateur En cours...
-        $em = $doctrine->getManager();
-
-        $etat = $request->query->get('etat'); // Retrieve the "etat" value from the query parameters
-
-        $commandeRepository = $em->getRepository(Commande::class);
-
-        // Perform the filtering based on the selected "etat" value and user ID
-        if ($etat) {
-            $commande = $commandeRepository->createQueryBuilder('c')
-                ->where('c.user = :id')
-                ->andWhere('c.etat = :etat')
-                ->setParameters(['id' => $id, 'etat' => $etat])
-                ->getQuery()
-                ->getResult();
-        } else {
-            $commande = $commandeRepository->findBy(['user' => $id]);
-        }
-
-        return $this->render('admin/commandByUser.html.twig', [
-            'controller_name' => 'AdminController',
-            'image' => $image,
-            'commandes' => $commande,
-            'Id' => $id,
-        ]);
-    }
-
-
-  
-
     #[Route('/approveU/{id}', name: 'app_approveU')]
     public function approveU($id, UserRepository $rep, PersistenceManagerRegistry $doctrine, SendMailService $mail): Response
     {
@@ -1082,8 +1103,6 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('app_pending_users');
     }
     
-
-
     #[Route('/liste_pending_users', name: 'app_pending_users')]
     public function ListePendingUsers(PersistenceManagerRegistry $doctrine, Request $request): Response
     {
@@ -1103,63 +1122,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-
-
-    #[Route('/commandes_expired', name: 'app_commandes_expiration')]
-    public function CommandesExpired(PersistenceManagerRegistry $doctrine, Request $request): Response
-    {
-        $user = $this->getUser();
-        $image = $user->getImage();
-
-        $em = $doctrine->getManager();
-
-
-        $commandeRepository = $em->getRepository(Commande::class);
-
-        // Get commands older than 30 days
-        $thirtyDaysAgo = new DateTime();
-        $thirtyDaysAgo->sub(new DateInterval('P30D'));
-        $commande = $commandeRepository->createQueryBuilder('c')
-            ->where('c.date < :thirtyDaysAgo')
-            ->setParameter('thirtyDaysAgo', $thirtyDaysAgo)
-            ->getQuery()
-            ->getResult();
-
-        return $this->render('admin/commandes/commandeExpired.html.twig', [
-            'controller_name' => 'AdminController',
-            'image' => $image,
-            'commandes' => $commande,
-        ]);
-    }
-
-    // #[Route('/info/{id}', name: 'app_info_user')]
-    // public function infoUser($id, UserRepository $rep, PersistenceManagerRegistry $doctrine, SendMailService $mail): Response
-    // {
-    //     // Get the user to deactivate
-    //     $user = $rep->find($id);
-
-    //     if (!$user) {
-    //         throw $this->createNotFoundException('User not found');
-    //     }
-
-    //     // Envoi du mail
-    //     $mail->sendMail(
-    //         'melekbejaoui29@gmail.com', 'Secure Print',
-    //         $user->getEmail(),
-    //         'Account Approval Confirmation',
-    //         'info',
-    //         [
-    //             'user' => $user,
-    //         ]
-    //     );
-
-    //     //flash message
-    //     $this->addFlash('success', 'Mail envoyé avec succés !');
-
-    //     return $this->redirectToRoute('app_commandes_expiration');
-    // }
-
-    
+// *************************************Gestion des tresories********************************************************
 
     #[Route('/tresorie', name: 'app_tresorie')]
     public function tresorie(PersistenceManagerRegistry $doctrine, Request $request): Response
@@ -1217,27 +1180,6 @@ class AdminController extends AbstractController
         ]);
     }
 
-    //generate app_historique_tresorie_by_bank
-    // #[Route('/historique_tresorie/{id}', name: 'app_historique_tresorie_by_bank')]
-    // public function showTresorieHistoryByBank(int $bankId, PersistenceManagerRegistry $doctrine): Response
-    // {
-    //     $bank = $doctrine->getRepository(Bank::class)->find($bankId);
-
-    //     if (!$bank) {
-    //         throw $this->createNotFoundException('Bank not found');
-    //     }
-
-    //     // Assuming you have a repository method to find historique by bank id
-    //     $historiques = $doctrine->getRepository(TresorieHistory::class)->findBy(['banque' => $bank]);
-
-    //     return $this->render('admin/histoTresoByBanque.html.twig', [
-    //         'bank' => $bank,
-    //         'historiques' => $historiques,
-    //     ]);
-    // }
-    
-    
-
     #[Route('/edit_tresorie/{id}', name: 'app_edit_tresorie')]
     public function editTresorie(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
     {
@@ -1280,25 +1222,6 @@ class AdminController extends AbstractController
             
         ]);
     }
-
-
-
-   //generate function tresorieByPays
-    // #[Route('/tresorie_by_pays/{id}', name: 'app_tresorie_by_pays')]
-    // public function tresorieByPays(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
-    // {
-    //     $user = $this->getUser();
-    //     $image = $user->getImage();
-        
-    //     $em = $doctrine->getManager();
-    //     $tresorie = $em->getRepository(Tresorie::class)->findBy(['pays' => $id]);
-
-    //     return $this->render('admin/tresorieByPays.html.twig', [
-    //         'controller_name' => 'AdminController',
-    //         'image' => $image,
-    //         'tresories' => $tresorie,
-    //     ]);
-    // }
 
 
 }
