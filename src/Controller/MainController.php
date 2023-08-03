@@ -45,7 +45,7 @@ use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/dashboard')]
-class AdminController extends AbstractController
+class MainController extends AbstractController
 {
     #[Route('/', name: 'app_dashboard')]
     public function index(PersistenceManagerRegistry $doctrine): Response
@@ -84,8 +84,8 @@ class AdminController extends AbstractController
         $oldCommandsCount = count($oldCommands);
         // dd($oldCommandsCount);
 
-        return $this->render('admin/index.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/index.html.twig', [
+            'controller_name' => 'MainController',
             'pendingUsersCount' => $totalUsers,
             'pendingUsersPercentage' => $totalUsersPercentage,
             'totalCommandsCount' => $totalCommands,
@@ -106,8 +106,8 @@ class AdminController extends AbstractController
         $em = $doctrine->getManager();
         $pays = $em->getRepository(Pays::class)->findAll();
 
-        return $this->render('admin/pays.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/pays.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'etats' => $pays,
             
@@ -137,8 +137,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_country');
         }
 
-        return $this->render('admin/pays/listPays.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/pays/listPays.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'etats' => $pays,
             'etatForm' =>$form->createView(),
@@ -180,8 +180,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_list_country');
         }
 
-        return $this->render('admin/pays/editPays.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/pays/editPays.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'editForm' =>$form->createView(),
         ]);
@@ -210,8 +210,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_banks');
         }
 
-        return $this->render('admin/banques/banques.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/banques/banques.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'banks' => $banks,
             'bankForm' =>$form->createView(),
@@ -253,8 +253,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_banks');
         }
 
-        return $this->render('admin/banques/editBanque.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/banques/editBanque.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'editForm' =>$form->createView(),
         ]);
@@ -281,8 +281,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_banks_by_country', ['id' => $id]);
         }
         
-        return $this->render('admin/banksByCountry.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/banksByCountry.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'banks' => $banks,
             'pays' => $pays,
@@ -311,8 +311,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_ajout_bon_commande');
         }
 
-        return $this->render('admin/ajoutMateriel.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/ajoutMateriel.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'ajoutMaterialForm' =>$form->createView(),
         ]);
@@ -346,8 +346,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_material_by_category', ['id' => $id]);
         }
 
-        return $this->render('admin/materialsByCategory.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/materialsByCategory.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'materials' => $materials,
             'materialForm' =>$form->createView(),
@@ -389,8 +389,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_materials_category');
         }
 
-        return $this->render('admin/materiels/editMaterial.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/materiels/editMaterial.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'editForm' =>$form->createView(),
         ]);
@@ -419,8 +419,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_materials_category');
         }
 
-        return $this->render('admin/categorieMateriel/listeCategorie.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/categorieMateriel/listeCategorie.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'categories' => $categories,
             'CategoryForm' =>$form->createView(),
@@ -462,8 +462,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_materials_category');
         }
 
-        return $this->render('admin/categorieMateriel/editCategoryMaterial.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/categorieMateriel/editCategoryMaterial.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'editForm' =>$form->createView(),
         ]);
@@ -492,8 +492,8 @@ class AdminController extends AbstractController
 
         
 
-        return $this->render('admin/commandes/commande.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/commandes/commande.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'materiels' => $materiels,
             'banques' => $banques,
@@ -591,8 +591,8 @@ class AdminController extends AbstractController
 
 
 
-        return $this->render('admin/ajoutCommande.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/ajoutCommande.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'materiels' => $materiels,
             'categories' => $catMateriels,
@@ -681,8 +681,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_commandes');
         }
 
-        return $this->render('admin/commandes/editCommande.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/commandes/editCommande.html.twig', [
+            'controller_name' => 'MainController',
             'commande' => $commande,
             'image' => $image,
             'banques' => $banques,
@@ -740,8 +740,8 @@ class AdminController extends AbstractController
 
        
 
-        return $this->render('admin/commandByBank.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/commandByBank.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'commandes' => $commande,
             'Id' => $id,
@@ -764,8 +764,8 @@ class AdminController extends AbstractController
             throw $this->createNotFoundException('Commande not found');
         }
 
-        return $this->render('admin/detailCommande.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/detailCommande.html.twig', [
+            'controller_name' => 'MainController',
             'commande' => $commande,
             'image' => $image,
         ]);
@@ -793,8 +793,8 @@ class AdminController extends AbstractController
 
         
 
-        return $this->render('admin/commandes/commandeLP.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/commandes/commandeLP.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'materiels' => $materiels,
             'banques' => $banques,
@@ -827,8 +827,8 @@ class AdminController extends AbstractController
             $commande = $commandeRepository->findBy(['user' => $id]);
         }
 
-        return $this->render('admin/commandByUser.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/commandByUser.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'commandes' => $commande,
             'Id' => $id,
@@ -883,8 +883,8 @@ class AdminController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        return $this->render('admin/commandes/commandeExpired.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/commandes/commandeExpired.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'commandes' => $commande,
         ]);
@@ -964,8 +964,8 @@ class AdminController extends AbstractController
 
 
 
-        return $this->render('admin/ListeUsers.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/ListeUsers.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'users' => $users,
             'allUsers' => $allUsers,
@@ -988,8 +988,8 @@ class AdminController extends AbstractController
             $this->addFlash('success', 'User modifié avec succès');
             return $this->redirectToRoute('app_users');
         }
-        return $this->render('admin/editUser.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/editUser.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'editForm' =>$form->createView(),
         ]);
@@ -1115,8 +1115,8 @@ class AdminController extends AbstractController
 
         $users = $em->getRepository(User::class)->findBy(['etat' => 'pending']);
 
-        return $this->render('admin/ListePendingUsers.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/ListePendingUsers.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'users' => $users,
         ]);
@@ -1133,8 +1133,8 @@ class AdminController extends AbstractController
         $em = $doctrine->getManager();
         $pays = $em->getRepository(Pays::class)->findAll();
 
-        return $this->render('admin/tresorie.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/tresorie.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'etats' => $pays,
             
@@ -1142,7 +1142,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/liste_tresorie_banque/{id}', name: 'app_tresorie_banque')]
-    public function TresorieBanque(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    public function TresorieBanque(Pays $pays,PersistenceManagerRegistry $doctrine, Request $request, $id): Response
     {
         $user = $this->getUser();
         $image = $user->getImage();
@@ -1171,12 +1171,13 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_tresorie_banque', ['id' => $id]);
         }
 
-        return $this->render('admin/tresorieBanques.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/tresorieBanques.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'tresories' => $tresoriee,
             'tresorieForm' =>$form->createView(),
             'tresorieHistory' => $tresorieHistory,
+            'pays' => $pays,
         ]);
     }
 
@@ -1215,8 +1216,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_tresorie_banque', ['id' => $paysId]);
         }
 
-        return $this->render('admin/editTresorie.html.twig', [
-            'controller_name' => 'AdminController',
+        return $this->render('main/editTresorie.html.twig', [
+            'controller_name' => 'MainController',
             'image' => $image,
             'editForm' =>$form->createView(),
             

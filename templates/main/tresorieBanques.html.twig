@@ -22,11 +22,9 @@
 					{% endfor %}
 					<div class="card-body">
 						<h4 class="card-title">Liste des tresories</h4>
-						{# <p class="card-description">
-						                    Add class <code>.table-striped</code>
-						                  </p> #}
+						<h3 class="card-header font-italic font-weight-bold text-capitalize text-center text-primary">{{pays.nom}}</h3>
 						<div class="table-responsive">
-							<table class="table table-striped">
+							<table class="table table-bordered">
 								<thead>
 									<tr>
 										<th>
@@ -55,6 +53,7 @@
 									</tr>
 								</thead>
 								<tbody>
+								{% set sum = 0 %}
 									{% for item in tresories %}
 										<tr>
 											<td>
@@ -69,12 +68,14 @@
 											<td>
 												{{item.sortie}}
 											</td>
-											 <td>
+											<td>
 												{{ item.solder + item.entree - item.sortie }}
 											</td>
 											 <td>
 												{{ item.date | date('d-m-Y') }}
 											</td>
+
+											{% set sum = sum + (item.solder + item.entree - item.sortie)  %}
 											
 											{# <td>
 												{{item.banque.pays.nom}}
@@ -88,6 +89,17 @@
 
 										</tr>
 									{% endfor %}
+
+									<tr>
+										<th>Total</th>
+										<td>
+											<span id="sumSoldeReel">0</span>
+										</td>
+										<td colspan="2"></td>
+										<td>
+											{{sum}}
+										</td>
+									</tr>
 								</tbody>
 							</table>
 
@@ -111,28 +123,43 @@
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog  modal-xl" role="document">
+	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Ajouter nouveau commande</h5>
+				<h5 class="modal-title" id="exampleModalLabel">Ajouter tresorie</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
-
-             {{form(tresorieForm)}}   
-
-
+            	{{form(tresorieForm)}}   
 			</div>
-
-			{# <div class="modal-footer">
-			                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			                                <button type="submit" class="btn btn-primary">Save changes</button>
-			                              </div> #}
 		</div>
 	</div>
 </div>
+
+
+
+<script>
+    // JavaScript code to calculate the sum of "Solde réel" and update the table
+    document.addEventListener("DOMContentLoaded", function () {
+        const soldeReelCells = document.querySelectorAll("tbody td:nth-child(2)"); // Select all "Solde réel" cells in the table body
+        let sumSoldeReel = 0;
+
+        // Calculate the sum of "Solde réel"
+        soldeReelCells.forEach((cell) => {
+            sumSoldeReel += parseFloat(cell.innerText); // Assuming the "Solde réel" values are numbers (can handle decimals)
+        });
+
+        // Update the value in the "Sum Solde réel" cell
+        const sumSoldeReelCell = document.getElementById("sumSoldeReel");
+        sumSoldeReelCell.innerText = sumSoldeReel;
+    });
+</script>
+
+
+
+
 
 
 
