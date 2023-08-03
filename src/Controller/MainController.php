@@ -1225,4 +1225,27 @@ class MainController extends AbstractController
     }
 
 
+    #[Route('/historique_tresorie', name: 'historique_tresorie')]
+    public function historiqueTresorieByBank(PersistenceManagerRegistry $doctrine, Request $request): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+        $em = $doctrine->getManager();
+
+        // Get the TresorieHistory entries filtered by bank id
+        $tresorieHistory = $em->getRepository(TresorieHistory::class)->findAll();
+
+        return $this->render('main/historiqueTresorie.html.twig', [
+            'controller_name' => 'MainController',
+            'image' => $image,
+            'tresorieHistory' => $tresorieHistory, // Pass the filtered results to the template
+        ]);
+    }
+
+
+
+
+
+
+
 }

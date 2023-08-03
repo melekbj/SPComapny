@@ -45,20 +45,23 @@
 										<th>
 											Date
 										</th>
-										{# {% if app.user.getRoles()=='ROLE_ADMIN' %}
+										{% if app.user.getRoles()=='ROLE_SUPER_USER' %}
 											<th>
 												Actions
 											</th>
-										{% endif %} #}
+										{% endif %}
 									</tr>
 								</thead>
 								<tbody>
-								{% set sum = 0 %}
+								{% set sumAM = 0 %}
+								{% set sumSR = 0 %}
 									{% for item in tresories %}
 										<tr>
+											
 											<td>
 												{{item.banque.nom}}
 											</td>
+											
 											<td>
 												{{item.solder}}											
 											</td>
@@ -75,8 +78,8 @@
 												{{ item.date | date('d-m-Y') }}
 											</td>
 
-											{% set sum = sum + (item.solder + item.entree - item.sortie)  %}
-											
+											{% set sumAM = sumAM + (item.solder + item.entree - item.sortie)  %}
+											{% set sumSR = sumSR + item.solder %}
 											{# <td>
 												{{item.banque.pays.nom}}
 											</td> #}
@@ -92,14 +95,12 @@
 
 									<tr>
 										<th>Total</th>
-										<td>
-											<span id="sumSoldeReel">0</span>
-										</td>
+										<td colspan="1">{{ sumSR }}</td>
 										<td colspan="2"></td>
-										<td>
-											{{sum}}
-										</td>
+										<td>{{ sumAM }}</td>
+										<td colspan="2"></td>
 									</tr>
+
 								</tbody>
 							</table>
 
@@ -139,23 +140,6 @@
 </div>
 
 
-
-<script>
-    // JavaScript code to calculate the sum of "Solde réel" and update the table
-    document.addEventListener("DOMContentLoaded", function () {
-        const soldeReelCells = document.querySelectorAll("tbody td:nth-child(2)"); // Select all "Solde réel" cells in the table body
-        let sumSoldeReel = 0;
-
-        // Calculate the sum of "Solde réel"
-        soldeReelCells.forEach((cell) => {
-            sumSoldeReel += parseFloat(cell.innerText); // Assuming the "Solde réel" values are numbers (can handle decimals)
-        });
-
-        // Update the value in the "Sum Solde réel" cell
-        const sumSoldeReelCell = document.getElementById("sumSoldeReel");
-        sumSoldeReelCell.innerText = sumSoldeReel;
-    });
-</script>
 
 
 
