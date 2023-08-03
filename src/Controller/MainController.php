@@ -52,11 +52,23 @@ class MainController extends AbstractController
     {
         $user = $this->getUser();
         $image = $user->getImage();
-
+        
+        $tresorieRepo = $doctrine->getRepository(Tresorie::class);
         $userRepository = $doctrine->getRepository(User::class);
         $commandRepository = $doctrine->getRepository(Commande::class);
 
-        // Get all pending users
+        // Get total number of commands
+        $totalCommands = count($commandRepository->findAll());
+
+        $solderSum = $tresorieRepo->createQueryBuilder('t')
+            ->select('SUM(t.solde_r) as totalSolder')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $finishedCommands = $commandRepository->findBy(['etat' => 'livrepaye']);
+        $allFinishedCommands = count($finishedCommands);
+        $totalFinishedCommandsPercentage = ( $allFinishedCommands / $totalCommands) * 100;
+
         $pendingUsers = $userRepository->findBy(['etat' => 'pending']);
         $allUsers = $userRepository->findAll();
         
@@ -65,8 +77,7 @@ class MainController extends AbstractController
         $totalUsers = count($pendingUsers);
         $totalUsersPercentage = ($totalUsers / count($userRepository->findAll())) * 100;
 
-        // Get total number of commands
-        $totalCommands = count($commandRepository->findAll());
+        
 
         // Calculate the percentage of commands
         $totalCommandsPercentage = ($totalCommands / $totalAllUsers) * 100;
@@ -86,12 +97,15 @@ class MainController extends AbstractController
 
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
+            'image' => $image,
             'pendingUsersCount' => $totalUsers,
             'pendingUsersPercentage' => $totalUsersPercentage,
             'totalCommandsCount' => $totalCommands,
             'totalCommandsPercentage' => $totalCommandsPercentage,
-            'image' => $image,
             'oldCommandsCount' => $oldCommandsCount,
+            'solderSum' => $solderSum,
+            'allFinishedCommands' => $allFinishedCommands,
+            'percentageFinishedC' => $totalFinishedCommandsPercentage
 
         ]);
     }
