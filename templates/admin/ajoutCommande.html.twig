@@ -4,6 +4,32 @@
 {% block body %}
 
 
+<style>
+  /* Add inline-block display for the inputs and button inside "horizontal-container" */
+  .horizontal-container input {
+    display: inline-block;
+    
+    /* Optional: Adjust other styles for spacing and alignment */
+    /* For example: */
+     margin-top: 16px;
+     margin-right: 16px;
+    /* vertical-align: middle; // Align elements vertically */
+  }
+  .horizontal-container button {
+
+    display: inline-block;
+    
+
+
+  }
+  /* Make sure to hide the contents of the div when it's set to display: none */
+  .horizontal-container[style*="display: none"] {
+    display: none;
+  }
+</style>
+
+
+
 <div class="container mt-5">
 
 
@@ -107,22 +133,20 @@
                   <select class="form-control materialSelect mt-3" onchange="showSelectedMaterial()" name="materialSelect[]" required>
                     <option value="">Choisir matériel</option>
                     {% for materiel in materiels %}
-                      <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
+                      <option value="{{ materiel.id }}" data-price="{{ materiel.pu }}">{{ materiel.nom }}</option>
                     {% endfor %}
-                     {# <option value="{{ path('add_material_route') }}">Add New Material</option> #}
                   </select>
                 </div>
-                <div style="display: none;">
-                  {# <label for="quantite">Quantité</label> #}
-                  <input class="form-control quantity" name="quantite[]" pattern="[0-9]+" title="Please enter an integer number"/>
-                  {# <label for="price">Prix de vente</label> #}
-                  <input class="form-control price" type="text" name="price[]" pattern="\d+(\.\d+)?" title="Please enter a valid float number"/>
-                  <button class="mt-3 addMaterial btn btn-info" type="button"><span style="font-size:16px;">+</span></button>
+                <div class="horizontal-container" style="display: none;">
+                  <input type="number" class=" col-md-4 form-control quantity" name="quantite[]" placeholder="Quantité" pattern="[0-9]+" title="Please enter an integer number" required/>
+                  <input class=" col-md-4 form-control price" type="text" name="price[]" value=""  pattern="\d+(\.\d+)?" title="Please enter a valid float number"/>
+                  <button class=" addMaterial btn btn-info" type="button"><span style="font-size:16px;">+</span></button>
                 </div>
                 
               </div>
             </div>
           </div>
+          
 
 
 					
@@ -155,8 +179,6 @@
 
 <!-- Include jQuery library if not already included -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
 
 <script>
     // Function to add a new material row
@@ -226,18 +248,25 @@
 <script>
   // Function to show/hide the quantity and price div based on material selection
   function showSelectedMaterial() 
-  {
-    const materialContainers = document.querySelectorAll('.material-container');
-    materialContainers.forEach((container) => {
-      const select = container.querySelector('.materialSelect');
-      const divToShowHide = container.querySelector('.quantity').parentElement;
-      if (select.value !== '') {
-        divToShowHide.style.display = 'block';
-      } else {
-        divToShowHide.style.display = 'none';
-      }
-    });
-  }
+{
+  const materialContainers = document.querySelectorAll('.material-container');
+  materialContainers.forEach((container) => {
+    const select = container.querySelector('.materialSelect');
+    const priceInput = container.querySelector('.price');
+    const selectedOption = select.options[select.selectedIndex]; // Corrected variable name here
+    const price = selectedOption.getAttribute('data-price');
+
+    priceInput.value = price;
+    const divToShowHide = container.querySelector('.quantity').parentElement;
+  
+    if (select.value !== '') {
+      divToShowHide.style.display = 'inline-block';
+    } else {
+      divToShowHide.style.display = 'none';
+    }
+  });
+}
+
 
     // Get the container for material select dropdowns
     const materialContainers = document.getElementById('materialContainers');

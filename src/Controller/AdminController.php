@@ -504,7 +504,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/ajout_commande', name: 'app_ajout_bon_commande')]
-    public function ajoutCommandes(PersistenceManagerRegistry $doctrine, Request $request): Response
+    public function ajoutCommandes( PersistenceManagerRegistry $doctrine, Request $request): Response
     {
         // Get the user and image information
         $user = $this->getUser();
