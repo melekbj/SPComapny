@@ -83,16 +83,19 @@ class MainController extends AbstractController
         $totalCommandsPercentage = ($totalCommands / $totalAllUsers) * 100;
 
         // Get commands older than 30 days
-        $thirtyDaysAgo = new DateTime();
-        $thirtyDaysAgo->sub(new DateInterval('P30D'));
-        $oldCommands = $commandRepository->createQueryBuilder('c')
-            ->where('c.date < :thirtyDaysAgo')
-            ->setParameter('thirtyDaysAgo', $thirtyDaysAgo)
-            ->getQuery()
-            ->getResult();
+        // $thirtyDaysAgo = new DateTime();
+        // $thirtyDaysAgo->sub(new DateInterval('P30D'));
 
-        // Count the number of old commands
-        $oldCommandsCount = count($oldCommands);
+        // $oldCommands = $commandeRepository->createQueryBuilder('c')
+        //     ->where('c.date < :thirtyDaysAgo')
+        //     ->andWhere('c.etat = :etat')
+        //     ->setParameter('thirtyDaysAgo', $thirtyDaysAgo)
+        //     ->setParameter('etat', 'pending')
+        //     ->getQuery()
+        //     ->getResult();
+
+        // // Count the number of old commands
+        // $oldCommandsCount = count($oldCommands);
         // dd($oldCommandsCount);
 
         return $this->render('main/index.html.twig', [
@@ -102,7 +105,7 @@ class MainController extends AbstractController
             'pendingUsersPercentage' => $totalUsersPercentage,
             'totalCommandsCount' => $totalCommands,
             'totalCommandsPercentage' => $totalCommandsPercentage,
-            'oldCommandsCount' => $oldCommandsCount,
+            // 'oldCommandsCount' => $oldCommandsCount,
             'solderSum' => $solderSum,
             'allFinishedCommands' => $allFinishedCommands,
             'percentageFinishedC' => $totalFinishedCommandsPercentage
@@ -486,7 +489,7 @@ class MainController extends AbstractController
 // *************************************Gestion des commandes********************************************************
 
     #[Route('/commandes', name: 'app_commandes')]
-    public function addCommandes(PersistenceManagerRegistry $doctrine, Request $request): Response
+    public function ListeCommandes(PersistenceManagerRegistry $doctrine, Request $request): Response
     {
         // Get the user and image information
         $user = $this->getUser();
@@ -636,6 +639,8 @@ class MainController extends AbstractController
         // Retrieve the command entity
         $commande = $em->getRepository(Commande::class)->find($id);
 
+        $devises = ['USD', 'EUR', 'GBP', 'JPY'];
+
         // Check if the command exists
         if (!$commande) {
             throw $this->createNotFoundException('Commande not found');
@@ -644,6 +649,7 @@ class MainController extends AbstractController
         if ($request->isMethod('POST')) {
             // Get the submitted data
             $description = $request->request->get('description');
+            $devise = $request->request->get('devise');
             $tauxtva = $request->request->get('tauxtva');
             $avance = $request->request->get('avance');
             $ref = $request->request->get('ref');
@@ -651,21 +657,23 @@ class MainController extends AbstractController
             $date = \DateTime::createFromFormat('Y-m-d', $dateString); // Assuming the date format is "YYYY-MM-DD"
             $banqueId = $request->request->get('banque');
             $materielIds = $request->request->all('materiel');
+            
 
             // Retrieve the selected Banque entity
             $banque = $em->getRepository(Banques::class)->find($banqueId);
-
+            
             // Update the command attributes
             $commande->setDescription($description);
             $commande->setTauxTVA($tauxtva);
             $commande->setAvance($avance);
             $commande->setBanque($banque);
             $commande->setDate($date);
+            $commande->setDevise($devise);
             $commande->setRef($ref);
 
             // Retrieve the current materials of the command
             $currentMaterials = $commande->getCommandeMateriels()->toArray();
-
+            // $prices = $formData['price'];
             // Iterate over the current materials and remove them from the command
             foreach ($currentMaterials as $currentMaterial) {
                 $commande->removeCommandeMateriel($currentMaterial);
@@ -676,12 +684,14 @@ class MainController extends AbstractController
             foreach ($materielIds as $materielId) {
                 $materiel = $em->getRepository(Materiels::class)->find($materielId);
                 $quantity = $request->request->get('textarea' . $materielId);
+                $price = $request->request->get('price' . $materielId);
 
                 // Create a new CommandMaterial instance
                 $commandMaterial = new CommandeMateriels();
                 $commandMaterial->setCommande($commande);
                 $commandMaterial->setMateriel($materiel);
                 $commandMaterial->setQuantite($quantity);
+                $commandMaterial->setPrixV($price);
 
                 // Persist the CommandMaterial entity
                 $em->persist($commandMaterial);
@@ -700,6 +710,7 @@ class MainController extends AbstractController
             'commande' => $commande,
             'image' => $image,
             'banques' => $banques,
+            'devises' => $devises,
             'materiels' => $materiels,
         ]);
     }
@@ -884,23 +895,24 @@ class MainController extends AbstractController
         $image = $user->getImage();
 
         $em = $doctrine->getManager();
-
-
         $commandeRepository = $em->getRepository(Commande::class);
 
-        // Get commands older than 30 days
+        // Get commands older than 30 days and with 'pending' state
         $thirtyDaysAgo = new DateTime();
         $thirtyDaysAgo->sub(new DateInterval('P30D'));
-        $commande = $commandeRepository->createQueryBuilder('c')
+
+        $commandes = $commandeRepository->createQueryBuilder('c')
             ->where('c.date < :thirtyDaysAgo')
+            ->andWhere('c.etat = :etat')
             ->setParameter('thirtyDaysAgo', $thirtyDaysAgo)
+            ->setParameter('etat', 'pending')
             ->getQuery()
             ->getResult();
 
         return $this->render('main/commandes/commandeExpired.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
-            'commandes' => $commande,
+            'commandes' => $commandes,
         ]);
     }
 

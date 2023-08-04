@@ -26,7 +26,7 @@
                 </div>
              {% endfor %}
                 <div class="card-body">
-                  <h4 class="card-title">Commands expired</h4>
+                  <h4 class="card-title">Commandes expirées</h4>
 
                   <div class="table-responsive">
 
@@ -47,7 +47,7 @@
 										<th>Etat</th>
 										<th>Actions</th>
 										{% if app.user.getRoles()=='ROLE_SUPER_USER' %}
-										{# <th>Gérer etat</th> #}
+										<th>Gérer etat</th>
 										{# <th>Send message</th> #}
 										{% endif %}
 									</tr>
@@ -106,7 +106,7 @@
 												</button>
 											</form>
 										</td> #}
-										{# {% if app.user.getRoles()=='ROLE_SUPER_USER' %}
+										{% if app.user.getRoles()=='ROLE_SUPER_USER' %}
 										<td rowspan="{{ numRows }}">
 											{% if app.user and app.user.commandes.contains(item) %}
 												<div class="dropdown">
@@ -120,8 +120,8 @@
 													</div>
 												</div>
 											{% endif %}
-										</td> #}
-										{# {% endif %} #}
+										</td>
+										{% endif %}
 
 
 

@@ -31,7 +31,9 @@ class AppExtension extends AbstractExtension
         $thirtyDaysAgo->sub(new DateInterval('P30D'));
         $oldCommands = $this->commandRepository->createQueryBuilder('c')
             ->where('c.date < :thirtyDaysAgo')
+            ->andWhere('c.etat = :etat')
             ->setParameter('thirtyDaysAgo', $thirtyDaysAgo)
+            ->setParameter('etat', 'pending')
             ->getQuery()
             ->getResult();
 
