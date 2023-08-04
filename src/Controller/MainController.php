@@ -1233,6 +1233,7 @@ class MainController extends AbstractController
             $tresorieHistory->setSortie($tresorie->getSortie());
             $tresorieHistory->setBanque($tresorie->getBanque());
             $tresorieHistory->setUpdatedAt(); 
+            $tresorieHistory->setUser($user); 
             $entityManager->persist($tresorieHistory);
 
             $entityManager->flush();

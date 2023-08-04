@@ -45,11 +45,12 @@
 										<th>
 											Date
 										</th>
-										{% if app.user.getRoles()=='ROLE_SUPER_USER' %}
-											<th>
-												Actions
-											</th>
-										{% endif %}
+										{# <th>
+											User name
+										</th> #}
+										<th colspan="2">
+											Actions
+										</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -81,14 +82,18 @@
 											{% set sumAM = sumAM + (item.solder + item.entree - item.sortie)  %}
 											{% set sumSR = sumSR + item.solder %}
 											{# <td>
-												{{item.banque.pays.nom}}
+												{{item.user.nom}}
 											</td> #}
-											{# {% if app.user.getRoles()=='ROLE_ADMIN' %} #}
+											{% if app.user.getRoles()=='ROLE_SUPER_USER' %}
 												<td>
 													<a href="{{path('app_edit_tresorie', {'id': item.id})}}" class="btn btn-success btn-sm">Edit</a>
+												</td>
+											{% endif %}
+											
+												<td>
 													<a href="{{path('app_show_bank_tresorie', {'id': item.id})}}" class="btn btn-info btn-sm">Historique</a>
 												</td>
-											{# {% endif %} #}
+
 
 										</tr>
 									{% endfor %}
@@ -98,7 +103,7 @@
 										<td colspan="1">{{ sumSR }}</td>
 										<td colspan="2"></td>
 										<td>{{ sumAM }}</td>
-										<td colspan="2"></td>
+										<td colspan="3"></td>
 									</tr>
 
 								</tbody>

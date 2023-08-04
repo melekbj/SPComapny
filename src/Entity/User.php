@@ -60,10 +60,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: false)]
     private ?bool $verified = false;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: TresorieHistory::class)]
+    private Collection $tresorieHistories;
+
 
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
+        $this->tresorieHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -237,6 +241,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setVerified(?bool $verified): static
     {
         $this->verified = $verified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TresorieHistory>
+     */
+    public function getTresorieHistories(): Collection
+    {
+        return $this->tresorieHistories;
+    }
+
+    public function addTresorieHistory(TresorieHistory $tresorieHistory): static
+    {
+        if (!$this->tresorieHistories->contains($tresorieHistory)) {
+            $this->tresorieHistories->add($tresorieHistory);
+            $tresorieHistory->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTresorieHistory(TresorieHistory $tresorieHistory): static
+    {
+        if ($this->tresorieHistories->removeElement($tresorieHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($tresorieHistory->getUser() === $this) {
+                $tresorieHistory->setUser(null);
+            }
+        }
 
         return $this;
     }
