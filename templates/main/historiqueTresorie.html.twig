@@ -44,7 +44,7 @@
 								<tbody>
 								{% set sumAM = 0 %}
 								{% set sumSR = 0 %}
-									{% for item in tresorieHistory %}
+									{% for item in bankHistory %}
 										<tr>
 											<td>
 												{{item.banque.nom}}
@@ -62,7 +62,7 @@
 												{{ item.solder + item.entree - item.sortie }}
 											</td>
 											 <td>
-												{{ item.updatedAt | date('d-m-Y') }}
+												{{ item.updatedAt | date('d-m-Y H:i') }}
 											</td>
 
 											{% set sumAM = sumAM + (item.solder + item.entree - item.sortie)  %}
