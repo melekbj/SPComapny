@@ -17,6 +17,10 @@ app_verify_account:
     schemes: [https]
     methods: GET 
 
+status_counts:
+    path: /status_counts
+    controller: App\Controller\MainController::getStatusCounts
+
 
 # liste_users:
 #   path: /listeUsers/{userId}

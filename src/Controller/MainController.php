@@ -77,38 +77,43 @@ class MainController extends AbstractController
         $totalUsers = count($pendingUsers);
         $totalUsersPercentage = ($totalUsers / count($userRepository->findAll())) * 100;
 
-        
-
         // Calculate the percentage of commands
         $totalCommandsPercentage = ($totalCommands / $totalAllUsers) * 100;
+        
+        // command status to be displayed in chart
+        $pendingC = $commandRepository->count(['etat' => 'pending']);
+        $livrepaye = $commandRepository->count(['etat' => 'livrepaye']);
+        $livrenonpaye = $commandRepository->count(['etat' => 'livrenonpaye']);
+        $nonlivre = $commandRepository->count(['etat' => 'nonlivre']);
 
-        // Get commands older than 30 days
-        // $thirtyDaysAgo = new DateTime();
-        // $thirtyDaysAgo->sub(new DateInterval('P30D'));
 
-        // $oldCommands = $commandeRepository->createQueryBuilder('c')
-        //     ->where('c.date < :thirtyDaysAgo')
-        //     ->andWhere('c.etat = :etat')
-        //     ->setParameter('thirtyDaysAgo', $thirtyDaysAgo)
-        //     ->setParameter('etat', 'pending')
-        //     ->getQuery()
-        //     ->getResult();
+        // users status to be displayed in chart
+        $pendingU = $userRepository->count(['etat' => 'pending']);
+        $approved = $userRepository->count(['etat' => 'approved']);
+        $blocked = $userRepository->count(['etat' => 'blocked']);
+        $deblocked = $userRepository->count(['etat' => 'debloqué']);
 
-        // // Count the number of old commands
-        // $oldCommandsCount = count($oldCommands);
-        // dd($oldCommandsCount);
+       
 
-        return $this->render('main/index.html.twig', [
+        
+        return $this->render('main/pays/index.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'pendingUsersCount' => $totalUsers,
             'pendingUsersPercentage' => $totalUsersPercentage,
             'totalCommandsCount' => $totalCommands,
             'totalCommandsPercentage' => $totalCommandsPercentage,
-            // 'oldCommandsCount' => $oldCommandsCount,
             'solderSum' => $solderSum,
             'allFinishedCommands' => $allFinishedCommands,
-            'percentageFinishedC' => $totalFinishedCommandsPercentage
+            'percentageFinishedC' => $totalFinishedCommandsPercentage,
+            'pendingC' => $pendingC,
+            'livrepaye' => $livrepaye,
+            'livrenonpaye' => $livrenonpaye,
+            'nonlivre' => $nonlivre,
+            'pendingU' => $pendingU,
+            'approved' => $approved,
+            'blocked' => $blocked,
+            'deblocked' => $deblocked,
 
         ]);
     }
@@ -123,7 +128,7 @@ class MainController extends AbstractController
         $em = $doctrine->getManager();
         $pays = $em->getRepository(Pays::class)->findAll();
 
-        return $this->render('main/pays.html.twig', [
+        return $this->render('main/pays/pays.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'etats' => $pays,
@@ -298,7 +303,7 @@ class MainController extends AbstractController
             return $this->redirectToRoute('app_banks_by_country', ['id' => $id]);
         }
         
-        return $this->render('main/banksByCountry.html.twig', [
+        return $this->render('main/banques/banksByCountry.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'banks' => $banks,
@@ -328,7 +333,7 @@ class MainController extends AbstractController
             return $this->redirectToRoute('app_ajout_bon_commande');
         }
 
-        return $this->render('main/ajoutMateriel.html.twig', [
+        return $this->render('main/materiels/ajoutMateriel.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'ajoutMaterialForm' =>$form->createView(),
@@ -363,7 +368,7 @@ class MainController extends AbstractController
             return $this->redirectToRoute('app_material_by_category', ['id' => $id]);
         }
 
-        return $this->render('main/materialsByCategory.html.twig', [
+        return $this->render('main/materiels/materialsByCategory.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'materials' => $materials,
@@ -608,7 +613,7 @@ class MainController extends AbstractController
 
 
 
-        return $this->render('main/ajoutCommande.html.twig', [
+        return $this->render('main/commandes/ajoutCommande.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'materiels' => $materiels,
@@ -765,7 +770,7 @@ class MainController extends AbstractController
 
        
 
-        return $this->render('main/commandByBank.html.twig', [
+        return $this->render('main/commandes/commandByBank.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'commandes' => $commande,
@@ -789,7 +794,7 @@ class MainController extends AbstractController
             throw $this->createNotFoundException('Commande not found');
         }
 
-        return $this->render('main/detailCommande.html.twig', [
+        return $this->render('main/commandes/detailCommande.html.twig', [
             'controller_name' => 'MainController',
             'commande' => $commande,
             'image' => $image,
@@ -852,7 +857,7 @@ class MainController extends AbstractController
             $commande = $commandeRepository->findBy(['user' => $id]);
         }
 
-        return $this->render('main/commandByUser.html.twig', [
+        return $this->render('main/commandes/commandByUser.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'commandes' => $commande,
@@ -990,7 +995,7 @@ class MainController extends AbstractController
 
 
 
-        return $this->render('main/ListeUsers.html.twig', [
+        return $this->render('main/users/ListeUsers.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'users' => $users,
@@ -1014,7 +1019,7 @@ class MainController extends AbstractController
             $this->addFlash('success', 'User modifié avec succès');
             return $this->redirectToRoute('app_users');
         }
-        return $this->render('main/editUser.html.twig', [
+        return $this->render('main/users/editUser.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'editForm' =>$form->createView(),
@@ -1141,7 +1146,7 @@ class MainController extends AbstractController
 
         $users = $em->getRepository(User::class)->findBy(['etat' => 'pending']);
 
-        return $this->render('main/ListePendingUsers.html.twig', [
+        return $this->render('main/users/ListePendingUsers.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'users' => $users,
@@ -1159,7 +1164,7 @@ class MainController extends AbstractController
         $em = $doctrine->getManager();
         $pays = $em->getRepository(Pays::class)->findAll();
 
-        return $this->render('main/tresorie.html.twig', [
+        return $this->render('main/tresories/tresorie.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'etats' => $pays,
@@ -1197,7 +1202,7 @@ class MainController extends AbstractController
             return $this->redirectToRoute('app_tresorie_banque', ['id' => $id]);
         }
 
-        return $this->render('main/tresorieBanques.html.twig', [
+        return $this->render('main/tresories/tresorieBanques.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'tresories' => $tresoriee,
@@ -1243,7 +1248,7 @@ class MainController extends AbstractController
             return $this->redirectToRoute('app_tresorie_banque', ['id' => $paysId]);
         }
 
-        return $this->render('main/editTresorie.html.twig', [
+        return $this->render('main/tresories/editTresorie.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'editForm' =>$form->createView(),
@@ -1265,7 +1270,7 @@ class MainController extends AbstractController
         $bankHistory = $em->getRepository(TresorieHistory::class)->findBy(['banque' => $tresorie->getBanque()]);
 
 
-        return $this->render('main/historiqueTresorie.html.twig', [
+        return $this->render('main/tresories/historiqueTresorie.html.twig', [
             'bankHistory' => $bankHistory,
             'tresorie' => $tresorie,
             'image' => $image,
