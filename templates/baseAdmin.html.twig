@@ -131,11 +131,12 @@
         
         <ul class="navbar-nav navbar-nav-right">
           {% set oldCommandsCount = oldCommandsCount() %}
+          {% set pendingUsersCount = pendingUsersCount() %}
           <li class="nav-item dropdown">
             <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
               <i class="icon-bell mx-0"></i>
 
-              {% if oldCommandsCount > 0 %}
+              {% if oldCommandsCount > 0 or pendingUsersCount > 0 %}
                 <span class="count"></span>
               {% endif %}
             </a>
@@ -143,7 +144,8 @@
               <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
 
 
-              {% if oldCommandsCount > 0 %}
+              {% if oldCommandsCount > 0 or pendingUsersCount > 0 %}
+                {% if oldCommandsCount > 0 %}
                 <a href="{{path('app_commandes_expiration')}}" class="dropdown-item preview-item">
                   <div class="preview-thumbnail">
                     <div class="preview-icon bg-success">
@@ -169,6 +171,30 @@
 
                   </div>
                 </a>
+                {% endif %}
+                {% if pendingUsersCount > 0 %}
+                  <a href="{{path('app_pending_users')}}" class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-info">
+                        <i class="ti-user mx-0"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <h6 class="preview-subject font-weight-normal">Inscription nouveau super utilisateur</h6>
+
+                      <p class="font-weight-light small-text text-muted">
+
+                        Veuillez patienter !
+                        <br>
+                        Vous avez
+                        <span class="">{{ pendingUsersCount }}
+                        nouvelle invitation
+                      </p>
+
+
+                    </div>
+                  </a>
+                {% endif %}
 
               {% else %}
                 <a class="dropdown-item preview-item">

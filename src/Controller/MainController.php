@@ -96,7 +96,7 @@ class MainController extends AbstractController
        
 
         
-        return $this->render('main/pays/index.html.twig', [
+        return $this->render('main/index/index.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'pendingUsersCount' => $totalUsers,

@@ -2,25 +2,29 @@
 
 namespace App\Twig;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
-use App\Repository\CommandeRepository;
 use DateTime;
 use DateInterval;
+use Twig\TwigFunction;
+use App\Repository\UserRepository;
+use Twig\Extension\AbstractExtension;
+use App\Repository\CommandeRepository;
 
 class AppExtension extends AbstractExtension
 {
     private $commandRepository;
+    private $userRepository;
 
-    public function __construct(CommandeRepository $commandRepository)
+    public function __construct(CommandeRepository $commandRepository, UserRepository $userRepository)
     {
         $this->commandRepository = $commandRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function getFunctions(): array
     {
         return [
             new TwigFunction('oldCommandsCount', [$this, 'getOldCommandsCount']),
+            new TwigFunction('pendingUsersCount', [$this, 'getPendingUsers']),
         ];
     }
 
@@ -40,4 +44,23 @@ class AppExtension extends AbstractExtension
         // Count the number of old commands
         return count($oldCommands);
     }
+
+
+
+    public function getPendingUsers(): int
+    {
+        // Get commands older than 30 days
+        $pendingUsers = $this->userRepository->createQueryBuilder('c')
+            ->Where('c.etat = :etat')
+            ->setParameter('etat', 'pending')
+            ->getQuery()
+            ->getResult();
+
+        // Count the number of old commands
+        return count($pendingUsers);
+    }
+
+
+
+
 }
