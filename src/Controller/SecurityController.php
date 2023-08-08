@@ -43,7 +43,7 @@ class SecurityController extends AbstractController
                 )
             );
 
-            if ($user->getRoles() == 'ROLE_SUPER_USER') {
+            if ($user->getRoles() == 'ROLE_SUPER_USER' or $user->getRoles() == 'ROLE_USER') {
                 $user->setEtat('pending');
             }
 

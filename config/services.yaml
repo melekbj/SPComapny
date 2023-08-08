@@ -19,10 +19,12 @@ services:
     #     tags:
     #         - { name: 'monolog.logger', channel: 'security' }
     App\Repository\CommandRepository: ~
-    App\Twig\AppExtension:
+    App\Twig\Extension\AppExtension: # Use the correct namespace for the AppExtension class
         public: false
         arguments:
             $commandRepository: '@App\Repository\CommandeRepository'
+            $userRepository: '@App\Repository\UserRepository'
+            $security: '@security.helper' # Use the correct service reference for Security
         tags:
             - { name: twig.extension }
    

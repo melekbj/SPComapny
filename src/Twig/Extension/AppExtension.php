@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Twig;
+namespace App\Twig\Extension;
 
 use DateTime;
 use DateInterval;

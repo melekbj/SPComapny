@@ -47,7 +47,7 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         if ($user) {
-            if ($user->getRoles() == 'ROLE_SUPER_USER' && $user->getEtat() == 'pending') {
+            if (($user->getRoles() == 'ROLE_SUPER_USER' or $user->getRoles() == 'ROLE_USER') && $user->getEtat() == 'pending') {
                 throw new CustomUserMessageAuthenticationException('Account pending approval. Please check your email for further instructions.');
             }elseif ($user->getEtat() == 'blocked') {
                 throw new CustomUserMessageAuthenticationException('Account Restricted. Please check your email for further instructions.');
