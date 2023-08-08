@@ -7,6 +7,11 @@
 
       <div class="main-panel">
         <div class="content-wrapper">
+		    {# <div>
+				<h6 class="text-sm-right mr-3" style="font-size:12px;">
+				<<a href="{{path('app_dashboard')}}">dashboard</a><<a href="{{path('app_country')}}">pays</a><<a href="{{path('app_banks_by_country', {'id': Id})}}">banques</a><<a href=""></a>commandes
+				</h6>
+			</div> #}
           <div class="card mb-3">
           <div class="card-body col-lg-12">
             <form action="{{ path('app_commandes_by_bank', {'id': Id}) }}" method="get" class="form-inline">

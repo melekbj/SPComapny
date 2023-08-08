@@ -49,10 +49,12 @@ class Pays
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
+
     public function __construct()
     {
         $this->banques = new ArrayCollection();
         $this->tresories = new ArrayCollection();
+        $this->tresorieHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -188,6 +190,36 @@ class Pays
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TresorieHistory>
+     */
+    public function getTresorieHistories(): Collection
+    {
+        return $this->tresorieHistories;
+    }
+
+    public function addTresorieHistory(TresorieHistory $tresorieHistory): static
+    {
+        if (!$this->tresorieHistories->contains($tresorieHistory)) {
+            $this->tresorieHistories->add($tresorieHistory);
+            $tresorieHistory->setPays($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTresorieHistory(TresorieHistory $tresorieHistory): static
+    {
+        if ($this->tresorieHistories->removeElement($tresorieHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($tresorieHistory->getPays() === $this) {
+                $tresorieHistory->setPays(null);
+            }
+        }
 
         return $this;
     }

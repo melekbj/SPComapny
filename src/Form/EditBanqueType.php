@@ -16,6 +16,10 @@ class EditBanqueType extends AbstractType
     {
         $builder
             ->add('nom')
+            ->add('descr')
+            ->add('mail')
+            ->add('tel')
+            ->add('address')
             // ->add('photo')
             ->add('pays',EntityType::class
             ,[

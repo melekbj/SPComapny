@@ -67,7 +67,9 @@ class MainController extends AbstractController
 
         $finishedCommands = $commandRepository->findBy(['etat' => 'livrepaye']);
         $allFinishedCommands = count($finishedCommands);
-        $totalFinishedCommandsPercentage = ( $allFinishedCommands / $totalCommands) * 100;
+
+        // $totalFinishedCommandsPercentage = ( $allFinishedCommands / $totalCommands) * 100;
+        
 
         $pendingUsers = $userRepository->findBy(['etat' => 'pending']);
         $allUsers = $userRepository->findAll();
@@ -105,7 +107,7 @@ class MainController extends AbstractController
             'totalCommandsPercentage' => $totalCommandsPercentage,
             'solderSum' => $solderSum,
             'allFinishedCommands' => $allFinishedCommands,
-            'percentageFinishedC' => $totalFinishedCommandsPercentage,
+            // 'percentageFinishedC' => $totalFinishedCommandsPercentage,
             'pendingC' => $pendingC,
             'livrepaye' => $livrepaye,
             'livrenonpaye' => $livrenonpaye,
@@ -114,6 +116,7 @@ class MainController extends AbstractController
             'approved' => $approved,
             'blocked' => $blocked,
             'deblocked' => $deblocked,
+           
 
         ]);
     }
@@ -290,7 +293,13 @@ class MainController extends AbstractController
         $image = $user->getImage();
 
         $em = $doctrine->getManager();
-        $banks = $em->getRepository(Banques::class)->findBy(['pays' => $id]);
+        $banks = $em->getRepository(Banques::class)->createQueryBuilder('b')
+            ->where('b.pays = :paysId')
+            ->andwhere('b.nom NOT LIKE :pattern')
+            ->setParameter('paysId', $id)
+            ->setParameter('pattern', 'caisse%')
+            ->getQuery()
+            ->getResult();
         //editpays
         $pays = $em->getRepository(Pays::class)->find($id);
         $form = $this->createForm(PaysInfoType::class, $pays);
@@ -536,7 +545,11 @@ class MainController extends AbstractController
         $commande = $em->getRepository(Commande::class)->findall();
 
         // Retrieve the list of banques from the database
-        $banques = $em->getRepository(Banques::class)->findAll();
+        $banques = $em->getRepository(Banques::class)->createQueryBuilder('b')
+            ->where('b.nom NOT LIKE :pattern')
+            ->setParameter('pattern', 'caisse%')
+            ->getQuery()
+            ->getResult();
         
         // Retrieve the list of materiels from the database
         $materiels = $em->getRepository(Materiels::class)->findAll();
@@ -1183,7 +1196,17 @@ class MainController extends AbstractController
         $pays = $em->getRepository(Pays::class)->find($id);
         
         $tresoriee = $em->getRepository(Tresorie::class)->findBy(['pays' => $pays]);
-        $tresorieHistory = $em->getRepository(TresorieHistory::class)->findAll();
+        // $tresorieHistory = $em->getRepository(TresorieHistory::class)->findAll();
+        // $subquery = $em->createQueryBuilder()
+        //     ->select('MAX(thSub.updatedAt)')
+        //     ->from(TresorieHistory::class, 'thSub')
+        //     ->where('thSub.banque = th.banque')
+        //     ->getDQL();
+
+        // $tresorieHistory = $em->getRepository(TresorieHistory::class)->createQueryBuilder('th')
+        //     ->where('th.updatedAt IN (' . $subquery . ')')
+        //     ->getQuery()
+        //     ->getResult();
 
         $paysId = $id;
 
@@ -1207,7 +1230,7 @@ class MainController extends AbstractController
             'image' => $image,
             'tresories' => $tresoriee,
             'tresorieForm' =>$form->createView(),
-            'tresorieHistory' => $tresorieHistory,
+            // 'tresorieHistory' => $tresorieHistory,
             'pays' => $pays,
         ]);
     }
@@ -1239,6 +1262,7 @@ class MainController extends AbstractController
             $tresorieHistory->setBanque($tresorie->getBanque());
             $tresorieHistory->setUpdatedAt(); 
             $tresorieHistory->setUser($user); 
+            // $tresorieHistory->setPays($paysId);
             $entityManager->persist($tresorieHistory);
 
             $entityManager->flush();

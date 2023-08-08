@@ -132,6 +132,7 @@
         <ul class="navbar-nav navbar-nav-right">
           {% set oldCommandsCount = oldCommandsCount() %}
           {% set pendingUsersCount = pendingUsersCount() %}
+          {% if currentUser() and 'ROLE_ADMIN' in currentUser().roles %}
           <li class="nav-item dropdown">
             <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
               <i class="icon-bell mx-0"></i>
@@ -211,35 +212,10 @@
                 </a>
               {% endif %}
 
-
-              {# <a class="dropdown-item preview-item">
-                              <div class="preview-thumbnail">
-                                <div class="preview-icon bg-warning">
-                                  <i class="ti-settings mx-0"></i>
-                                </div>
-                              </div>
-                              <div class="preview-item-content">
-                                <h6 class="preview-subject font-weight-normal">Settings</h6>
-                                <p class="font-weight-light small-text mb-0 text-muted">
-                                  Private message
-                                </p>
-                              </div>
-                            </a>
-                            <a class="dropdown-item preview-item">
-                              <div class="preview-thumbnail">
-                                <div class="preview-icon bg-info">
-                                  <i class="ti-user mx-0"></i>
-                                </div>
-                              </div>
-                              <div class="preview-item-content">
-                                <h6 class="preview-subject font-weight-normal">New user registration</h6>
-                                <p class="font-weight-light small-text mb-0 text-muted">
-                                  2 days ago
-                                </p>
-                              </div>
-                            </a> #}
             </div>
           </li>
+
+          {% endif %}
 
 
 

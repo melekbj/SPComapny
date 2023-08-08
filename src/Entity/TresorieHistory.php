@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TresorieHistoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TresorieHistoryRepository::class)]
@@ -30,6 +32,11 @@ class TresorieHistory
 
     #[ORM\ManyToOne(inversedBy: 'tresorieHistories')]
     private ?User $user = null;
+
+    public function __construct()
+    {
+        $this->tresories = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -110,4 +117,6 @@ class TresorieHistory
 
         return $this;
     }
+
+    
 }

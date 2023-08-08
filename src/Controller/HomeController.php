@@ -19,7 +19,12 @@ class HomeController extends AbstractController
     {
         $em = $doctrine->getManager();
 
-        $banques = $em->getRepository(Banques::class)->findAll();
+        // $banques = $em->getRepository(Banques::class)->findAll();
+        $banques = $em->getRepository(Banques::class)->createQueryBuilder('b')
+            ->where('b.nom NOT LIKE :pattern')
+            ->setParameter('pattern', 'caisse%')
+            ->getQuery()
+            ->getResult();
 
         $materiels = $em->getRepository(Materiels::class)->findAll();
 

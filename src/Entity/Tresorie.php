@@ -37,6 +37,7 @@ class Tresorie
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date = null;
 
+
     public function __construct()
     {
         $this->banques = new ArrayCollection();
@@ -118,5 +119,7 @@ class Tresorie
 
         return $this;
     }
+
+
 
 }
