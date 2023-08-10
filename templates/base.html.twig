@@ -20,6 +20,7 @@
             <title>{% block title %}Secure Print{% endblock %}</title>
         
         {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
 
 
                     <!-- fontawesome -->
@@ -55,6 +56,7 @@
         {% endblock %}
 
         {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
 
         <!-- jquery -->
         <script src="{{ asset('assets/js/jquery-1.11.3.min.js')}}"></script>
