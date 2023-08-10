@@ -36,7 +36,7 @@
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="breadcrumb-text">
 						{# <p>Fresh and Organic</p> #}
-						<h1>Hello! Let's get started</h1>
+						<h1>Bonjour ! Commençons</h1>
 					</div>
 				</div>
 			</div>
@@ -66,7 +66,7 @@
                                 </div>
                             {% endfor %}
 
-                            <h6 class="font-weight-light">Sign in to continue.</h6>
+                            <h6 class="font-weight-light">Connectez-vous pour continuer.</h6>
                             <form class="pt-3" method="post">
                                 
 
@@ -85,7 +85,7 @@
 
                                 {% if app.user %}
                                 <div class="mb-3">
-                                    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                                    Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
                                 </div>
                                 {% endif %}
                                 <div class="form-group">
@@ -98,7 +98,7 @@
                                 <div class="form-group">
                                     <label for="inputPassword" class="input-label">
                                         <i class="fas fa-lock"></i>
-                                        Password
+                                        Mot de passe
                                         <i class="fas fa-eye" id="togglePassword"></i>
                                     </label>
                                     <div class="password-container">
@@ -110,15 +110,15 @@
 
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                                 <div class="mt-3">
-                                    <button type="submit" class="btn btn-block btn-lg auth-form-btn" style="background-color:#F28123;color:white;">Sign in</button>
+                                    <button type="submit" class="btn btn-block btn-lg auth-form-btn" style="background-color:#F28123;color:white;">Se connecter</button>
                                 </div>
                                 <div class="my-2 d-flex justify-content-between align-items-center">
                                     <div class="form-check">
                                     </div>
-                                    <a href="{{ path('forgotten_password') }}" class="auth-link text-black">Forgot password?</a>
+                                    <a href="{{ path('forgotten_password') }}" class="auth-link text-black">Mot de passe oublié?</a>
                                 </div>
                                 <div class="text-center mt-4 font-weight-light">
-                                    Don't have an account? <a href="{{path('app_registration')}}" class="text-primary">Sign up</a>
+                                    Don't have an account? <a href="{{path('app_registration')}}" class="text-primary">S'inscrire</a>
                                 </div>
                             </form>
                         </div>

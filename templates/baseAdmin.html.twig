@@ -231,7 +231,7 @@
               </a> #}
               <a href ="{{path('app_logout')}}"class="dropdown-item">
                 <i class="ti-power-off text-primary"></i>
-                Logout
+                Se déconnecter
               </a>
             </div>
           </li>
@@ -267,7 +267,7 @@
           </div>
         </div>
       </div> #}
-      <div id="right-sidebar" class="settings-panel">
+      {# <div id="right-sidebar" class="settings-panel">
         <i class="settings-close ti-close"></i>
         <ul class="nav nav-tabs border-top" id="setting-panel" role="tablist">
           <li class="nav-item">
@@ -416,7 +416,7 @@
           </div>
           <!-- chat tab ends -->
         </div>
-      </div>
+      </div> #}
       <!-- partial -->
       <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
@@ -467,26 +467,6 @@
             </a>
           </li>
 
-          {# <li class="nav-item">
-            <a class="nav-link" href="{{path('historique_tresorie')}}">
-              <i class="icon-columns menu-icon"></i>
-              <span class="menu-title">Histo</span>
-            </a>
-          </li> #}
-          {# <li class="nav-item">
-            <a class="nav-link" href="{{path('app_historique_tresorie')}}">
-              <i class="icon-columns menu-icon"></i>
-              <span class="menu-title">Historique tresories</span>
-            </a>
-          </li> #}
-          
-          {# <li class="nav-item">
-            <a class="nav-link" href="{{(path('app_show_commande_lp'))}}">
-              <i class="icon-columns menu-icon"></i>
-              <span class="menu-title">Commandes livrés et <br> payés</span>
-            </a>
-          </li>  #}
-         
           {% if app.user.getRoles()=='ROLE_ADMIN' %}
           <li class="nav-item">
             <a class="nav-link" href="{{(path('app_users'))}}">
