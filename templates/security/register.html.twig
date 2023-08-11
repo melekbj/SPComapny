@@ -34,18 +34,17 @@
                             
                                 <!-- Form content -->
                               {{ form_start(registerForm) }}
-                              {{ form_row(registerForm.roles, {'attr': {'class': 'form-control'}}) }}
-                              {{ form_row(registerForm.fullname, {'attr': {'class': 'form-control '}}) }}
-                              {{ form_row(registerForm.imageFile, {'attr': {'class': 'form-control'}}) }}
-                              {{ form_row(registerForm.email, {'attr': {'class': 'form-control'}}) }}
-                              <div class="password-toggle">
-                                {{ form_row(registerForm.password.first, {'attr': {'class': 'form-control', 'id': 'inputPassword'}}) }}
-                                {# <i class="fas fa-eye" id="togglePassword"></i> #}
-                              </div>
-                              {{ form_row(registerForm.password.second, {'attr': {'class': 'form-control'}}) }}
-
-                              {{ form_row(registerForm.save) }}
-                              {{ form_end(registerForm) }}                        
+                                {{ form_row(registerForm.roles, {'attr': {'class': 'form-control'}, 'label': 'Rôles'}) }}
+                                {{ form_row(registerForm.fullname, {'attr': {'class': 'form-control '}, 'label': 'Nom et prénom'}) }}
+                                {{ form_row(registerForm.imageFile, {'attr': {'class': 'form-control'}, 'label': 'Photo de profil'}) }}
+                                {{ form_row(registerForm.email, {'attr': {'class': 'form-control'}, 'label': 'Adresse e-mail'}) }}
+                                <div class="password-toggle">
+                                    {{ form_row(registerForm.password.first, {'attr': {'class': 'form-control', 'id': 'inputPassword'}, 'label': 'Mot de Passe'}) }}
+                                </div>
+                                {{ form_row(registerForm.password.second, {'attr': {'class': 'form-control'}, 'label': 'Confirmer Le Mot de Passe'}) }}
+                                {{ form_row(registerForm.save, {'label': 'Créer votre compte'}) }}
+                              {{ form_end(registerForm) }}
+                        
                                 
                                 <div class="text-center mt-4 font-weight-light">
                                     You already have an account? <a href="{{path('app_login')}}" class="text-primary">Se connecter</a>

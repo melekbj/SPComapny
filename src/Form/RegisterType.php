@@ -26,8 +26,8 @@ class RegisterType extends AbstractType
             ->add('imageFile', VichFileType::class, [
                 'label' => 'Photo de profil',
                 'required' => true,
-                'allow_delete' => true,
-                'download_uri' => true,
+                'allow_delete' => false,
+                'download_uri' => false,
                 'attr' => ['class' => 'square-image-input'],
             ])
             ->add('email', EmailType::class, [
@@ -64,7 +64,7 @@ class RegisterType extends AbstractType
             ])
             ->add('save', SubmitType::class, [
                 'attr' => [
-                    'class' => 'mt-3 btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn'
+                    'class' => 'mt-3 btn btn-block btn-success btn-lg font-weight-medium auth-form-btn'
                 ]
             ])
         ;
