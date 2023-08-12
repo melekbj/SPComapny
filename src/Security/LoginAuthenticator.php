@@ -42,15 +42,15 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
 
         if ($user) {
             if (!$user->isVerified()) {
-                throw new CustomUserMessageAuthenticationException('You need to verify your email first.');
+                throw new CustomUserMessageAuthenticationException("Avant de procéder, veuillez d'abord vérifier votre email.");
             }
         }
 
         if ($user) {
             if (($user->getRoles() == 'ROLE_SUPER_USER' or $user->getRoles() == 'ROLE_USER') && $user->getEtat() == 'pending') {
-                throw new CustomUserMessageAuthenticationException('Account pending approval. Please check your email for further instructions.');
+                throw new CustomUserMessageAuthenticationException("Votre compte est en attente d'approbation. Merci de vérifier votre email pour plus d'instructions.");
             }elseif ($user->getEtat() == 'blocked') {
-                throw new CustomUserMessageAuthenticationException('Account Restricted. Please check your email for further instructions.');
+                throw new CustomUserMessageAuthenticationException("Compte bloqué. Merci de vérifier votre email pour plus d'instructions.");
             }
         }
         
