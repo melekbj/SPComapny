@@ -1,0 +1,32 @@
+{% extends "baseAdmin.html.twig" %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card mt-3">
+                <div class="card-header mt-3">
+                    <h3 class="text-center">Ajouter une banque</h3>
+                </div>
+                <div class="card-body">
+                    {{ form_start(ajoutBanqueForm) }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(ajoutBanqueForm.nom, {'attr': {'class': 'form-control'}, 'label': 'Nom du banque'}) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(ajoutBanqueForm.pays, {'attr': {'class': 'form-control'}, 'label': 'Pays'}) }}
+                            </div>
+                        </div>
+
+                        {{ form_row(ajoutBanqueForm.imageFile, {'attr': {'class': 'form-control'}, 'label': 'Photo du banque'}) }}
+                        {{ form_row(ajoutBanqueForm.Add, {'attr': {'class': 'btn btn-success'}, 'label': 'Confirmer'}) }}
+                    {{ form_end(ajoutBanqueForm) }}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

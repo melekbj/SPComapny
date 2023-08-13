@@ -4,34 +4,37 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card mt-3" style="background-color:#2C3E4F;">
+            <div class="card mt-3">
+                <div class="card-header mt-3">
+                    <h3 class="text-center">Ajouter un matériel</h3>
+                </div>
                 <div class="card-body">
                     {{ form_start(ajoutMaterialForm) }}
                         <div class="row">
                             <div class="col-md-6">
-                                {{ form_row(ajoutMaterialForm.ref, {'attr': {'class': 'form-control'}, 'label_attr': {'class': 'text-white'}, 'label': 'Reference'}) }}
+                                {{ form_row(ajoutMaterialForm.ref, {'attr': {'class': 'form-control'}, 'label': 'Référence'}) }}
                             </div>
                             <div class="col-md-6">
-                                {{ form_row(ajoutMaterialForm.nom, {'attr': {'class': 'form-control'}, 'label_attr': {'class': 'text-white'}, 'label': 'Nom'}) }}
+                                {{ form_row(ajoutMaterialForm.nom, {'attr': {'class': 'form-control'}, 'label': 'Nom'}) }}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                {{ form_row(ajoutMaterialForm.pu, {'attr': {'class': 'form-control'}, 'label_attr': {'class': 'text-white'}, 'label': 'Prix unitaire'}) }}
+                                {{ form_row(ajoutMaterialForm.pu, {'attr': {'class': 'form-control'}, 'label': 'Prix unitaire'}) }}
                             </div>
                             <div class="col-md-6">
-                                {{ form_row(ajoutMaterialForm.quantite, {'attr': {'class': 'form-control'}, 'label_attr': {'class': 'text-white'}, 'label': 'Quantité'}) }}
+                                {{ form_row(ajoutMaterialForm.quantite, {'attr': {'class': 'form-control'}, 'label': 'Quantité'}) }}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                {{ form_row(ajoutMaterialForm.tauxtva, {'attr': {'class': 'form-control'}, 'label_attr': {'class': 'text-white'}, 'label': 'Taux TVA'}) }}
+                                {{ form_row(ajoutMaterialForm.tauxtva, {'attr': {'class': 'form-control'}, 'label': 'Taux TVA'}) }}
                             </div>
                             <div class="col-md-6">
-                                {{ form_row(ajoutMaterialForm.categorie, {'attr': {'class': 'form-control'}, 'label_attr': {'class': 'text-white'}, 'label': 'Catégorie'}) }}
+                                {{ form_row(ajoutMaterialForm.categorie, {'attr': {'class': 'form-control'}, 'label': 'Catégorie'}) }}
                             </div>
                         </div>
-                        {{ form_row(ajoutMaterialForm.imageFile, {'attr': {'class': 'form-control'}, 'label_attr': {'class': 'text-white'}, 'label': 'Image'}) }}
+                        {{ form_row(ajoutMaterialForm.imageFile, {'attr': {'class': 'form-control'}, 'label': 'Image'}) }}
                         {{ form_row(ajoutMaterialForm.save, {'label_attr': {'class': 'white-label'}, 'label': 'Confirmer'}) }}
                     {{ form_end(ajoutMaterialForm) }}
 

@@ -24,15 +24,15 @@ class BanquesType extends AbstractType
                 'label' => 'Photo de banque',
                 'required' => false,
                 'allow_delete' => false,
-                'download_uri' => true,
+                'download_uri' => false,
             ])
             ->add('pays',EntityType::class
             ,[
              'class' => Pays::class,
              'choice_label' => 'nom',
-            'label' => 'Country',
-                'placeholder' => 'Choose a type',
-                'required' => true,
+             'label' => 'Country',
+             'placeholder' => 'Choisir un pays',
+             'required' => true,
             
             ])
             ->add('Add', SubmitType::class, [

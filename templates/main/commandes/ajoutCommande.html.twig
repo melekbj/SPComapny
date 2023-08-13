@@ -50,8 +50,11 @@
 				<h3>Ajouter bon de commande :</h3>
 			</div>
 			<div>
-				<a href="{{path('add_material_route')}}" class="btn btn-dark">
+				<a href="{{path('add_material_route')}}" class="btn btn-success">
           Ajouter materiel +
+        </a>
+        <a href="{{path('add_banque_route')}}" class="btn btn-danger">
+          Ajouter Banque +
         </a>
 			</div>
 		</div>
@@ -156,7 +159,7 @@
 
 
           <div class="mt-3">
-            <button type="submit" class="btn btn-primary">Confirmer</button>
+            <button type="submit" class="btn btn-primary font-italic">Enregistrer</button>
           </div>
 
 			  </form>
@@ -308,7 +311,7 @@
   });
 </script>
 
-<script>
+{# <script>
     $(document).ready(function() {
         const devises = {{ devises|json_encode|raw }};
         const selectElement = $('#devise');
@@ -321,7 +324,7 @@
             selectElement.append(option);
         }
     });
-</script>
+</script> #}
 
 
 

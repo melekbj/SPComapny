@@ -243,6 +243,31 @@ class MainController extends AbstractController
         ]);
     }
 
+    #[Route('/add_banque', name: 'add_banque_route', methods: ['POST', 'GET'])]
+    public function ajoutBanques(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $banque = new Banques();
+        $form = $this->createForm(BanquesType::class, $banque);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+           
+            $entityManager->persist($banque);
+            $entityManager->flush();
+            $this->addFlash('success', 'Banque ajouté avec succès');
+            return $this->redirectToRoute('app_ajout_bon_commande');
+        }
+
+        return $this->render('main/banques/ajoutBanque.html.twig', [
+            'controller_name' => 'MainController',
+            'image' => $image,
+            'ajoutBanqueForm' =>$form->createView(),
+        ]);
+    }
+
     #[Route('/delete_banque/{id}', name: 'app_delete_banque')]
     public function deleteBanque(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
     {
