@@ -4,6 +4,34 @@
 
 {% block body %}
 
+<style>
+  /* Add inline-block display for the inputs and button inside "horizontal-container" */
+  .horizontal-container input {
+    display: inline-block;
+    
+    /* Optional: Adjust other styles for spacing and alignment */
+    /* For example: */
+     margin-top: 5px;
+     margin-right: 16px;
+    /* vertical-align: middle; // Align elements vertically */
+  }
+  .horizontal-container button {
+
+    display: inline-block;
+    
+
+
+  }
+  /* Make sure to hide the contents of the div when it's set to display: none */
+  .horizontal-container[style*="display: none"] {
+    display: none;
+  }
+</style>
+
+
+
+
+
 <div class="main-panel">
 	<div class="content-wrapper">
 		<div class="row">
@@ -51,29 +79,41 @@
 									{% endfor %}
 								</select>
 							</div>
-							<div id="materialContainers" class="col-md-12">
-								{% for material in existingMaterials %}
-									<div class="row material-container">
-										<!-- Existing Material Dropdown -->
-										<div class="col-md-4">
-											<select class="form-control materialSelect mt-3" onchange="showSelectedMaterial(this)" name="materialSelect[]" required>
-												<option value="">Choisir matériel</option>
-												{% for materiel in materiels %}
-													<option value="{{ materiel.id }}" data-price="{{ materiel.pu }}" {% if materiel.id == material.id %} selected {% endif %}>{{ materiel.nom }}</option>
-												{% endfor %}
-											</select>
-										</div>
-										<!-- Quantity and Price Input -->
-										<div class="horizontal-container" style="display: {{ material.id ? 'inline-block' : 'none' }}">
-											<input type="number" class="col-md-4 form-control quantity" name="quantite[]" value="{{ material.quantity }}" placeholder="Quantité" pattern="[0-9]+" title="Veuillez saisir un numéro valide" required/>
-											<input class="col-md-4 form-control price" type="text" name="price[]" value="{{ material.price }}" pattern="\d+(\.\d+)?" title="Veuillez saisir un numéro valide"/>
-											<button class="removeMaterial btn btn-danger" type="button"><span style="font-size:16px;">-</span></button>
-										</div>
-									</div>
-								{% endfor %}
-							</div>
 
-							<button type="submit" class="btn btn-primary">Update Commande</button>
+
+
+
+
+						<div class="row">
+							<div id="materialContainers" class="col-md-12">
+								<div class="row material-containers">
+									{% for commandMaterial in commandeMaterials %}
+										<div class="col-md-12 material-container">
+											<div class="row">
+												<div class="col-md-4">
+													<!-- Display the selected material -->
+													<select class="form-control materialSelect mt-1" name="materialSelect[]" required>
+														<option value="">Choisir matériel</option>
+														{% for materiel in materiels %}
+															<option value="{{ materiel.id }}" {% if materiel.id == commandMaterial.getMateriel().getId() %} selected {% endif %}>
+																{{ materiel.nom }}
+															</option>
+														{% endfor %}
+													</select>
+												</div>
+												<div class="horizontal-container">
+												<input type="number" class="col-md-4 form-control quantity" name="quantite[]" placeholder="Quantité" pattern="[0-9]+" title="Veuillez saisir un numéro valide" value="{{ commandMaterial.getQuantite()  }}" required/>
+												<input class="col-md-4 form-control price" type="text" name="price[]" pattern="\d+(\.\d+)?" title="Veuillez saisir un numéro valide" value="{{ commandMaterial.getPrixV() }}" required/>
+												</div>
+											</div>
+										</div>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+
+
+							<button type="submit" class="btn btn-primary mt-3">Update Commande</button>
 						</form>
 
 						
@@ -87,21 +127,9 @@
 
 
 
-{# <script>
-							$(document).ready(function () {
-							$('input[type="checkbox"]').change(function () {
-							var checkboxId = $(this).attr('id');
-							var textareaId = checkboxId.replace('materiel', 'textarea');
-							// var PriceId = checkboxId.replace('materiel', 'price');
-							var textAreaContainer = $('#' + textareaId).closest('.text-area-container');
-							if ($(this).is(':checked')) {
-							textAreaContainer.show();
-							} else {
-							textAreaContainer.hide();
-							}
-							});
-							});
-</script> #}
+
+
+
 
 
 

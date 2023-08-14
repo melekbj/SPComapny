@@ -664,16 +664,15 @@ class MainController extends AbstractController
     }
 
 
+   
     #[Route('/edit_commande/{id}', name: 'app_edit_commande')]
     public function editCommande($id, PersistenceManagerRegistry $doctrine, Request $request): Response
     {
-
         $user = $this->getUser();
         $image = $user->getImage();
         // Get the Doctrine entity manager
         $em = $doctrine->getManager();
 
-        
         // Retrieve the list of banques from the database
         $banques = $em->getRepository(Banques::class)->findAll();
 
@@ -682,6 +681,7 @@ class MainController extends AbstractController
 
         // Retrieve the command entity
         $commande = $em->getRepository(Commande::class)->find($id);
+        $commandeMaterials = $commande->getCommandeMateriels();
 
         $devises = ['USD', 'EUR', 'GBP', 'JPY'];
 
@@ -692,20 +692,23 @@ class MainController extends AbstractController
 
         if ($request->isMethod('POST')) {
             // Get the submitted data
-            $description = $request->request->get('description');
-            $devise = $request->request->get('devise');
-            $tauxtva = $request->request->get('tauxtva');
-            $avance = $request->request->get('avance');
-            $ref = $request->request->get('ref');
-            $dateString = $request->request->get('date');
+            $formData = $request->request->all();
+
+            $description = $formData['description'];
+            $devise = $formData['devise'];
+            $tauxtva = $formData['tauxtva'];
+            $avance = $formData['avance'];
+            $ref = $formData['ref'];
+            $dateString = $formData['date'];
             $date = \DateTime::createFromFormat('Y-m-d', $dateString); // Assuming the date format is "YYYY-MM-DD"
-            $banqueId = $request->request->get('banque');
-            $materielIds = $request->request->all('materiel');
-            
+            $banqueId = $formData['banque'];
+            $materielIds = $formData['materialSelect'];
+            $quantities = $formData['quantite'];
+            $prices = $formData['price'];
 
             // Retrieve the selected Banque entity
             $banque = $em->getRepository(Banques::class)->find($banqueId);
-            
+
             // Update the command attributes
             $commande->setDescription($description);
             $commande->setTauxTVA($tauxtva);
@@ -715,30 +718,36 @@ class MainController extends AbstractController
             $commande->setDevise($devise);
             $commande->setRef($ref);
 
-            // Retrieve the current materials of the command
-            $currentMaterials = $commande->getCommandeMateriels()->toArray();
-            // $prices = $formData['price'];
-            // Iterate over the current materials and remove them from the command
-            foreach ($currentMaterials as $currentMaterial) {
-                $commande->removeCommandeMateriel($currentMaterial);
-                $em->remove($currentMaterial);
-            }
-
-            // Iterate over the selected Materiel IDs and create new CommandMaterial entities
-            foreach ($materielIds as $materielId) {
+            // Iterate over the selected Materiel IDs and create/update CommandMaterial entities
+            foreach ($materielIds as $index => $materielId) {
+                // Retrieve the selected Materiel entity
                 $materiel = $em->getRepository(Materiels::class)->find($materielId);
-                $quantity = $request->request->get('textarea' . $materielId);
-                $price = $request->request->get('price' . $materielId);
 
-                // Create a new CommandMaterial instance
-                $commandMaterial = new CommandeMateriels();
-                $commandMaterial->setCommande($commande);
-                $commandMaterial->setMateriel($materiel);
-                $commandMaterial->setQuantite($quantity);
-                $commandMaterial->setPrixV($price);
+                // Get the quantity and price for the current Materiel
+                $quantity = $quantities[$index];
+                $price = $prices[$index];
 
-                // Persist the CommandMaterial entity
-                $em->persist($commandMaterial);
+                // Find existing CommandMaterial entity if it exists for this combination
+                $existingCommandMaterial = $em->getRepository(CommandeMateriels::class)->findOneBy([
+                    'commande' => $commande,
+                    'materiel' => $materiel,
+                ]);
+
+                if ($existingCommandMaterial) {
+                    // Update the existing CommandMaterial entity
+                    $existingCommandMaterial->setQuantite($quantity);
+                    $existingCommandMaterial->setPrixV($price);
+                } else {
+                    // Create a new CommandMaterial instance
+                    $commandMaterial = new CommandeMateriels();
+                    $commandMaterial->setCommande($commande);
+                    $commandMaterial->setMateriel($materiel);
+                    $commandMaterial->setQuantite($quantity);
+                    $commandMaterial->setPrixV($price);
+
+                    // Persist the CommandMaterial entity
+                    $em->persist($commandMaterial);
+                }
             }
 
             // Flush the changes to the database
@@ -756,6 +765,7 @@ class MainController extends AbstractController
             'banques' => $banques,
             'devises' => $devises,
             'materiels' => $materiels,
+            'commandeMaterials' => $commandeMaterials,
         ]);
     }
 

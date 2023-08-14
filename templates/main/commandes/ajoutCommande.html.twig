@@ -244,25 +244,30 @@
 
 <script>
   // Function to show/hide the quantity and price div based on material selection
-  function showSelectedMaterial() 
-  {
-    const materialContainers = document.querySelectorAll('.material-container');
-    materialContainers.forEach((container) => {
-      const select = container.querySelector('.materialSelect');
-      const priceInput = container.querySelector('.price');
-      const selectedOption = select.options[select.selectedIndex]; // Corrected variable name here
-      const price = selectedOption.getAttribute('data-price');
+  // Inside the function showSelectedMaterial()
+  function showSelectedMaterial() {
+      const materialContainers = document.querySelectorAll('.material-container');
+      materialContainers.forEach((container) => {
+          const select = container.querySelector('.materialSelect');
+          const priceInput = container.querySelector('.price');
+          const quantityInput = container.querySelector('.quantity');
+          const selectedOption = select.options[select.selectedIndex]; // Corrected variable name here
+          const price = selectedOption.getAttribute('data-price');
+          const quantity = selectedOption.getAttribute('data-quantity');
 
-      priceInput.value = price;
-      const divToShowHide = container.querySelector('.quantity').parentElement;
-    
-      if (select.value !== '') {
-        divToShowHide.style.display = 'inline-block';
-      } else {
-        divToShowHide.style.display = 'none';
-      }
-    });
+          priceInput.value = price;
+          quantityInput.value = quantity; // Set the quantity value
+
+          const divToShowHide = container.querySelector('.quantity').parentElement;
+
+          if (select.value !== '') {
+              divToShowHide.style.display = 'inline-block';
+          } else {
+              divToShowHide.style.display = 'none';
+          }
+      });
   }
+
 
 
     // Get the container for material select dropdowns
