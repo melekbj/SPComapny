@@ -46,8 +46,21 @@
                             </div>
                         {% endfor %}
                         <div class="card-body">
-                            <h4 class="card-title">Command №
-                                {{ commande.ref}}</h4>
+                            <div class="row ml-2 mr-2 mb-3 justify-content-between">
+                                <div>
+                                    <strong>Commande N°</strong>
+                                    
+                                    {{commande.ref}}
+
+                                </div>
+                                <div>
+                                    <strong>TVA :</strong>
+                                    {{commande.tauxtva}} %
+                                </div>
+                            </div>
+
+                            
+                            
                             <div class="table-responsive">
 
 
@@ -59,7 +72,7 @@
                                         <th>Materiel</th>
                                         <th>Quantity</th>
                                         <th>TTM</th>
-                                        <th>Taux TVA</th>
+                                        {# <th>Taux TVA</th> #}
                                         <th>PRIX UNIT. HT</th>
                                         <th>MONTANT HT</th>
                                     </tr>
@@ -80,7 +93,7 @@
                                                 <td>{{ commandeMateriel.materiel.nom }}</td>
                                                 <td>{{ commandeMateriel.quantite }}</td>
                                                 <td>{{ commandeMateriel.materiel.tauxtva }}</td>
-                                                <td>{{ commandeMateriel.commande.tauxtva * 100 }}%</td>
+                                                {# <td rowspan="{{ commande.commandeMateriels|length }}">{{ commandeMateriel.commande.tauxtva}}%</td> #}
                                                 <td>{{ commandeMateriel.prixV }}</td>
                                                 <td>{{ commandeMateriel.quantite * commandeMateriel.prixV }}  {{devise}}</td>
                                             </tr>
@@ -102,7 +115,7 @@
                                     <tr>
                                         <th>
                                             TVA
-                                            <span class=" float-right">{{ totalHT * commande.tauxtva }}
+                                            <span class=" float-right">{{ totalHT * ( commande.tauxtva / 100 ) }}
                                             </span>
                                         </th>
                                     </tr>
@@ -112,7 +125,7 @@
                             <table class="table table-bordered col-xl-12">
                                 <tr>
                                     <th>TOTAL TTC
-                                        <span class=" float-right">{{ totalHT + (totalHT * commande.tauxtva) }} {{devise}}</span>
+                                        <span class=" float-right">{{ totalHT + (totalHT * ( commande.tauxtva / 100 )) }} {{devise}}</span>
                                     </th>
                                 </tr>
 

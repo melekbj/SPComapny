@@ -12,6 +12,7 @@ use App\Entity\Tresorie;
 use App\Entity\Materiels;
 use App\Form\BanquesType;
 use App\Form\AddAdminType;
+use App\Form\BankInfoType;
 use App\Form\CommandeType;
 use App\Form\EditPaysType;
 use App\Form\EditUserType;
@@ -806,6 +807,18 @@ class MainController extends AbstractController
             $commande = $commandeRepository->findBy(['banque' => $id]);
         }
 
+        //edit bank
+        $banque = $em->getRepository(Banques::class)->find($id);
+        $form = $this->createForm(BankInfoType::class, $banque);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $em->persist($banque);
+            $em->flush();
+            $this->addFlash('success', 'Banque informations modifiés avec succès');
+            return $this->redirectToRoute('app_commandes_by_bank', ['id' => $id]);
+        }
+
        
 
         return $this->render('main/commandes/commandByBank.html.twig', [
@@ -813,6 +826,8 @@ class MainController extends AbstractController
             'image' => $image,
             'commandes' => $commande,
             'Id' => $id,
+            'banques' => $banque,
+            'editForm' =>$form->createView(),
         ]);
     }
 
@@ -836,6 +851,7 @@ class MainController extends AbstractController
             'controller_name' => 'MainController',
             'commande' => $commande,
             'image' => $image,
+
         ]);
     }
 

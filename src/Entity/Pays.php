@@ -40,7 +40,10 @@ class Pays
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $responsable = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, unique:true)]
+    private ?string $tel = null;
+
+    #[ORM\Column(length: 255, nullable: true, unique:true)]
     private ?string $mail = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -154,6 +157,18 @@ class Pays
     public function setResponsable(?string $responsable): static
     {
         $this->responsable = $responsable;
+
+        return $this;
+    }
+
+    public function getTel(): ?string
+    {
+        return $this->tel;
+    }
+
+    public function setTel(?string $tel): static
+    {
+        $this->tel = $tel;
 
         return $this;
     }

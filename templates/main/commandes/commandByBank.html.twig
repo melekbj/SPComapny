@@ -161,10 +161,41 @@
 							{% endif %}
 
 
+
+
                   </div>
                 </div>
+
+				<div class="card text-center">
+				<div class="card-header">
+					<h6 class="card-title">
+						Informations sur la Banque</h6>
+				</div>
+				<div class="card-body">
+					<h5 class="">Responsable</h5>
+					<h6 class="font-weight-bold mb-4">{{banques.responsable}}</h6>
+					<h5 class="">Adresse</h5>
+					<h6 class="font-weight-bold mb-4">{{banques.address}}</h6>
+					<h5 class="">Numéro de téléphone</h5>
+					<h6 class="font-weight-bold mb-4">{{banques.tel}}</h6>
+					<h5 class="">Adresse e-mail</h5>
+					<h6 class=" font-weight-bold mb-4">{{banques.mail}}</h6>
+					<p class="card-text">{{banques.descr}}</p>
+					<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Modifier les informations</a>
+				</div>
+				<div
+					class="card-footer text-muted">{# 2 days ago #}
+				</div>
+			</div>
               </div>
             </div>
+
+			
+
+
+
+
+
           </div>
         </div>
       </div>
@@ -175,25 +206,14 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Ajouter une nouvelle commande</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Informations sur la banque</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-            {# {{ form_start(commandForm) }}
-              {{ form_row(commandForm.descr, {'attr': {'class': 'form-control'}}) }}
-              {{ form_row(commandForm.materiels, {'attr': {'class': 'form-control'}}) }}
-              {{ form_row(commandForm.quantite, {'attr': {'class': 'form-control'}}) }}
-              {{ form_row(commandForm.banques, {'attr': {'class': 'form-control'}}) }}
-              {{ form_row(commandForm.tauxtva, {'attr': {'class': 'form-control'}}) }}
-              {{ form_row(commandForm.Add) }}
-            {{ form_end(commandForm) }}  #}
+             {{form(editForm)}}
             </div>
-            {# <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Save changes</button>
-            </div> #}
           </div>
         </div>
       </div>

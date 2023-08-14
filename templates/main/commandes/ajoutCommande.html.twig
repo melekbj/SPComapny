@@ -97,14 +97,14 @@
 					<div class="row">
 						<div class="col-md-3">
 							<div class="form-group">
-								<label for="tauxtva">Taux TVA ( 10% = 0.1 )</label>
-								<input type="text" class="form-control" id="tauxtva" name="tauxtva" pattern="\d+(\.\d+)?" title="Please enter a valid float number" required>
+								<label for="tauxtva">Taux TVA ( 10 = 10% )</label>
+								<input type="text" class="form-control" id="tauxtva" name="tauxtva" pattern="\d+(\.\d+)?" title="Veuillez saisir un numéro valide" required>
 							</div>
 						</div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="devise">Devise</label>
-                    <select name="devise" id="devise" class="form-control">
+                    <select name="devise" class="form-control">
                         <option value="">Choisir devise</option>
                         {% for devise in devises %}
                             <option value="{{ devise }}">{{ devise }}</option>
@@ -115,7 +115,7 @@
 						<div class="col-md-3">
 							<div class="form-group">
 								<label for="avance">Avance</label>
-								<input type="text" class="form-control" id="avance" name="avance" pattern="[0-9]+" title="Please enter an integer number">
+								<input type="text" class="form-control" id="avance" name="avance" pattern="[0-9]+" title="Veuillez saisir un numéro valide">
 							</div>
 						</div>
 						<div class="col-md-3">
@@ -141,8 +141,8 @@
                   </select>
                 </div>
                 <div class="horizontal-container" style="display: none;">
-                  <input type="number" class=" col-md-4 form-control quantity" name="quantite[]" placeholder="Quantité" pattern="[0-9]+" title="Please enter an integer number" required/>
-                  <input class=" col-md-4 form-control price" type="text" name="price[]" value=""  pattern="\d+(\.\d+)?" title="Please enter a valid float number"/>
+                  <input type="number" class=" col-md-4 form-control quantity" name="quantite[]" placeholder="Quantité" pattern="[0-9]+" title="Veuillez saisir un numéro valide" required/>
+                  <input class=" col-md-4 form-control price" type="text" name="price[]" value=""  pattern="\d+(\.\d+)?" title="Veuillez saisir un numéro valide"/>
                   <button class=" addMaterial btn btn-info" type="button"><span style="font-size:16px;">+</span></button>
                 </div>
                 

@@ -51,46 +51,41 @@
                           <h5 class=" text-capitalize text-center text-body text-behance ">{{ item.nom }}</h5>
                         </div>
                       </a>
-                      {# <div class="mt-3">Country :  {{ item.pays.nom }}</div> #}
-                      <div
-                        class="mt-2">{# <a href="{{path('app_edit_banque', {'id': item.id})}}" class="btn btn-success btn-sm">Modifier</a>
-                                        <a href="{{path('app_delete_banque', {'id': item.id})}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this material?')">Supprimer</a> #}
-                      </div>
                     </div>
                     {% if loop.index is divisible by(3) %}
                       <div style="clear:both;"></div>
                     {% endif %}
                   {% endfor %}
-                </div</div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="card text-center">
-            <div class="card-header">
-             <h6 class="card-title"> Informations sur le pays</h6>
-            </div>
-            <div class="card-body">
-              <h5 class="">Responsable</h5>
-              <h6 class="font-weight-bold mb-4">{{pays.responsable}}</h6>
-              <h5 class="">Adresse</h5>
-              <h6 class="font-weight-bold mb-4">{{pays.adesse}}</h6>
-              <h5 class="">Adresse e-mail</h5>
-              <h6 class=" font-weight-bold mb-4">{{pays.mail}}</h6>
-              <p class="card-text">{{pays.description}}</p>
-              <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Modifier les informations</a>
-            </div>
-            <div class="card-footer text-muted">
-              {# 2 days ago #}
-            </div>
+        </div>
+        <div class="card text-center col-12">
+          <div class="card-header">
+            <h6 class="card-title">
+              Informations sur le pays</h6>
           </div>
-
-
-          
-
-
+          <div class="card-body">
+            <h5 class="">Responsable</h5>
+            <h6 class="font-weight-bold mb-4">{{pays.responsable}}</h6>
+            <h5 class="">Adresse</h5>
+            <h6 class="font-weight-bold mb-4">{{pays.adesse}}</h6>
+            <h5 class="">Numéro de téléphone</h5>
+					  <h6 class="font-weight-bold mb-4">{{pays.tel}}</h6>
+            <h5 class="">Adresse e-mail</h5>
+            <h6 class=" font-weight-bold mb-4">{{pays.mail}}</h6>
+            <p class="card-text">{{pays.description}}</p>
+            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Modifier les informations</a>
+          </div>
+          <div
+            class="card-footer text-muted">{# 2 days ago #}
+          </div>
         </div>
 
-      </div>
+
+      </div></div>
+
       <!-- content-wrapper ends -->
       <!-- partial -->
     </div>

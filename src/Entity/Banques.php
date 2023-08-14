@@ -14,6 +14,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\Entity(repositoryClass: BanquesRepository::class)]
 #[Vich\Uploadable]
 #[UniqueEntity(fields: ['nom'], message: 'There is already a libelle with this name')]
+#[UniqueEntity(fields: ['mail'], message: 'There is already a mail with this address')]
+#[UniqueEntity(fields: ['tel'], message: 'There is already a tel with this number')]
 
 class Banques
 {
@@ -46,14 +48,17 @@ class Banques
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $address = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, unique:true)]
     private ?string $tel = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, unique:true)]
     private ?string $mail = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $descr = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $responsable = null;
 
     public function __construct()
     {
@@ -253,6 +258,18 @@ class Banques
     public function setDescr(?string $descr): static
     {
         $this->descr = $descr;
+
+        return $this;
+    }
+
+    public function getResponsable(): ?string
+    {
+        return $this->responsable;
+    }
+
+    public function setResponsable(?string $responsable): static
+    {
+        $this->responsable = $responsable;
 
         return $this;
     }

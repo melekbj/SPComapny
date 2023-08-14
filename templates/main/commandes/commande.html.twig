@@ -79,7 +79,7 @@
 										<td>{{ commande_materiel.prixV }}</td>
 										{% if loop.first %}
 										<td rowspan="{{ numRows }}">{{ item.banque.nom }}</td>
-										<td rowspan="{{ numRows }}">{{ item.tauxtva * 100 }}%</td>
+										<td rowspan="{{ numRows }}">{{ item.tauxtva }}%</td>
 										<td rowspan="{{ numRows }}">{{ item.date | date('d-m-Y') }}</td>
 										<td rowspan="{{ numRows }}">{{ item.user.fullname }}</td>
 										<td rowspan="{{ numRows }}">
@@ -147,141 +147,13 @@
 </div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog  modal-xl" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Ajouter nouveau commande</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div
-				class="modal-body">
-
-				<form action="{{ path('app_commandes') }}" method="POST">
-					<div class="row">
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="ref">Réference</label>
-								<input type="text" class="form-control" id="ref" name="ref" required unique>
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="description">Description</label>
-								<input type="text" class="form-control" id="description" name="description" required>
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="banque">Banque</label>
-								<select class="form-control" id="banque" name="banque" required>
-									<option value="">Choose a banque</option>
-									{% for banque in banques %}
-										<option value="{{ banque.id }}">{{ banque.nom }}</option>
-									{% endfor %}
-								</select>
-							</div>
-						</div>
-
-					</div>
-
-					<div class="row">
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="tauxtva">Taux TVA ( 10% = 0.1 )</label>
-								<input type="text" class="form-control" id="tauxtva" name="tauxtva" pattern="\d+(\.\d+)?" title="Please enter a valid float number" required>
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="avance">Avance</label>
-								<input type="text" class="form-control" id="avance" name="avance" pattern="[0-9]+" title="Please enter an integer number">
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="date">Date</label>
-								<input type="date" class="form-control" id="date" name="date" required>
-							</div>
-						</div>
-
-
-					</div>
-
-
-					<div class="ml-4 form-group">
-						<label for="materiel">Materiels</label>
-						<div class="row">
-							{% for materiel in materiels %}
-								{% if loop.index0 % 5 == 0 %}
-								</div>
-								<div class="row">
-								{% endif %}
-								<div class="col">
-									<div class="form-check">
-										<input class="form-check-input" type="checkbox" id="materiel{{ materiel.id }}" name="materiel[]" value="{{ materiel.id }}">
-										<label class="form-check-label" for="materiel{{ materiel.id }}">{{ materiel.nom }}</label>
-									</div>
-									<div class="text-area-container" style="display: none;">
-										<label for="textarea{{ materiel.id }}">Quantité</label>
-										<textarea class="form-control col-lg-12" id="textarea{{ materiel.id }}" name="textarea{{ materiel.id }}"></textarea>
-										<label for="price{{ materiel.id }}">Prix de vente</label>
-										<input class="form-control col-lg-12" type="text" id="price{{ materiel.id }}" name="price{{ materiel.id }}" value="{{ materiel.pu }}">
-									</div>
-								</div>
-
-							{% endfor %}
-						</div>
-
-					</div>
-
-
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary">Confirm</button>
-					</div>
-				</form>
-
-
-
-
-			</div>
-
-			{# <div class="modal-footer">
-			                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			                                <button type="submit" class="btn btn-primary">Save changes</button>
-			                              </div> #}
-		</div>
-	</div>
-</div>
 
 
 
 
 
-<script>
 
-	$(document).ready(function () {
-$('input[type="checkbox"]').change(function () {
-var checkboxId = $(this).attr('id');
-var textareaId = checkboxId.replace('materiel', 'textarea');
-var priceId = checkboxId.replace('materiel', 'price');
-var textAreaContainer = $('#' + textareaId).closest('.text-area-container');
-var priceContainer = $('#' + priceId).closest('.text-area-container');
-if ($(this).is(':checked')) {
-textAreaContainer.show();
-priceContainer.show()
-} else {
-textAreaContainer.hide();
-priceContainer.hide()
 
-}
-});
-});
-</script>
 
 
 
