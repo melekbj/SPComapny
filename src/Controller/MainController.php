@@ -540,6 +540,9 @@ class MainController extends AbstractController
 
         $commande = $em->getRepository(Commande::class)->findall();
 
+        $etat = $request->query->get('etat');
+
+        $commandeRepository = $em->getRepository(Commande::class);
         // Retrieve the list of banques from the database
         $banques = $em->getRepository(Banques::class)->findAll();
         
@@ -547,7 +550,14 @@ class MainController extends AbstractController
         $materiels = $em->getRepository(Materiels::class)->findAll();
         
 
-        
+        // Perform the filtering based on the selected "etat" value and bank ID
+        if ($etat) {
+            $commande = $commandeRepository->createQueryBuilder('c')
+                ->Where('c.etat = :etat')
+                ->setParameter('etat', $etat)
+                ->getQuery()
+                ->getResult();
+        }
 
         return $this->render('main/commandes/commande.html.twig', [
             'controller_name' => 'MainController',
