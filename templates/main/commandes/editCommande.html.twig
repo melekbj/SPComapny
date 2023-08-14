@@ -51,18 +51,24 @@
 									{% endfor %}
 								</select>
 							</div>
-							<div class="ml-4 form-group">
-								<label for="materiel">Matériels</label>
-								{% for materiel in materiels %}
-									<div class="form-check">
-										<input class="form-check-input" type="checkbox" id="materiel{{ materiel.id }}" name="materiel[]" value="{{ materiel.id }}" {% if commande.hasMateriel(materiel) %} checked {% endif %}>
-										<label class="form-check-label" for="materiel{{ materiel.id }}">{{ materiel.nom }}</label>
-									</div>
-									<div class="text-area-container {% if commande.hasMateriel(materiel) %} show {% else %} show {% endif %}">
-										<label for="textarea{{ materiel.id }}">Quantité</label>
-										<textarea class="form-control col-2" id="textarea{{ materiel.id }}" name="textarea{{ materiel.id }}">{{ commande.getMaterielQuantity(materiel) }}</textarea>
-										<label for="price{{ materiel.id }}">Prix de vente</label>
-										<input class="form-control col-2" id="price{{ materiel.id }}" name="price{{ materiel.id }}"></input>
+							<div id="materialContainers" class="col-md-12">
+								{% for material in existingMaterials %}
+									<div class="row material-container">
+										<!-- Existing Material Dropdown -->
+										<div class="col-md-4">
+											<select class="form-control materialSelect mt-3" onchange="showSelectedMaterial(this)" name="materialSelect[]" required>
+												<option value="">Choisir matériel</option>
+												{% for materiel in materiels %}
+													<option value="{{ materiel.id }}" data-price="{{ materiel.pu }}" {% if materiel.id == material.id %} selected {% endif %}>{{ materiel.nom }}</option>
+												{% endfor %}
+											</select>
+										</div>
+										<!-- Quantity and Price Input -->
+										<div class="horizontal-container" style="display: {{ material.id ? 'inline-block' : 'none' }}">
+											<input type="number" class="col-md-4 form-control quantity" name="quantite[]" value="{{ material.quantity }}" placeholder="Quantité" pattern="[0-9]+" title="Veuillez saisir un numéro valide" required/>
+											<input class="col-md-4 form-control price" type="text" name="price[]" value="{{ material.price }}" pattern="\d+(\.\d+)?" title="Veuillez saisir un numéro valide"/>
+											<button class="removeMaterial btn btn-danger" type="button"><span style="font-size:16px;">-</span></button>
+										</div>
 									</div>
 								{% endfor %}
 							</div>
@@ -70,7 +76,18 @@
 							<button type="submit" class="btn btn-primary">Update Commande</button>
 						</form>
 
-						<script>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- content-wrapper ends -->
+</div>
+
+
+
+{# <script>
 							$(document).ready(function () {
 							$('input[type="checkbox"]').change(function () {
 							var checkboxId = $(this).attr('id');
@@ -84,15 +101,7 @@
 							}
 							});
 							});
-						</script>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- content-wrapper ends -->
-</div>
-
+</script> #}
 
 
 

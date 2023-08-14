@@ -70,7 +70,7 @@
 					<div class="row">
 						<div class="col-md-4">
 							<div class="form-group">
-								<label for="ref">Réference</label>
+								<label for="ref">N° de commande</label>
 								<input type="text" class="form-control" id="ref" name="ref" required unique>
 							</div>
 						</div>
@@ -80,10 +80,21 @@
 								<input type="text" class="form-control" id="description" name="description" required>
 							</div>
 						</div>
-						<div class="col-md-4">
+            <div class="col-md-4">
+							<div class="form-group">
+								<label for="date">Date</label>
+								<input type="date" class="form-control" id="date" name="date" required>
+							</div>
+						</div>
+						
+
+					</div>
+
+					<div class="row">
+            <div class="col-md-3">
 							<div class="form-group">
 								<label for="banque">Banque</label>
-								<select class="form-control" id="banque" name="banque" required>
+								<select class="form-control" name="banque" required>
 									<option value="">Choose a banque</option>
 									{% for banque in banques %}
 										<option value="{{ banque.id }}">{{ banque.nom }}</option>
@@ -91,10 +102,6 @@
 								</select>
 							</div>
 						</div>
-
-					</div>
-
-					<div class="row">
 						<div class="col-md-3">
 							<div class="form-group">
 								<label for="tauxtva">Taux TVA ( 10 = 10% )</label>
@@ -118,12 +125,7 @@
 								<input type="text" class="form-control" id="avance" name="avance" pattern="[0-9]+" title="Veuillez saisir un numéro valide">
 							</div>
 						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								<label for="date">Date</label>
-								<input type="date" class="form-control" id="date" name="date" required>
-							</div>
-						</div>
+						
 
 
 					</div>
@@ -150,14 +152,6 @@
             </div>
           </div>
           
-
-
-					
-
-
-
-
-
           <div class="mt-3">
             <button type="submit" class="btn btn-primary font-italic">Enregistrer</button>
           </div>
@@ -251,24 +245,24 @@
 <script>
   // Function to show/hide the quantity and price div based on material selection
   function showSelectedMaterial() 
-{
-  const materialContainers = document.querySelectorAll('.material-container');
-  materialContainers.forEach((container) => {
-    const select = container.querySelector('.materialSelect');
-    const priceInput = container.querySelector('.price');
-    const selectedOption = select.options[select.selectedIndex]; // Corrected variable name here
-    const price = selectedOption.getAttribute('data-price');
+  {
+    const materialContainers = document.querySelectorAll('.material-container');
+    materialContainers.forEach((container) => {
+      const select = container.querySelector('.materialSelect');
+      const priceInput = container.querySelector('.price');
+      const selectedOption = select.options[select.selectedIndex]; // Corrected variable name here
+      const price = selectedOption.getAttribute('data-price');
 
-    priceInput.value = price;
-    const divToShowHide = container.querySelector('.quantity').parentElement;
-  
-    if (select.value !== '') {
-      divToShowHide.style.display = 'inline-block';
-    } else {
-      divToShowHide.style.display = 'none';
-    }
-  });
-}
+      priceInput.value = price;
+      const divToShowHide = container.querySelector('.quantity').parentElement;
+    
+      if (select.value !== '') {
+        divToShowHide.style.display = 'inline-block';
+      } else {
+        divToShowHide.style.display = 'none';
+      }
+    });
+  }
 
 
     // Get the container for material select dropdowns
@@ -311,20 +305,6 @@
   });
 </script>
 
-{# <script>
-    $(document).ready(function() {
-        const devises = {{ devises|json_encode|raw }};
-        const selectElement = $('#devise');
-
-        for (let i = 0; i < devises.length; i++) {
-            const option = $('<option>', {
-                value: devises[i],
-                text: devises[i]
-            });
-            selectElement.append(option);
-        }
-    });
-</script> #}
 
 
 

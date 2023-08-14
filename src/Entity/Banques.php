@@ -36,7 +36,7 @@ class Banques
     #[ORM\Column(length: 255,nullable:true)]
     private ?string $photo = 'photo';
 
-    #[ORM\OneToMany(mappedBy: 'banque', targetEntity: Commande::class, cascade:['remove'])]
+    #[ORM\OneToMany(mappedBy: 'banque', targetEntity: Commande::class)]
     private Collection $commandes;
 
     #[ORM\OneToMany(mappedBy: 'banque', targetEntity: Tresorie::class)]

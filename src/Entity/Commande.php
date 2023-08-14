@@ -36,7 +36,7 @@ class Commande
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $etat = 'pending';
 
-    #[ORM\ManyToOne(inversedBy: 'commandes', cascade:['remove'])]
+    #[ORM\ManyToOne(inversedBy: 'commandes')]
     private ?Banques $banque = null;
 
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: CommandeMateriels::class, cascade:['remove'])]
