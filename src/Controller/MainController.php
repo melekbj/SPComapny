@@ -694,7 +694,11 @@ class MainController extends AbstractController
         $em = $doctrine->getManager();
 
         // Retrieve the list of banques from the database
-        $banques = $em->getRepository(Banques::class)->findAll();
+        $banques = $em->getRepository(Banques::class)->createQueryBuilder('b')
+        ->where('b.nom NOT LIKE :pattern')
+        ->setParameter('pattern', 'caisse%')
+        ->getQuery()
+        ->getResult();
 
         // Retrieve the list of materiels from the database
         $materiels = $em->getRepository(Materiels::class)->findAll();
