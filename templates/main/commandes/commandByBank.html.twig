@@ -13,28 +13,32 @@
 				</h6>
 			</div> #}
           <div class="card mb-3">
-          <div class="card-body col-lg-12">
-            <form action="{{ path('app_commandes_by_bank', {'id': Id}) }}" method="get" class="form-inline">
-              
-              <div class="form-group col-mx-8">
-                <h5 class="mt-2"><strong>Filtrer par : </strong></h5>
-              </div>
-              
-              <div class="form-group col-lg-6">
-                <select name="etat" class="form-control col-lg-12">
-                  <option value="">Tous</option>
-                  <option value="livrenonpaye">Livré non payé</option>
-                  <option value="livrepaye">Terminé</option>
-                  <option value="nonlivre">Non livré</option>
-				  <option value="pending">En cours...</option>
-                </select>
-              </div>
-              
+			<div class="card-body col-lg-12">
+				<form action="{{ path('app_commandes_by_bank', {'id': Id}) }}" method="get" class="form-inline">
+					<div class="form-group col-mx-8">
+						<h5 class="mt-2">
+							<strong>Filtrer par :</strong>
+						</h5>
+					</div>
 
-              <button type="submit" class="btn btn-primary ">Filtrer</button>
-            </form>
-          </div>
-        </div>
+					<div class="form-group col-lg-2">
+						<select name="etat" class="form-control col-lg-12">
+							<option value="">Tous</option>
+							<option value="livrenonpaye">Livré non payé</option>
+							<option value="livrepaye">Terminé</option>
+							<option value="nonlivre">Non livré</option>
+							<option value="pending">En cours...</option>
+						</select>
+					</div>
+
+					<div class="form-group col-lg-4">
+						<input type="text" name="reference" class="form-control col-lg-12" placeholder="Rechercher par n° de commande">
+					</div>
+
+					<button type="submit" class="btn btn-primary">Filtrer</button>
+				</form>
+			</div>
+		</div>
 
 
 

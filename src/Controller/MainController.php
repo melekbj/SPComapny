@@ -541,6 +541,7 @@ class MainController extends AbstractController
         $commande = $em->getRepository(Commande::class)->findall();
 
         $etat = $request->query->get('etat');
+        $reference = $request->query->get('reference');
 
         $commandeRepository = $em->getRepository(Commande::class);
         // Retrieve the list of banques from the database
@@ -551,13 +552,22 @@ class MainController extends AbstractController
         
 
         // Perform the filtering based on the selected "etat" value and bank ID
+        $queryBuilder = $commandeRepository->createQueryBuilder('c');
+
+        // Apply the etat filter
         if ($etat) {
-            $commande = $commandeRepository->createQueryBuilder('c')
-                ->Where('c.etat = :etat')
-                ->setParameter('etat', $etat)
-                ->getQuery()
-                ->getResult();
+            $queryBuilder->andWhere('c.etat = :etat')
+                ->setParameter('etat', $etat);
         }
+    
+        // Apply the reference filter
+        if ($reference) {
+            $queryBuilder->orWhere('c.ref LIKE :reference')
+                ->setParameter('reference', '%' . $reference . '%');
+        }
+    
+        $commande = $queryBuilder->getQuery()->getResult();
+        
 
         return $this->render('main/commandes/commande.html.twig', [
             'controller_name' => 'MainController',
@@ -814,18 +824,36 @@ class MainController extends AbstractController
         $etat = $request->query->get('etat'); // Retrieve the "etat" value from the query parameters
 
         $commandeRepository = $em->getRepository(Commande::class);
+        $reference = $request->query->get('reference');
         
         // Perform the filtering based on the selected "etat" value and bank ID
-        if ($etat) {
-            $commande = $commandeRepository->createQueryBuilder('c')
-                ->where('c.banque = :id')
-                ->andWhere('c.etat = :etat')
-                ->setParameters(['id' => $id, 'etat' => $etat])
-                ->getQuery()
-                ->getResult();
-        } else {
-            $commande = $commandeRepository->findBy(['banque' => $id]);
+        $queryBuilder = $commandeRepository->createQueryBuilder('c');
+
+        // Apply the banque filter (similar to your original code)
+        if ($id) {
+            if ($etat) {
+                $queryBuilder->andWhere('c.banque = :id')
+                    ->andWhere('c.etat = :etat')
+                    ->setParameters(['id' => $id, 'etat' => $etat]);
+            } else {
+                $queryBuilder->andWhere('c.banque = :id')
+                    ->setParameter('id', $id);
+            }
         }
+
+        // Apply the etat filter
+        if ($etat) {
+            $queryBuilder->andWhere('c.etat = :etat')
+                ->setParameter('etat', $etat);
+        }
+
+        // Apply the reference filter
+        if ($reference) {
+            $queryBuilder->andWhere('c.ref LIKE :reference')
+                ->setParameter('reference', '%' . $reference . '%');
+        }
+
+        $commande = $queryBuilder->getQuery()->getResult();
 
         //edit bank
         $banque = $em->getRepository(Banques::class)->find($id);
@@ -915,21 +943,39 @@ class MainController extends AbstractController
         // On récupère la liste des commandes de l'utilisateur En cours...
         $em = $doctrine->getManager();
 
-        $etat = $request->query->get('etat'); // Retrieve the "etat" value from the query parameters
+        $etat = $request->query->get('etat'); 
+        $reference = $request->query->get('reference');// Retrieve the "etat" value from the query parameters
 
         $commandeRepository = $em->getRepository(Commande::class);
 
         // Perform the filtering based on the selected "etat" value and user ID
-        if ($etat) {
-            $commande = $commandeRepository->createQueryBuilder('c')
-                ->where('c.user = :id')
-                ->andWhere('c.etat = :etat')
-                ->setParameters(['id' => $id, 'etat' => $etat])
-                ->getQuery()
-                ->getResult();
-        } else {
-            $commande = $commandeRepository->findBy(['user' => $id]);
+        $queryBuilder = $commandeRepository->createQueryBuilder('c');
+
+        // Apply the user filter (similar to your original code)
+        if ($id) {
+            if ($etat) {
+                $queryBuilder->andWhere('c.user = :id')
+                    ->andWhere('c.etat = :etat')
+                    ->setParameters(['id' => $id, 'etat' => $etat]);
+            } else {
+                $queryBuilder->andWhere('c.user = :id')
+                    ->setParameter('id', $id);
+            }
         }
+
+        // Apply the etat filter
+        if ($etat) {
+            $queryBuilder->andWhere('c.etat = :etat')
+                ->setParameter('etat', $etat);
+        }
+
+        // Apply the reference filter
+        if ($reference) {
+            $queryBuilder->andWhere('c.ref LIKE :reference')
+                ->setParameter('reference', '%' . $reference . '%');
+        }
+
+        $commande = $queryBuilder->getQuery()->getResult();
 
         return $this->render('main/commandes/commandByUser.html.twig', [
             'controller_name' => 'MainController',
