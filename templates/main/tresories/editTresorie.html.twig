@@ -17,15 +17,38 @@
                   </p> #}
                   
                     
-                    {{ form_start(editForm) }}
+                    {# {{ form_start(editForm) }}
                     {{ form_row(editForm.solde_r, {'attr': {'class': 'form-control'}}) }}
                     {{ form_row(editForm.entree, {'attr': {'class': 'form-control'}}) }}
                     {{ form_row(editForm.descE, {'attr': {'class': 'form-control'}}) }}
                     {{ form_row(editForm.sortie, {'attr': {'class': 'form-control'}}) }}
                     {{ form_row(editForm.descS, {'attr': {'class': 'form-control'}}) }}
-                    {# {{ form_row(editForm.banque, {'attr': {'class': 'form-control'}}) }} #}
                     {{ form_row(editForm.Add, {'label': 'Modifier', 'attr': {'class': 'btn btn-success'}}) }}
-                    {{ form_end(editForm) }}
+                    {{ form_end(editForm) }} #}
+                    {{ form_start(editForm) }}
+                    {{ form_row(editForm.solde_r) }}
+                    <div class="form-row">
+                      <div class=" col-md-9">
+                        {{ form_row(editForm.entree) }}
+                      </div>
+                      <div class="col-md-3">
+                        {{ form_row(editForm.deviseE) }}
+                      </div>
+                    </div>
+                    {{ form_row(editForm.descE) }}
+                    <div class="form-row">
+                      <div class=" col-md-9">
+                        {{ form_row(editForm.sortie) }}
+                      </div>
+                      <div class="col-md-3">
+                        {{ form_row(editForm.deviseS) }}
+                      </div>
+                    </div>
+                    {{ form_row(editForm.descS) }}
+                    {# {{ form_row(editForm.banque) }} #}
+                    {{ form_row(editForm.Add, {'label': 'Modifier', 'attr': {'class': 'btn btn-success'}}) }}
+
+                    {{ form_end(editForm) }} 
 
                 </div>
               </div>

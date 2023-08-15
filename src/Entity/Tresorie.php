@@ -43,6 +43,12 @@ class Tresorie
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $descS = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $deviseE = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $deviseS = null;
+
 
     public function __construct()
     {
@@ -146,6 +152,30 @@ class Tresorie
     public function setDescS(?string $descS): static
     {
         $this->descS = $descS;
+
+        return $this;
+    }
+
+    public function getDeviseE(): ?string
+    {
+        return $this->deviseE;
+    }
+
+    public function setDeviseE(?string $deviseE): static
+    {
+        $this->deviseE = $deviseE;
+
+        return $this;
+    }
+
+    public function getDeviseS(): ?string
+    {
+        return $this->deviseS;
+    }
+
+    public function setDeviseS(?string $deviseS): static
+    {
+        $this->deviseS = $deviseS;
 
         return $this;
     }

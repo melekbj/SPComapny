@@ -22,10 +22,19 @@
 					{% endfor %}
 					<div class="card-body">
 						<h4 class="card-title">Liste des tresories</h4>
-						<h3 class="card-header font-italic font-weight-bold text-capitalize text-center text-primary">{{pays.nom}}</h3>
+						<h3 class="card-header bg-dark font-italic font-weight-bold text-capitalize text-center text-primary">{{pays.nom}}</h3>
 						<div class="table-responsive">
 							<table class="table table-bordered">
 								<thead>
+									<tr>
+										<th></th>
+										<th></th>
+										<th colspan="4" class=" font-italic text-capitalize text-center bg-secondary text-white">En cours</th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
 									<tr>
 										<th>
 											Banque nom
@@ -73,13 +82,13 @@
 												{{item.solder}}											
 											</td>
 											<td>
-												{{item.entree}}
-											</td>
+												{{item.entree}} <strong>{{item.deviseE}}</strong> 
+											</td> 
 											<td>
 												{{item.descE}}
 											</td>
 											<td>
-												{{item.sortie}}
+												{{item.sortie}} <strong>{{item.deviseS}}</strong> 
 											</td>
 											<td>
 												{{item.descS}}
@@ -113,7 +122,7 @@
 									<tr>
 										<th>Total</th>
 										<td colspan="1">{{ sumSR }}</td>
-										<td colspan="2"></td>
+										<td colspan="4"></td>
 										<td>{{ sumAM }}</td>
 										<td colspan="3"></td>
 									</tr>
@@ -150,7 +159,30 @@
 				</button>
 			</div>
 			<div class="modal-body">
-            	{{form(tresorieForm)}}   
+            	{{ form_start(tresorieForm) }}
+				{{ form_row(tresorieForm.solde_r) }}
+				<div class="form-row">
+					<div class=" col-md-9">
+						{{ form_row(tresorieForm.entree) }}
+					</div>
+					<div class="col-md-3">
+						{{ form_row(tresorieForm.deviseE) }}
+					</div>
+				</div>
+				{{ form_row(tresorieForm.descE) }}
+				<div class="form-row">
+					<div class=" col-md-9">
+						{{ form_row(tresorieForm.sortie) }}
+					</div>
+					<div class="col-md-3">
+						{{ form_row(tresorieForm.deviseS) }}
+					</div>
+				</div>
+				{{ form_row(tresorieForm.descS) }}
+				{{ form_row(tresorieForm.banque) }}
+				{{ form_row(tresorieForm.Add) }}
+
+				{{ form_end(tresorieForm) }} 
 			</div>
 		</div>
 	</div>

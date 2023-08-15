@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class TresorieType extends AbstractType
@@ -25,12 +26,35 @@ class TresorieType extends AbstractType
                 'label' => 'Montant sortie',
             ])
             ->add('descE', null, [
-                'label' => 'Montant entrée',
+                'label' => 'Description du montant entrée',
             ])
             ->add('descS', null, [
-                'label' => 'Montant sortie',
+                'label' => 'Description du montant sortie',
             ])
-            // ->add('banque')
+            ->add('deviseE', ChoiceType::class, [
+                'label' => 'Devise',
+                'choices' => [
+                    'USD' => 'USD',
+                    'EUR' => 'EUR',
+                ],
+                'expanded' => false, // Set to true if you want radio buttons instead of a dropdown
+                'multiple' => false, // Set to true if you want to allow multiple currency selections
+                'attr' => [
+                    'class' => 'form-control', // Use the same CSS class for consistent styling
+                ],
+            ])
+            ->add('deviseS', ChoiceType::class, [
+                'label' => 'Devise',
+                'choices' => [
+                    'USD' => 'USD',
+                    'EUR' => 'EUR',
+                ],
+                'expanded' => false, // Set to true if you want radio buttons instead of a dropdown
+                'multiple' => false, // Set to true if you want to allow multiple currency selections
+                'attr' => [
+                    'class' => 'form-control', // Use the same CSS class for consistent styling
+                ],
+            ])
             ->add('banque', EntityType::class, [
                 'class' => Banques::class,
                 'choice_label' => 'nom',
