@@ -1314,20 +1314,8 @@ class MainController extends AbstractController
         $pays = $em->getRepository(Pays::class)->find($id);
         
         $tresoriee = $em->getRepository(Tresorie::class)->findBy(['pays' => $pays]);
-        // $tresorieHistory = $em->getRepository(TresorieHistory::class)->findAll();
-        // $subquery = $em->createQueryBuilder()
-        //     ->select('MAX(thSub.updatedAt)')
-        //     ->from(TresorieHistory::class, 'thSub')
-        //     ->where('thSub.banque = th.banque')
-        //     ->getDQL();
-
-        // $tresorieHistory = $em->getRepository(TresorieHistory::class)->createQueryBuilder('th')
-        //     ->where('th.updatedAt IN (' . $subquery . ')')
-        //     ->getQuery()
-        //     ->getResult();
 
         $paysId = $id;
-
 
         $tresorie = new Tresorie();
         $tresorie->setPays($pays);

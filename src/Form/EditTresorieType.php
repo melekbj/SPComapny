@@ -24,6 +24,12 @@ class EditTresorieType extends AbstractType
             ->add('sortie', null, [
                 'label' => 'Montant sortie',
             ])
+            ->add('descE', null, [
+                'label' => 'Description entrée',
+            ])
+            ->add('descS', null, [
+                'label' => 'Description sortie',
+            ])
             // ->add('banque')
             // ->add('banque', EntityType::class, [
             //     'class' => Banques::class,

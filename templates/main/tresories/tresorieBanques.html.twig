@@ -7,8 +7,8 @@
 <div class="main-panel">
 	<div class="content-wrapper">
 		{% if app.user.getRoles()=="ROLE_SUPER_USER" %}
-			<button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#exampleModal">
-				Add tresorie +
+			<button type="button" class="btn btn-success mb-2 ml-3" data-toggle="modal" data-target="#exampleModal">
+				Ajouter tresorie +
 			</button>
 		{% endif %}
 			
@@ -37,7 +37,13 @@
 											Montant entrée
 										</th>
 										<th>
+											Description entrée
+										</th>
+										<th>
 											Montant sortie
+										</th>
+										<th>
+											Description sortie
 										</th>
 										<th>
 											Solde après mouvement
@@ -70,7 +76,13 @@
 												{{item.entree}}
 											</td>
 											<td>
+												{{item.descE}}
+											</td>
+											<td>
 												{{item.sortie}}
+											</td>
+											<td>
+												{{item.descS}}
 											</td>
 											<td>
 												{{ item.solder + item.entree - item.sortie }}

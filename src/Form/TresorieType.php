@@ -24,12 +24,18 @@ class TresorieType extends AbstractType
             ->add('sortie', null, [
                 'label' => 'Montant sortie',
             ])
+            ->add('descE', null, [
+                'label' => 'Montant entrée',
+            ])
+            ->add('descS', null, [
+                'label' => 'Montant sortie',
+            ])
             // ->add('banque')
             ->add('banque', EntityType::class, [
                 'class' => Banques::class,
                 'choice_label' => 'nom',
                 'label' => 'Banque',
-                'placeholder' => 'Choose a type',
+                'placeholder' => 'Choisir une banque',
                 'required' => true,
                 'query_builder' => function ($repository) use ($options) {
                     $paysId = $options['pays_id'];

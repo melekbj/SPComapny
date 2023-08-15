@@ -37,6 +37,12 @@ class Tresorie
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $descE = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $descS = null;
+
 
     public function __construct()
     {
@@ -116,6 +122,30 @@ class Tresorie
     public function setDate(?\DateTimeInterface $date): static
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getDescE(): ?string
+    {
+        return $this->descE;
+    }
+
+    public function setDescE(?string $descE): static
+    {
+        $this->descE = $descE;
+
+        return $this;
+    }
+
+    public function getDescS(): ?string
+    {
+        return $this->descS;
+    }
+
+    public function setDescS(?string $descS): static
+    {
+        $this->descS = $descS;
 
         return $this;
     }
