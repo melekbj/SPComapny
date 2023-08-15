@@ -90,13 +90,8 @@
 												{{item.solder}}											
 											</td>
 											<td>
-												{% for amount in item.entree %}
-													{{ amount }}
-												{% endfor %} 
+												{{item.entree}} <strong>{{item.deviseE}}</strong> 
 											</td> 
-											<td>
-												<strong>{{ item.deviseE }}</strong>
-											</td>
 											<td>
 												{{item.descE}}
 											</td>
@@ -106,14 +101,14 @@
 											<td>
 												{{item.descS}}
 											</td>
-											{# <td>
+											<td>
 												{{ item.solder + item.entree - item.sortie }}
-											</td> #}
+											</td>
 											 <td>
 												{{ item.date | date('d-m-Y') }}
 											</td>
 
-											{# {% set sumAM = sumAM + (item.solder + item.entree - item.sortie)  %} #}
+											{% set sumAM = sumAM + (item.solder + item.entree - item.sortie)  %}
 											{% set sumSR = sumSR + item.solder %}
 											{# <td>
 												{{item.user.nom}}
@@ -174,13 +169,14 @@
 			<div class="modal-body">
             	{{ form_start(tresorieForm) }}
 				{{ form_row(tresorieForm.solde_r) }}
-
-				
-				<div id="entree-container" data-prototype="{{ form_widget(tresorieForm.entree.vars.prototype)|e }}" data-index="{{ tresorieForm.entree|length }}">
-					{{ form_widget(tresorieForm.entree) }}
+				<div class="form-row">
+					<div class=" col-md-9">
+						{{ form_row(tresorieForm.entree) }}
+					</div>
+					<div class="col-md-3">
+						{{ form_row(tresorieForm.deviseE) }}
+					</div>
 				</div>
-				{{ form_row(tresorieForm.deviseE) }}
-				<button id="add-entree" type="button">+</button>
 				{{ form_row(tresorieForm.descE) }}
 				<div class="form-row">
 					<div class=" col-md-9">
@@ -204,23 +200,6 @@
 
 
 
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-    var $entreeContainer = $('#entree-container');
-    var $addEntreeButton = $('#add-entree');
-
-    $addEntreeButton.click(function() {
-        var prototype = $entreeContainer.data('prototype');
-        var index = $entreeContainer.data('index');
-        var newForm = prototype.replace(/__name__/g, index);
-
-        $entreeContainer.append(newForm);
-        $entreeContainer.data('index', index + 1);
-    });
-});
-</script>
 
 
 
