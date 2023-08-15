@@ -88,10 +88,15 @@
 									<input type="number" id="avance" name="avance" value="{{ commande.avance }}" required class="form-control">
 								</div>
 							</div>
+
 							
 							<div class="row mt-4">
-								<div id="materialContainers" class="col-md-12">
+								<div id="materialContainer" class="col-md-12">
 									<div class="row material-containers">
+										<div class="col-md-12 mb-2">
+											<button type="button" class="addMaterialButton btn btn-info">Ajouter materiel +</button>
+										</div>
+
 										{% for commandMaterial in commandeMaterials %}
 											<div class="col-md-12 material-container">
 												<div class="row">
@@ -107,12 +112,15 @@
 														</select>
 													</div>
 													<div class="horizontal-container">
-													<input type="number" class="col-md-4 form-control quantity" name="quantite[]" placeholder="Quantité" pattern="[0-9]+" title="Veuillez saisir un numéro valide" value="{{ commandMaterial.getQuantite()  }}" required/>
-													<input class="col-md-4 form-control price" type="text" name="price[]" pattern="\d+(\.\d+)?" title="Veuillez saisir un numéro valide" value="{{ commandMaterial.getPrixV() }}" required/>
+														<input type="number" class="col-md-4 form-control quantity" name="quantite[]" placeholder="Quantité" pattern="[0-9]+" title="Veuillez saisir un numéro valide" value="{{ commandMaterial.getQuantite()  }}" required/>
+														<input class="col-md-4 form-control price" type="text" name="price[]" pattern="\d+(\.\d+)?" title="Veuillez saisir un numéro valide" value="{{ commandMaterial.getPrixV() }}" required/>
+
 													</div>
 												</div>
 											</div>
 										{% endfor %}
+										
+
 									</div>
 								</div>
 							</div>
@@ -131,10 +139,53 @@
 
 
 
+<script>
+    $(document).ready(function() {
+        // Counter for generating unique IDs
+        let materialCounter = 0;
 
+        // Function to create a new material selection field
+        function createMaterialField() {
+            materialCounter++;
+            const newMaterialField = `
+                <div class="col-md-12 material-container">
+                    <div class="row">
+                        <div class="col-md-4" style="margin-left:-15px;" >
+                            <select class="form-control materialSelect mt-1" style="width:103%;" name="materialSelect[]" required>
+                                <option value="">Choisir matériel</option>
+                                {% for materiel in materiels %}
+                                    <option value="{{ materiel.id }}">{{ materiel.nom }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class=" ml-1 horizontal-container quantity-price-fields" style="display: none;">
+                            <input type="number" class="col-md-4 form-control quantity ml-1" name="quantite[]" placeholder="Quantité" pattern="[0-9]+" title="Veuillez saisir un numéro valide" required/>
+                            <input class="col-md-4 form-control price" type="text" name="price[]"  title="Veuillez saisir un numéro valide" required/>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return newMaterialField;
+        }
 
+        // Handle click event on the "+ Add Material" button by delegating to a higher-level element
+        $(document).on("click", ".addMaterialButton", function() {
+            const materialField = createMaterialField();
+            $("#materialContainer").append(materialField);
+        });
 
-
+        // Show/hide quantity and price fields based on material selection
+        $(document).on("change", ".materialSelect", function() {
+            const container = $(this).closest(".material-container");
+            const fields = container.find(".quantity-price-fields");
+            if ($(this).val() !== "") {
+                fields.show();
+            } else {
+                fields.hide();
+            }
+        });
+    });
+</script>
 
 
 
