@@ -19,8 +19,8 @@ class Tresorie
     #[ORM\Column(nullable: true)]
     private ?float $solde_r = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $entree = null;
+    #[ORM\Column(type:"json",nullable: true)]
+    private ?array $entree = null;
 
     #[ORM\Column(nullable: true)]
     private ?float $sortie = null;
@@ -72,12 +72,23 @@ class Tresorie
         return $this;
     }
 
-    public function getEntree(): ?float
+    // public function getEntree(): ?float
+    // {
+    //     return $this->entree;
+    // }
+
+    // public function setEntree(?float $entree): static
+    // {
+    //     $this->entree = $entree;
+
+    //     return $this;
+    // }
+    public function getEntree(): ?array
     {
         return $this->entree;
     }
 
-    public function setEntree(?float $entree): static
+    public function setEntree(?array $entree): self
     {
         $this->entree = $entree;
 

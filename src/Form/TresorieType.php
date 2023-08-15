@@ -8,8 +8,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class TresorieType extends AbstractType
 {
@@ -19,8 +21,11 @@ class TresorieType extends AbstractType
             ->add('solde_r', null, [
                 'label' => 'Solde réel',
             ])
-            ->add('entree', null, [
+            ->add('entree', CollectionType::class, [
                 'label' => 'Montant entrée',
+                'entry_type' => TextType::class, // Create a dedicated form type for 'entree'
+                'allow_add' => true,
+                'by_reference' => false,
             ])
             ->add('sortie', null, [
                 'label' => 'Montant sortie',

@@ -30,10 +30,14 @@
 										<th></th>
 										<th></th>
 										<th colspan="4" class=" font-italic text-capitalize text-center bg-secondary text-white">En cours</th>
+										{% if app.user and (app.user.roles == "ROLE_ADMIN" or app.user.roles == "ROLE_SUPER_USER")  %}
 										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
+										{% else %}
+											<th colspan="3"></th>
+										{% endif %}
 									</tr>
 									<tr>
 										<th>
@@ -63,9 +67,13 @@
 										{# <th>
 											User name
 										</th> #}
-										<th colspan="2" class=" text-center">
-											Actions
-										</th>
+										{% if app.user and (app.user.roles == "ROLE_ADMIN" or app.user.roles == "ROLE_SUPER_USER")  %}
+											<th colspan="2" class=" text-center">
+												Actions
+											</th>
+										{% else %}
+											<th>Actions</th>
+										{% endif %}
 									</tr>
 								</thead>
 								<tbody>
@@ -82,8 +90,13 @@
 												{{item.solder}}											
 											</td>
 											<td>
-												{{item.entree}} <strong>{{item.deviseE}}</strong> 
+												{% for amount in item.entree %}
+													{{ amount }}
+												{% endfor %} 
 											</td> 
+											<td>
+												<strong>{{ item.deviseE }}</strong>
+											</td>
 											<td>
 												{{item.descE}}
 											</td>
@@ -93,19 +106,19 @@
 											<td>
 												{{item.descS}}
 											</td>
-											<td>
+											{# <td>
 												{{ item.solder + item.entree - item.sortie }}
-											</td>
+											</td> #}
 											 <td>
 												{{ item.date | date('d-m-Y') }}
 											</td>
 
-											{% set sumAM = sumAM + (item.solder + item.entree - item.sortie)  %}
+											{# {% set sumAM = sumAM + (item.solder + item.entree - item.sortie)  %} #}
 											{% set sumSR = sumSR + item.solder %}
 											{# <td>
 												{{item.user.nom}}
 											</td> #}
-											{% if app.user.getRoles()=='ROLE_SUPER_USER' %}
+											{% if app.user and (app.user.roles == "ROLE_ADMIN" or app.user.roles == "ROLE_SUPER_USER")  %}
 												<td>
 													<a href="{{path('app_edit_tresorie', {'id': item.id})}}" class="btn btn-success btn-sm">Modifier</a>
 												</td>
@@ -121,9 +134,9 @@
 
 									<tr>
 										<th>Total</th>
-										<td colspan="1">{{ sumSR }}</td>
+										<td colspan="1"> <strong>{{ sumSR }}</strong> </td>
 										<td colspan="4"></td>
-										<td>{{ sumAM }}</td>
+										<td> <strong>{{ sumAM }} </strong> </td>
 										<td colspan="3"></td>
 									</tr>
 
@@ -161,14 +174,13 @@
 			<div class="modal-body">
             	{{ form_start(tresorieForm) }}
 				{{ form_row(tresorieForm.solde_r) }}
-				<div class="form-row">
-					<div class=" col-md-9">
-						{{ form_row(tresorieForm.entree) }}
-					</div>
-					<div class="col-md-3">
-						{{ form_row(tresorieForm.deviseE) }}
-					</div>
+
+				
+				<div id="entree-container" data-prototype="{{ form_widget(tresorieForm.entree.vars.prototype)|e }}" data-index="{{ tresorieForm.entree|length }}">
+					{{ form_widget(tresorieForm.entree) }}
 				</div>
+				{{ form_row(tresorieForm.deviseE) }}
+				<button id="add-entree" type="button">+</button>
 				{{ form_row(tresorieForm.descE) }}
 				<div class="form-row">
 					<div class=" col-md-9">
@@ -192,6 +204,23 @@
 
 
 
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    var $entreeContainer = $('#entree-container');
+    var $addEntreeButton = $('#add-entree');
+
+    $addEntreeButton.click(function() {
+        var prototype = $entreeContainer.data('prototype');
+        var index = $entreeContainer.data('index');
+        var newForm = prototype.replace(/__name__/g, index);
+
+        $entreeContainer.append(newForm);
+        $entreeContainer.data('index', index + 1);
+    });
+});
+</script>
 
 
 
