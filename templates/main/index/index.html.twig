@@ -85,7 +85,7 @@
                 <div class="col-md-6 mb-4 stretch-card transparent">
                     <div class="card card-tale">
                         <div class="card-body">
-                            <p class="mb-4">Pending Super Users</p>
+                            <p class="mb-4">Invitations des utilisateurs</p>
                             <p class="fs-30 mb-2">{{ pendingUsersCount }}</p>
                             <p>{{ pendingUsersPercentage|number_format(2) }}%</p>
                         </div>
@@ -95,7 +95,7 @@
                 <div class="col-md-6 mb-4 stretch-card transparent">
                     <div class="card card-dark-blue">
                         <div class="card-body">
-                            <p class="mb-4">Total Commandes</p>
+                            <p class="mb-4">Nombre de commandes</p>
                             <p class="fs-30 mb-2">{{ totalCommandsCount }}</p>
                             <p>{{ totalCommandsPercentage|number_format(2) }}% </p>
                         </div>
@@ -140,7 +140,7 @@
                           new Chart(ctx, {
                             type: 'bar',
                             data: {
-                              labels: ['pending', 'livrepaye', 'livrenonpaye', 'nonlivre'],
+                              labels: ['En cours', 'Terminées', 'Livré non payé', 'Non livré'],
                               datasets: [{
                                 label: '# des commandes',
                                 data: [{{ pendingC }}, {{ livrepaye }}, {{ livrenonpaye }}, {{ nonlivre }}],
@@ -188,7 +188,7 @@
                           new Chart(ctx2, {
                             type: 'pie',
                             data: {
-                              labels: ['en attente', 'approuvé', 'bloqué', 'debloqué'],
+                              labels: ['En attente', 'Approuvés', 'Bloqués', 'Debloqués'],
                               datasets: [{
                                 label: '# des utilisateurs',
                                 data: [{{ pendingU }}, {{ approved }}, {{ blocked }}, {{ deblocked }}],
