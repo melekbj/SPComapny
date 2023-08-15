@@ -741,7 +741,14 @@ class MainController extends AbstractController
             $commande->setDate($date);
             $commande->setDevise($devise);
             $commande->setRef($ref);
-
+            
+            // Before iterating over selected materials
+            foreach ($commandeMaterials as $existingMaterial) {
+                if (!in_array($existingMaterial->getMateriel()->getId(), $materielIds)) {
+                    // Remove the existing material if not in the selected list
+                    $em->remove($existingMaterial);
+                }
+            }
             // Iterate over the selected Materiel IDs and create/update CommandMaterial entities
             foreach ($materielIds as $index => $materielId) {
                 // Retrieve the selected Materiel entity
