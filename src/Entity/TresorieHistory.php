@@ -40,6 +40,9 @@ class TresorieHistory
     #[ORM\ManyToOne(inversedBy: 'tresorieHistories')]
     private ?User $user = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $soldeAM = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -152,6 +155,18 @@ class TresorieHistory
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getSoldeAM(): ?float
+    {
+        return $this->soldeAM;
+    }
+
+    public function setSoldeAM(?float $soldeAM): static
+    {
+        $this->soldeAM = $soldeAM;
 
         return $this;
     }

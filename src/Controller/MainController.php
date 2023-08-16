@@ -1330,10 +1330,20 @@ class MainController extends AbstractController
         $form = $this->createForm(TresorieType::class, $tresorie, ['pays_id' => $paysId]);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $doctrine->getManager();
+        
+            // Calculate soldeAM based on the type
+            if ($tresorie->getType() == 'entree') {
+                $tresorie->setSoldeAM($tresorie->getSoldeR() + $tresorie->getMontant());
+            } elseif ($tresorie->getType() == 'sortie') {
+                $tresorie->setSoldeAM($tresorie->getSoldeR() - $tresorie->getMontant());
+            }
+        
+            // Persist and flush
             $entityManager->persist($tresorie);
             $entityManager->flush();
+        
             $this->addFlash('success', 'tresorie ajouté avec succès');
             return $this->redirectToRoute('app_tresorie_banque', ['id' => $id]);
         }
@@ -1382,6 +1392,7 @@ class MainController extends AbstractController
 
             $tresorieHistory = new TresorieHistory();
             $tresorieHistory->setSoldeR($tresorie->getSoldeR());
+            $tresorieHistory->setSoldeAM($tresorie->getSoldeAM());
             $tresorieHistory->setMontant($tresorie->getMontant());
             $tresorieHistory->setDescription($tresorie->getDescription());
             $tresorieHistory->setType($tresorie->getType());
@@ -1423,7 +1434,7 @@ class MainController extends AbstractController
 
         return $this->render('main/tresories/historiqueTresorie.html.twig', [
             'bankHistory' => $bankHistory,
-            'tresorie' => $tresorie,
+            'tresories' => $tresorie,
             'image' => $image,
         ]);
     }
