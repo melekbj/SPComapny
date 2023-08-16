@@ -1,5 +1,7 @@
 framework:
     notifier:
+        # browser:
+        #     enabled: true
         #chatter_transports:
         #    slack: '%env(SLACK_DSN)%'
         #    telegram: '%env(TELEGRAM_DSN)%'

@@ -60,8 +60,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: false)]
     private ?bool $verified = false;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: TresorieHistory::class)]
-    private Collection $tresorieHistories;
+    // #[ORM\OneToMany(mappedBy: 'user', targetEntity: TresorieHistory::class)]
+    // private Collection $tresorieHistories;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $phone = null;
 
 
     public function __construct()
@@ -271,6 +274,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $tresorieHistory->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
 
         return $this;
     }

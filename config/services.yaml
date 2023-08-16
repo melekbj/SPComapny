@@ -24,10 +24,11 @@ services:
         arguments:
             $commandRepository: '@App\Repository\CommandeRepository'
             $userRepository: '@App\Repository\UserRepository'
-            $security: '@security.helper' # Use the correct service reference for Security
+            $security: '@security.helper'
+            # $session: '@session'
         tags:
             - { name: twig.extension }
-   
+    
 
 
     Gregwar\Captcha\CaptchaBuilderInterface: '@gregwar_captcha.captcha_builder'

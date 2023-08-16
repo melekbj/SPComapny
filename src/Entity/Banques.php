@@ -39,11 +39,11 @@ class Banques
     #[ORM\OneToMany(mappedBy: 'banque', targetEntity: Commande::class, cascade:['remove'])]
     private Collection $commandes;
 
-    #[ORM\OneToMany(mappedBy: 'banque', targetEntity: Tresorie::class)]
-    private Collection $tresories;
+    // #[ORM\OneToMany(mappedBy: 'banque', targetEntity: Tresorie::class)]
+    // private Collection $tresories;
 
-    #[ORM\OneToMany(mappedBy: 'banque', targetEntity: TresorieHistory::class)]
-    private Collection $tresorieHistories;
+    // #[ORM\OneToMany(mappedBy: 'banque', targetEntity: TresorieHistory::class)]
+    // private Collection $tresorieHistories;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $address = null;
@@ -59,6 +59,12 @@ class Banques
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $responsable = null;
+
+    #[ORM\OneToMany(mappedBy: 'banque', targetEntity: Tresorie::class)]
+    private Collection $tresories;
+
+    #[ORM\OneToMany(mappedBy: 'banque', targetEntity: TresorieHistory::class)]
+    private Collection $tresorieHistories;
 
     public function __construct()
     {
@@ -184,35 +190,35 @@ class Banques
         return $this;
     }
 
-    /**
-     * @return Collection<int, TresorieHistory>
-     */
-    public function getTresorieHistories(): Collection
-    {
-        return $this->tresorieHistories;
-    }
+    // /**
+    //  * @return Collection<int, TresorieHistory>
+    //  */
+    // public function getTresorieHistories(): Collection
+    // {
+    //     return $this->tresorieHistories;
+    // }
 
-    public function addTresorieHistory(TresorieHistory $tresorieHistory): static
-    {
-        if (!$this->tresorieHistories->contains($tresorieHistory)) {
-            $this->tresorieHistories->add($tresorieHistory);
-            $tresorieHistory->setBanque($this);
-        }
+    // public function addTresorieHistory(TresorieHistory $tresorieHistory): static
+    // {
+    //     if (!$this->tresorieHistories->contains($tresorieHistory)) {
+    //         $this->tresorieHistories->add($tresorieHistory);
+    //         $tresorieHistory->setBanque($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeTresorieHistory(TresorieHistory $tresorieHistory): static
-    {
-        if ($this->tresorieHistories->removeElement($tresorieHistory)) {
-            // set the owning side to null (unless already changed)
-            if ($tresorieHistory->getBanque() === $this) {
-                $tresorieHistory->setBanque(null);
-            }
-        }
+    // public function removeTresorieHistory(TresorieHistory $tresorieHistory): static
+    // {
+    //     if ($this->tresorieHistories->removeElement($tresorieHistory)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($tresorieHistory->getBanque() === $this) {
+    //             $tresorieHistory->setBanque(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getAddress(): ?string
     {
@@ -270,6 +276,36 @@ class Banques
     public function setResponsable(?string $responsable): static
     {
         $this->responsable = $responsable;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TresorieHistory>
+     */
+    public function getTresorieHistories(): Collection
+    {
+        return $this->tresorieHistories;
+    }
+
+    public function addTresorieHistory(TresorieHistory $tresorieHistory): static
+    {
+        if (!$this->tresorieHistories->contains($tresorieHistory)) {
+            $this->tresorieHistories->add($tresorieHistory);
+            $tresorieHistory->setBanque($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTresorieHistory(TresorieHistory $tresorieHistory): static
+    {
+        if ($this->tresorieHistories->removeElement($tresorieHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($tresorieHistory->getBanque() === $this) {
+                $tresorieHistory->setBanque(null);
+            }
+        }
 
         return $this;
     }

@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\TresorieHistoryRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TresorieHistoryRepository::class)]
@@ -15,28 +13,32 @@ class TresorieHistory
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?float $solde_r = null;
+    #[ORM\Column(nullable: true)]
+    private ?float $soldeR = null;
 
-    #[ORM\Column]
-    private ?float $entree = null;
+    #[ORM\Column(nullable: true)]
+    private ?float $montant = null;
 
-    #[ORM\Column]
-    private ?float $sortie = null;
+    #[ORM\Column(length: 255)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $type = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tresorieHistories')]
+    private ?Devise $devise = null;
 
     #[ORM\ManyToOne(inversedBy: 'tresorieHistories')]
     private ?Banques $banque = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tresorieHistories')]
+    private ?Pays $pays = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'tresorieHistories')]
     private ?User $user = null;
-
-    public function __construct()
-    {
-        $this->tresories = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -45,36 +47,60 @@ class TresorieHistory
 
     public function getSoldeR(): ?float
     {
-        return $this->solde_r;
+        return $this->soldeR;
     }
 
-    public function setSoldeR(float $solde_r): static
+    public function setSoldeR(?float $soldeR): static
     {
-        $this->solde_r = $solde_r;
+        $this->soldeR = $soldeR;
 
         return $this;
     }
 
-    public function getEntree(): ?float
+    public function getMontant(): ?float
     {
-        return $this->entree;
+        return $this->montant;
     }
 
-    public function setEntree(float $entree): static
+    public function setMontant(?float $montant): static
     {
-        $this->entree = $entree;
+        $this->montant = $montant;
 
         return $this;
     }
 
-    public function getSortie(): ?float
+    public function getDescription(): ?string
     {
-        return $this->sortie;
+        return $this->description;
     }
 
-    public function setSortie(float $sortie): static
+    public function setDescription(string $description): static
     {
-        $this->sortie = $sortie;
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getDevise(): ?Devise
+    {
+        return $this->devise;
+    }
+
+    public function setDevise(?Devise $devise): static
+    {
+        $this->devise = $devise;
 
         return $this;
     }
@@ -87,6 +113,18 @@ class TresorieHistory
     public function setBanque(?Banques $banque): static
     {
         $this->banque = $banque;
+
+        return $this;
+    }
+
+    public function getPays(): ?Pays
+    {
+        return $this->pays;
+    }
+
+    public function setPays(?Pays $pays): static
+    {
+        $this->pays = $pays;
 
         return $this;
     }
@@ -117,6 +155,4 @@ class TresorieHistory
 
         return $this;
     }
-
-    
 }

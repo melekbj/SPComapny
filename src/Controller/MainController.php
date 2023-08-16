@@ -6,9 +6,12 @@ use DateTime;
 use DateInterval;
 use App\Entity\Pays;
 use App\Entity\User;
+use App\Entity\Devise;
 use App\Entity\Banques;
+use Twilio\Rest\Client;
 use App\Entity\Commande;
 use App\Entity\Tresorie;
+use App\Form\DeviseType;
 use App\Entity\Materiels;
 use App\Form\BanquesType;
 use App\Form\AddAdminType;
@@ -30,6 +33,7 @@ use App\Entity\CategorieMateriel;
 use App\Entity\CommandeMateriels;
 use App\Repository\UserRepository;
 use App\Form\CategorieMaterielType;
+use App\Event\CommandStateChangeEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,9 +45,14 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
+
 
 #[Route('/dashboard')]
 class MainController extends AbstractController
@@ -999,12 +1008,9 @@ class MainController extends AbstractController
 // *************************************Gestion etat du commande********************************************************
 
     #[Route("/set-etat/{id}/{etat}", name: 'app_set_etat')]
-    public function setEtat($id, $etat,PersistenceManagerRegistry $doctrine)
-    {
-        // Handle the logic to set the "etat" value for the given command ID
-        
-        // Assuming you have an Entity class for the command, you can fetch the entity
-        // and update its "etat" property based on the provided value.
+    public function setEtat($id, $etat,PersistenceManagerRegistry $doctrine, SessionInterface $session)
+    {   
+        $user = $this->getUser();
         $entityManager = $doctrine->getManager();
         $command = $entityManager->getRepository(Commande::class)->find($id);
         
@@ -1017,9 +1023,10 @@ class MainController extends AbstractController
         
         // Persist the changes to the database
         $entityManager->flush();
-        
+
         // Optionally, you can add a flash message to indicate successful update
-        
+        $session->getFlashBag()->add('success', 'Etat changed successfully!');
+
         // Redirect the user to a relevant page (e.g., the command details page)
         return $this->redirectToRoute('app_commandes');
     }
@@ -1331,13 +1338,25 @@ class MainController extends AbstractController
             return $this->redirectToRoute('app_tresorie_banque', ['id' => $id]);
         }
 
+        $devise = new Devise();
+        $formDevise = $this->createForm(DeviseType::class, $devise);
+        $formDevise->handleRequest($request);
+
+        if($formDevise->isSubmitted() && $formDevise->isValid()){
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($devise);
+            $entityManager->flush();
+            $this->addFlash('success', 'Devise ajouté avec succès');
+            return $this->redirectToRoute('app_tresorie_banque', ['id' => $id]);
+        }
+
         return $this->render('main/tresories/tresorieBanques.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'tresories' => $tresoriee,
             'tresorieForm' =>$form->createView(),
-            // 'tresorieHistory' => $tresorieHistory,
             'pays' => $pays,
+            'deviseForm' =>$formDevise->createView(),
         ]);
     }
 
@@ -1363,9 +1382,11 @@ class MainController extends AbstractController
 
             $tresorieHistory = new TresorieHistory();
             $tresorieHistory->setSoldeR($tresorie->getSoldeR());
-            $tresorieHistory->setEntree($tresorie->getEntree());
-            $tresorieHistory->setSortie($tresorie->getSortie());
+            $tresorieHistory->setMontant($tresorie->getMontant());
+            $tresorieHistory->setDescription($tresorie->getDescription());
+            $tresorieHistory->setType($tresorie->getType());
             $tresorieHistory->setBanque($tresorie->getBanque());
+            $tresorieHistory->setDevise($tresorie->getDevise());
             $tresorieHistory->setUpdatedAt(); 
             $tresorieHistory->setUser($user); 
             // $tresorieHistory->setPays($paysId);
@@ -1408,10 +1429,80 @@ class MainController extends AbstractController
     }
 
 
+// *************************************Gestion des devises********************************************************
 
 
 
+    #[Route('/list_devise', name: 'app_devise')]
+    public function ListDevise(PersistenceManagerRegistry $doctrine, Request $request): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
 
+        $em = $doctrine->getManager();
+        $devises = $em->getRepository(Devise::class)->findall();
+
+        $devise = new Devise();
+        $form = $this->createForm(DeviseType::class, $devise);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($devise);
+            $entityManager->flush();
+            $this->addFlash('success', 'Devise ajouté avec succès');
+            return $this->redirectToRoute('app_tresorie_banque', ['id' => $id]);
+        }
+
+        return $this->render('main/tresorie/tresorieBanques.html.twig', [
+            'controller_name' => 'MainController',
+            'image' => $image,
+            'categories' => $categories,
+            'CategoryForm' =>$form->createView(),
+        ]);
+    }
+
+    #[Route('/delete_devise/{id}', name: 'app_delete_devise')]
+    public function deleteDevise(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+        $materiels = $em->getRepository(CategorieMateriel::class)->find($id);
+
+        $em->remove($materiels);
+        $em->flush();
+        $this->addFlash('success', 'Categorie supprimé avec succès');
+        return $this->redirectToRoute('app_materials_category');
+    }
+
+    #[Route('/edit_devise/{id}', name: 'app_edit_devise')]
+    public function editDevise(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+        $pays = $em->getRepository(CategorieMateriel::class)->find($id);
+
+        $form = $this->createForm(CategorieMaterielType::class, $pays);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($pays);
+            $entityManager->flush();
+            $this->addFlash('success', 'Categorie modifié avec succès');
+            return $this->redirectToRoute('app_materials_category');
+        }
+
+        return $this->render('main/categorieMateriel/editCategoryMaterial.html.twig', [
+            'controller_name' => 'MainController',
+            'image' => $image,
+            'editForm' =>$form->createView(),
+        ]);
+    }
 
 
 

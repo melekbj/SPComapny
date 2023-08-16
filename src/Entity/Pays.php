@@ -34,8 +34,8 @@ class Pays
     #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Banques::class,  cascade:['remove'])]
     private Collection $banques;
 
-    #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Tresorie::class)]
-    private Collection $tresories;
+    // #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Tresorie::class)]
+    // private Collection $tresories;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $responsable = null;
@@ -51,6 +51,12 @@ class Pays
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
+
+    #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Tresorie::class)]
+    private Collection $tresories;
+
+    #[ORM\OneToMany(mappedBy: 'pays', targetEntity: TresorieHistory::class)]
+    private Collection $tresorieHistories;
 
 
     public function __construct()

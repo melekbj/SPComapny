@@ -2,11 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\TresorieRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TresorieRepository;
 
 #[ORM\Entity(repositoryClass: TresorieRepository::class)]
 class Tresorie
@@ -17,16 +16,19 @@ class Tresorie
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
-    private ?float $solde_r = null;
+    private ?float $soldeR = null;
 
     #[ORM\Column(nullable: true)]
-    private ?float $entree = null;
+    private ?float $montant = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $sortie = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'tresorie', targetEntity: Banques::class)]
-    private Collection $banques;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $type = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tresories')]
+    private ?Devise $devise = null;
 
     #[ORM\ManyToOne(inversedBy: 'tresories')]
     private ?Banques $banque = null;
@@ -35,25 +37,7 @@ class Tresorie
     private ?Pays $pays = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $descE = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $descS = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $deviseE = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $deviseS = null;
-
-
-    public function __construct()
-    {
-        $this->banques = new ArrayCollection();
-    }
+    private ?DateTimeInterface $date = null;
 
     public function getId(): ?int
     {
@@ -62,36 +46,60 @@ class Tresorie
 
     public function getSoldeR(): ?float
     {
-        return $this->solde_r;
+        return $this->soldeR;
     }
 
-    public function setSoldeR(?float $solde_r): static
+    public function setSoldeR(?float $soldeR): static
     {
-        $this->solde_r = $solde_r;
+        $this->soldeR = $soldeR;
 
         return $this;
     }
 
-    public function getEntree(): ?float
+    public function getMontant(): ?float
     {
-        return $this->entree;
+        return $this->montant;
     }
 
-    public function setEntree(?float $entree): static
+    public function setMontant(?float $montant): static
     {
-        $this->entree = $entree;
+        $this->montant = $montant;
 
         return $this;
     }
 
-    public function getSortie(): ?float
+    public function getDescription(): ?string
     {
-        return $this->sortie;
+        return $this->description;
     }
 
-    public function setSortie(?float $sortie): static
+    public function setDescription(?string $description): static
     {
-        $this->sortie = $sortie;
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getDevise(): ?Devise
+    {
+        return $this->devise;
+    }
+
+    public function setDevise(?Devise $devise): static
+    {
+        $this->devise = $devise;
 
         return $this;
     }
@@ -128,54 +136,6 @@ class Tresorie
     public function setDate(?\DateTimeInterface $date): static
     {
         $this->date = $date;
-
-        return $this;
-    }
-
-    public function getDescE(): ?string
-    {
-        return $this->descE;
-    }
-
-    public function setDescE(?string $descE): static
-    {
-        $this->descE = $descE;
-
-        return $this;
-    }
-
-    public function getDescS(): ?string
-    {
-        return $this->descS;
-    }
-
-    public function setDescS(?string $descS): static
-    {
-        $this->descS = $descS;
-
-        return $this;
-    }
-
-    public function getDeviseE(): ?string
-    {
-        return $this->deviseE;
-    }
-
-    public function setDeviseE(?string $deviseE): static
-    {
-        $this->deviseE = $deviseE;
-
-        return $this;
-    }
-
-    public function getDeviseS(): ?string
-    {
-        return $this->deviseS;
-    }
-
-    public function setDeviseS(?string $deviseS): static
-    {
-        $this->deviseS = $deviseS;
 
         return $this;
     }
