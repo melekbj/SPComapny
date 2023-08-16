@@ -42,6 +42,9 @@ class Tresorie
     #[ORM\Column(nullable: true)]
     private ?float $soldeAM = null;
 
+    #[ORM\ManyToOne(inversedBy: 'tresories')]
+    private ?User $user = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -151,6 +154,18 @@ class Tresorie
     public function setSoldeAM(?float $soldeAM): static
     {
         $this->soldeAM = $soldeAM;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

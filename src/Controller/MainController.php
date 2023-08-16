@@ -1332,6 +1332,12 @@ class MainController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $doctrine->getManager();
+            $bankId = $tresorie->getBanque()->getId();
+            // Update soldeR with soldeAM's value from the previous entry
+            $lastTresorie = $entityManager->getRepository(Tresorie::class)->findOneBy(['banque' => $bankId], ['id' => 'DESC']);
+            if ($lastTresorie) {
+                $tresorie->setSoldeR($lastTresorie->getSoldeAM());
+            }
         
             // Calculate soldeAM based on the type
             if ($tresorie->getType() == 'entree') {
@@ -1339,7 +1345,9 @@ class MainController extends AbstractController
             } elseif ($tresorie->getType() == 'sortie') {
                 $tresorie->setSoldeAM($tresorie->getSoldeR() - $tresorie->getMontant());
             }
-        
+
+            $tresorie->setUser($user);
+            
             // Persist and flush
             $entityManager->persist($tresorie);
             $entityManager->flush();
@@ -1417,6 +1425,27 @@ class MainController extends AbstractController
             
         ]);
     }
+
+    #[Route('/delete_tresorie/{id}', name: 'app_delete_tresorie')]
+    public function deleteTresorie(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $em = $doctrine->getManager();
+        $tresorie = $em->getRepository(Tresorie::class)->find($id);
+
+        // Capture the pays ID before deleting the tresorie
+        $paysId = $tresorie->getPays()->getId();
+
+        $em->remove($tresorie);
+        $em->flush();
+        $this->addFlash('success', 'Tresorie supprimé avec succès');
+
+        // Redirect with the pays ID after deletion
+        return $this->redirectToRoute('app_tresorie_banque', ['id' => $paysId]);
+    }
+
 
 
     #[Route('/show_bank_tresorie/{id}', name: 'app_show_bank_tresorie')]

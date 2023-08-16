@@ -60,17 +60,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: false)]
     private ?bool $verified = false;
 
-    // #[ORM\OneToMany(mappedBy: 'user', targetEntity: TresorieHistory::class)]
-    // private Collection $tresorieHistories;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Tresorie::class)]
+    private Collection $tresories;
 
 
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
-        $this->tresorieHistories = new ArrayCollection();
+        $this->tresories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -248,35 +249,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, TresorieHistory>
-     */
-    public function getTresorieHistories(): Collection
-    {
-        return $this->tresorieHistories;
-    }
-
-    public function addTresorieHistory(TresorieHistory $tresorieHistory): static
-    {
-        if (!$this->tresorieHistories->contains($tresorieHistory)) {
-            $this->tresorieHistories->add($tresorieHistory);
-            $tresorieHistory->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTresorieHistory(TresorieHistory $tresorieHistory): static
-    {
-        if ($this->tresorieHistories->removeElement($tresorieHistory)) {
-            // set the owning side to null (unless already changed)
-            if ($tresorieHistory->getUser() === $this) {
-                $tresorieHistory->setUser(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getPhone(): ?string
     {
@@ -286,6 +258,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tresorie>
+     */
+    public function getTresories(): Collection
+    {
+        return $this->tresories;
+    }
+
+    public function addTresory(Tresorie $tresory): static
+    {
+        if (!$this->tresories->contains($tresory)) {
+            $this->tresories->add($tresory);
+            $tresory->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTresory(Tresorie $tresory): static
+    {
+        if ($this->tresories->removeElement($tresory)) {
+            // set the owning side to null (unless already changed)
+            if ($tresory->getUser() === $this) {
+                $tresory->setUser(null);
+            }
+        }
 
         return $this;
     }

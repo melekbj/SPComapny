@@ -21,12 +21,7 @@ class Devise
     #[ORM\OneToMany(mappedBy: 'devise', targetEntity: Tresorie::class)]
     private Collection $tresories;
 
-    #[ORM\OneToMany(mappedBy: 'devise', targetEntity: TresorieHistory::class)]
-    private Collection $tresorieHistories;
-
-    // #[ORM\OneToMany(mappedBy: 'devise', targetEntity: Tresorie::class)]
-    // private Collection $tresories;
-
+    
     public function __construct()
     {
         $this->tresories = new ArrayCollection();
@@ -80,33 +75,4 @@ class Devise
         return $this;
     }
 
-    /**
-     * @return Collection<int, TresorieHistory>
-     */
-    public function getTresorieHistories(): Collection
-    {
-        return $this->tresorieHistories;
-    }
-
-    public function addTresorieHistory(TresorieHistory $tresorieHistory): static
-    {
-        if (!$this->tresorieHistories->contains($tresorieHistory)) {
-            $this->tresorieHistories->add($tresorieHistory);
-            $tresorieHistory->setDevise($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTresorieHistory(TresorieHistory $tresorieHistory): static
-    {
-        if ($this->tresorieHistories->removeElement($tresorieHistory)) {
-            // set the owning side to null (unless already changed)
-            if ($tresorieHistory->getDevise() === $this) {
-                $tresorieHistory->setDevise(null);
-            }
-        }
-
-        return $this;
-    }
 }

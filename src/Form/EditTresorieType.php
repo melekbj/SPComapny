@@ -17,7 +17,7 @@ class EditTresorieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('soldeR')
+            // ->add('soldeR')
             ->add('montant')
             ->add('description')
             // ->add('type')

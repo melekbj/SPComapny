@@ -34,9 +34,6 @@ class Pays
     #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Banques::class,  cascade:['remove'])]
     private Collection $banques;
 
-    // #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Tresorie::class)]
-    // private Collection $tresories;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $responsable = null;
 
@@ -54,10 +51,6 @@ class Pays
 
     #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Tresorie::class)]
     private Collection $tresories;
-
-    #[ORM\OneToMany(mappedBy: 'pays', targetEntity: TresorieHistory::class)]
-    private Collection $tresorieHistories;
-
 
     public function __construct()
     {
@@ -215,33 +208,4 @@ class Pays
         return $this;
     }
 
-    /**
-     * @return Collection<int, TresorieHistory>
-     */
-    public function getTresorieHistories(): Collection
-    {
-        return $this->tresorieHistories;
-    }
-
-    public function addTresorieHistory(TresorieHistory $tresorieHistory): static
-    {
-        if (!$this->tresorieHistories->contains($tresorieHistory)) {
-            $this->tresorieHistories->add($tresorieHistory);
-            $tresorieHistory->setPays($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTresorieHistory(TresorieHistory $tresorieHistory): static
-    {
-        if ($this->tresorieHistories->removeElement($tresorieHistory)) {
-            // set the owning side to null (unless already changed)
-            if ($tresorieHistory->getPays() === $this) {
-                $tresorieHistory->setPays(null);
-            }
-        }
-
-        return $this;
-    }
 }

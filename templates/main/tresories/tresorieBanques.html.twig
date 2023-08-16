@@ -65,6 +65,9 @@
 										<th>
 											Date
 										</th>
+										<th>
+											User name
+										</th>
 										{% if app.user and (app.user.roles == "ROLE_ADMIN" or app.user.roles == "ROLE_SUPER_USER")  %}
 											<th class=" text-center">
 												Actions
@@ -97,22 +100,26 @@
 												{{item.type}}
 											</td>
 											<td>
-												{% if item.type == 'entree' %}
+												{# {% if item.type == 'entree' %}
 													{{ item.solder + item.montant }}
 												{% elseif item.type == 'sortie' %}
 													{{ item.solder - item.montant }}
 												{% else %}
 													N/A <!-- Handle other types if needed -->
-												{% endif %}
+												{% endif %} #}
+												{{item.soldeAM}}
 											</td>
-											 <td>
-												{{ item.date | date('d-m-Y') }}
+											<td>
+												{{ item.date | date('d-m-Y H:i') }}
+											</td>
+											<td>
+												{{ item.user.fullname }}
 											</td>
 											
 											
 												<td>
 													{% if app.user and (app.user.roles == "ROLE_ADMIN" or app.user.roles == "ROLE_SUPER_USER")  %}
-													<a href="{{path('app_edit_tresorie', {'id': item.id})}}" class="btn btn-success btn-sm">Modifier</a>
+													{# <a href="{{path('app_edit_tresorie', {'id': item.id})}}" class="btn btn-success btn-sm">Modifier</a> #}
 													<a href="{{path('app_show_bank_tresorie', {'id': item.id})}}" class="btn btn-info btn-sm">Historique</a>
 													{% else %}
 													<a href="{{path('app_show_bank_tresorie', {'id': item.id})}}" class="btn btn-info btn-sm">Historique</a>
