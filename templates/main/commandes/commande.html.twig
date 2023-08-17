@@ -22,29 +22,6 @@
 			</div>
 		</div>
 
-		{# <div class="card mb-3">
-          <div class="card-body col-lg-12">
-            <form action="#" method="get" class="form-inline">
-              
-              <div class="form-group col-mx-8">
-                <h5 class="mt-2"><strong>Filtrer par : </strong></h5>
-              </div>
-              
-              <div class="form-group col-lg-6">
-                <select name="etat" class="form-control col-lg-12">
-                  <option value="">Tous</option>
-                  <option value="livrenonpaye">Livré non payé</option>
-                  <option value="livrepaye">Terminé</option>
-                  <option value="nonlivre">Non livré</option>
-				  <option value="pending">En cours...</option>
-                </select>
-              </div>
-              
-
-              <button type="submit" class="btn btn-primary ">Filtrer</button>
-            </form>
-          </div>
-        </div> #}
 
 		<div class="card mb-3">
 			<div class="card-body col-lg-12">
@@ -153,7 +130,7 @@
 											<a href="{{ path('app_edit_commande', {'id': item.id}) }}" class="btn btn-success btn-sm">Modifier</a>
 											{% endif %}
 											{% if app.user.getRoles()=='ROLE_ADMIN' or app.user.commandes.contains(item) %}
-											<a href="{{path('app_delete_commande', {'id': item.id})}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this command?')">Supprimer</a>
+											<a href="{{path('app_delete_commande', {'id': item.id})}}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')">Supprimer</a>
 											{% endif %}
 										</td>
 										{% if app.user.getRoles()=='ROLE_SUPER_USER' %}

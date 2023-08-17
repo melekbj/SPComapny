@@ -51,6 +51,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\HttpClient\HttpClient;
 
 
 
@@ -71,7 +72,7 @@ class MainController extends AbstractController
         $totalCommands = count($commandRepository->findAll());
 
         $solderSum = $tresorieRepo->createQueryBuilder('t')
-            ->select('SUM(t.solde_r) as totalSolder')
+            ->select('SUM(t.soldeR) as totalSolder')
             ->getQuery()
             ->getSingleScalarResult();
 
@@ -1318,9 +1319,27 @@ class MainController extends AbstractController
 
         $em = $doctrine->getManager();
 
+        $exchangeRates = $this->fetchExchangeRatesFromApi();
+
         $pays = $em->getRepository(Pays::class)->find($id);
         
         $tresoriee = $em->getRepository(Tresorie::class)->findBy(['pays' => $pays]);
+
+        $tresorieRepository = $em->getRepository(Tresorie::class);
+
+        $banks = $pays->getBanques();
+
+        // Handle the bank filter if it's submitted
+        $selectedBankId = $request->query->get('bank_id');
+
+        if ($selectedBankId) {
+            $tresoriee = $tresorieRepository->findBy([
+                'pays' => $pays,
+                'banque' => $selectedBankId,
+            ]);
+        } else {
+            $tresoriee = $tresorieRepository->findBy(['pays' => $pays]);
+        }
 
         $paysId = $id;
 
@@ -1333,12 +1352,18 @@ class MainController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $doctrine->getManager();
             $bankId = $tresorie->getBanque()->getId();
-            // Update soldeR with soldeAM's value from the previous entry
+
+            // Find the last tresorie entry for the same bank
             $lastTresorie = $entityManager->getRepository(Tresorie::class)->findOneBy(['banque' => $bankId], ['id' => 'DESC']);
+            
+            // Set the initial soldeR value
             if ($lastTresorie) {
                 $tresorie->setSoldeR($lastTresorie->getSoldeAM());
+            } else {
+                // If there's no previous entry, set soldeR to the initial montant
+                $tresorie->setSoldeR($tresorie->getMontant());
             }
-        
+
             // Calculate soldeAM based on the type
             if ($tresorie->getType() == 'entree') {
                 $tresorie->setSoldeAM($tresorie->getSoldeR() + $tresorie->getMontant());
@@ -1347,14 +1372,15 @@ class MainController extends AbstractController
             }
 
             $tresorie->setUser($user);
-            
+                    
             // Persist and flush
             $entityManager->persist($tresorie);
             $entityManager->flush();
-        
-            $this->addFlash('success', 'tresorie ajouté avec succès');
+                
+            $this->addFlash('success', 'Trésorerie ajoutée avec succès');
             return $this->redirectToRoute('app_tresorie_banque', ['id' => $id]);
         }
+
 
         $devise = new Devise();
         $formDevise = $this->createForm(DeviseType::class, $devise);
@@ -1375,20 +1401,69 @@ class MainController extends AbstractController
             'tresorieForm' =>$form->createView(),
             'pays' => $pays,
             'deviseForm' =>$formDevise->createView(),
+            'banks' => $banks,
+            'id' =>$paysId,
+            'exchangeRates' => $exchangeRates,
         ]);
     }
+
+    // #[Route('/edit_tresorie/{id}', name: 'app_edit_tresorie')]
+    // public function editTresorie(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    // {
+    //     $user = $this->getUser();
+    //     $image = $user->getImage();
+        
+    //     $em = $doctrine->getManager();
+    //     $tresorie = $em->getRepository(Tresorie::class)->find($id);
+        
+
+    //     // Store the country ID before modifying the form
+    //     $paysId = $tresorie->getPays()->getId();
+
+    //     $form = $this->createForm(EditTresorieType::class, $tresorie);
+    //     $form->handleRequest($request);
+
+    //     if($form->isSubmitted() && $form->isValid()){
+    //         $entityManager = $doctrine->getManager();
+    //         $entityManager->persist($tresorie);
+
+    //         $tresorieHistory = new TresorieHistory();
+    //         $tresorieHistory->setSoldeR($tresorie->getSoldeR());
+    //         $tresorieHistory->setSoldeAM($tresorie->getSoldeAM());
+    //         $tresorieHistory->setMontant($tresorie->getMontant());
+    //         $tresorieHistory->setDescription($tresorie->getDescription());
+    //         $tresorieHistory->setType($tresorie->getType());
+    //         $tresorieHistory->setBanque($tresorie->getBanque());
+    //         $tresorieHistory->setDevise($tresorie->getDevise());
+    //         $tresorieHistory->setUpdatedAt(); 
+    //         $tresorieHistory->setUser($user); 
+    //         // $tresorieHistory->setPays($paysId);
+    //         $entityManager->persist($tresorieHistory);
+
+    //         $entityManager->flush();
+    //         $this->addFlash('success', 'Tresorie modifié avec succès');
+
+    //         // Redirect to the 'app_tresorie_banque' route with the country ID
+    //         return $this->redirectToRoute('app_tresorie_banque', ['id' => $paysId]);
+    //     }
+
+    //     return $this->render('main/tresories/editTresorie.html.twig', [
+    //         'controller_name' => 'MainController',
+    //         'image' => $image,
+    //         'editForm' =>$form->createView(),
+            
+    //     ]);
+    // }
 
     #[Route('/edit_tresorie/{id}', name: 'app_edit_tresorie')]
     public function editTresorie(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
     {
         $user = $this->getUser();
         $image = $user->getImage();
-        
+
         $em = $doctrine->getManager();
         $tresorie = $em->getRepository(Tresorie::class)->find($id);
-        
 
-        // Store the country ID before modifying the form
         $paysId = $tresorie->getPays()->getId();
 
         $form = $this->createForm(EditTresorieType::class, $tresorie);
@@ -1397,24 +1472,8 @@ class MainController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $entityManager = $doctrine->getManager();
             $entityManager->persist($tresorie);
-
-            $tresorieHistory = new TresorieHistory();
-            $tresorieHistory->setSoldeR($tresorie->getSoldeR());
-            $tresorieHistory->setSoldeAM($tresorie->getSoldeAM());
-            $tresorieHistory->setMontant($tresorie->getMontant());
-            $tresorieHistory->setDescription($tresorie->getDescription());
-            $tresorieHistory->setType($tresorie->getType());
-            $tresorieHistory->setBanque($tresorie->getBanque());
-            $tresorieHistory->setDevise($tresorie->getDevise());
-            $tresorieHistory->setUpdatedAt(); 
-            $tresorieHistory->setUser($user); 
-            // $tresorieHistory->setPays($paysId);
-            $entityManager->persist($tresorieHistory);
-
             $entityManager->flush();
-            $this->addFlash('success', 'Tresorie modifié avec succès');
-
-            // Redirect to the 'app_tresorie_banque' route with the country ID
+            $this->addFlash('success', 'Trésorerie modifiée avec succès');
             return $this->redirectToRoute('app_tresorie_banque', ['id' => $paysId]);
         }
 
@@ -1424,6 +1483,8 @@ class MainController extends AbstractController
             'editForm' =>$form->createView(),
             
         ]);
+
+
     }
 
     #[Route('/delete_tresorie/{id}', name: 'app_delete_tresorie')]
@@ -1440,7 +1501,7 @@ class MainController extends AbstractController
 
         $em->remove($tresorie);
         $em->flush();
-        $this->addFlash('success', 'Tresorie supprimé avec succès');
+        $this->addFlash('success', 'Trésorerie supprimée avec succès');
 
         // Redirect with the pays ID after deletion
         return $this->redirectToRoute('app_tresorie_banque', ['id' => $paysId]);
@@ -1543,6 +1604,29 @@ class MainController extends AbstractController
             'editForm' =>$form->createView(),
         ]);
     }
+
+
+    private function fetchExchangeRatesFromApi() {
+        $apiKey = 'bfdc5c86f7d64f9ba81f69ab1334b4ab'; // Replace with your API key
+        $apiEndpoint = 'https://openexchangerates.org/api/latest.json';
+        
+        $client = HttpClient::create();
+        $response = $client->request('GET', $apiEndpoint, [
+            'query' => [
+                'app_id' => $apiKey,
+                'base' => 'USD', // Base currency for exchange rates
+            ],
+        ]);
+        
+        $data = $response->toArray();
+        return $data['rates'];
+    }
+
+
+
+
+
+
 
 
 

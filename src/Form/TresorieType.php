@@ -36,7 +36,7 @@ class TresorieType extends AbstractType
                , [
                  'class' => Devise::class,
                  'choice_label' => 'nom',
-                 'label' => 'Devise Type',
+                 'label' => 'Devise',
                  'placeholder' => 'Choisir une devise',
                  'required' => true,
                  'attr' => [
