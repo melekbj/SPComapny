@@ -64,14 +64,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Tresorie::class)]
-    private Collection $tresories;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Operation::class)]
+    private Collection $operations;
 
 
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
-        $this->tresories = new ArrayCollection();
+        $this->operations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -263,34 +263,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Tresorie>
+     * @return Collection<int, Operation>
      */
-    public function getTresories(): Collection
+    public function getOperations(): Collection
     {
-        return $this->tresories;
+        return $this->operations;
     }
 
-    public function addTresory(Tresorie $tresory): static
+    public function addOperation(Operation $operation): static
     {
-        if (!$this->tresories->contains($tresory)) {
-            $this->tresories->add($tresory);
-            $tresory->setUser($this);
+        if (!$this->operations->contains($operation)) {
+            $this->operations->add($operation);
+            $operation->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeTresory(Tresorie $tresory): static
+    public function removeOperation(Operation $operation): static
     {
-        if ($this->tresories->removeElement($tresory)) {
+        if ($this->operations->removeElement($operation)) {
             // set the owning side to null (unless already changed)
-            if ($tresory->getUser() === $this) {
-                $tresory->setUser(null);
+            if ($operation->getUser() === $this) {
+                $operation->setUser(null);
             }
         }
 
         return $this;
     }
+
 
 
 

@@ -6,7 +6,7 @@
 
 <div class="main-panel">
 	<div class="content-wrapper">
-		{% if app.user.getRoles()=="ROLE_SUPER_USER" %}
+		{# {% if app.user.getRoles()=="ROLE_SUPER_USER" %}
 			<button type="button" class="btn btn-success mb-2 ml-3" data-toggle="modal" data-target="#exampleModal">
 				<span style="font-size:15px;">Ajouter Trésorerie</span>
 			</button>
@@ -14,10 +14,10 @@
 			<button type="button" class="btn btn-info mb-2 ml-3" data-toggle="modal" data-target="#devModal">
 				<span style="font-size:15px;">Ajouter Devise</span>
 			</button>
-		{% endif %}
+		{% endif %} #}
 
 
-		<div class="card mb-3">
+		{# <div class="card mb-3">
 			<div class="card-body col-lg-12">
 				<form action="{{path('app_tresorie_banque', {'id': id})}}" method="get" class="form-inline">
 					<div class="col-2">
@@ -47,12 +47,14 @@
 					
 				</form>
 			</div>
-		</div>
+		</div> #}
 
 
 
 
-
+        <button type="button" class="btn btn-success mb-5" data-toggle="modal" data-target="#opModal">
+            Ajouter opération +
+        </button>
 			
 		<div class="">
 			<div class="col-lg-12 grid-margin stretch-card">
@@ -64,11 +66,11 @@
 					{% endfor %}
 					<div class="card-body">
 						<div class="card-title text-center text-info">
-							<span style="font-size:23px;">Liste des Trésoreries</span>
+							<span style="font-size:23px;">Liste des opérations</span>
 						</div>
 						
 								<!-- Second column with the table -->
-								<div class="">
+								{# <div class="">
 									{% set sumAM = 0 %}
 									<table class="table table-bordered col-12 mb-2">
 										{% for item in tresories %}
@@ -94,36 +96,30 @@
 											</tr>
 										</tbody>
 									</table>
-								</div>
+								</div> #}
 							
 						
 						
 
 
 
-						<h3 class="card-header bg-dark font-italic font-weight-bold text-capitalize text-center text-primary">{{pays.nom}}</h3>
+						<h3 class="card-header bg-dark font-italic font-weight-bold text-capitalize text-center text-primary">{{compte.num}}</h3>
 						<div class="table-responsive">
 							{% set sumAM = 0 %}
 							<table class="table table-bordered">
 								<thead>
 									<tr>
-										<th>
-											Banque nom
-										</th>
-										<th>
-											Solde réel
-										</th>
-										<th>
-											Montant
+                                        <th>
+											Numéro
 										</th>
 										<th>
 											Description
 										</th>
-										{# <th>
-											type
-										</th> #}
+                                        <th>
+											Solde réel
+										</th>
 										<th>
-											Solde après mouvement
+											Solde AM
 										</th>
 										<th>
 											Date
@@ -131,31 +127,31 @@
 										<th>
 											User name
 										</th>
-										{% if app.user and (app.user.roles == "ROLE_ADMIN" or app.user.roles == "ROLE_SUPER_USER")  %}
-											<th class=" text-center">
-												Actions
-											</th>
-										{% endif %}
+                                        {% if app.user and app.user.roles == "ROLE_ADMIN"  %}
+										<th class=" text-center">
+											Actions
+										</th>
+                                        {% endif %}
 									</tr>
 								</thead>
 								<tbody>
 							
-									{% for item in tresories %}
+									{% for item in operations %}
 										<tr class="{% if item.type == 'entree' %}table-success{% else %}table-danger{% endif %}">
 											
 											<td>
-												{{item.banque.nom}}
+												{{item.id}}
+											</td>
+                                            <td>
+												{{item.description}}
 											</td>
 											
 											<td>
 												{{item.soldeR}}											
 											</td>
 											<td>
-												{{item.montant}} {{item.devise.nom}}
+												{{item.soldeAM}}
 											</td> 
-											<td>
-												{{item.description}}
-											</td>
 											{# <td>
 												{% if item.type == 'entree' %}
 												Entrée
@@ -164,20 +160,15 @@
 												{% endif %}	
 											</td> #}
 											<td>
-												{{item.soldeAM}}
-											</td>
-											<td>
 												{{ item.date | date('d-m-Y H:i') }}
 											</td>
 											<td>
 												{{ item.user.fullname }}
 											</td>
-											{% if app.user and (app.user.roles == "ROLE_ADMIN" or app.user.roles == "ROLE_SUPER_USER")  %}
+											{% if app.user and app.user.roles == "ROLE_ADMIN"  %}
 												<td>
-													{% if app.user and app.user.tresories.contains(item)   %}
-													<a href="{{path('app_edit_tresorie', {'id': item.id})}}" class="btn btn-success btn-sm">Modifier</a>
-													<a href="{{path('app_delete_tresorie', {'id': item.id})}}" onclick="return confirm('Êtes-vous sûr de vouloir vous débarrasser de ce trésor ?')" class="btn btn-danger btn-sm">Supprimer</a>
-													{% endif %}
+													{# <a href="{{path('app_edit_tresorie', {'id': item.id})}}" class="btn btn-success btn-sm">Modifier</a> #}
+													<a href="{{path('app_delete_operation', {'id': item.id})}}" onclick="return confirm('Êtes-vous sûr de vouloir vous débarrasser de ce trésor ?')" class="btn btn-danger btn-sm">Supprimer</a>
 												</td>
 											{% endif %}
 										</tr>
@@ -209,7 +200,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
+{# <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -223,10 +214,10 @@
             </div>
         </div>
     </div>
-</div>
+</div> #}
 
 <!-- Modal -->
-<div class="modal fade" id="devModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="opModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -236,7 +227,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                {{ form(deviseForm) }}
+                {{ form(form) }}
             </div>
         </div>
     </div>

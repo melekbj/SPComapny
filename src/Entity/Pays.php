@@ -49,14 +49,9 @@ class Pays
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Tresorie::class)]
-    private Collection $tresories;
-
     public function __construct()
     {
         $this->banques = new ArrayCollection();
-        $this->tresories = new ArrayCollection();
-        $this->tresorieHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -118,35 +113,6 @@ class Pays
         return $this;
     }
 
-    /**
-     * @return Collection<int, Tresorie>
-     */
-    public function getTresories(): Collection
-    {
-        return $this->tresories;
-    }
-
-    public function addTresory(Tresorie $tresory): static
-    {
-        if (!$this->tresories->contains($tresory)) {
-            $this->tresories->add($tresory);
-            $tresory->setPays($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTresory(Tresorie $tresory): static
-    {
-        if ($this->tresories->removeElement($tresory)) {
-            // set the owning side to null (unless already changed)
-            if ($tresory->getPays() === $this) {
-                $tresory->setPays(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getResponsable(): ?string
     {

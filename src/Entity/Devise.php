@@ -18,14 +18,15 @@ class Devise
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\OneToMany(mappedBy: 'devise', targetEntity: Tresorie::class)]
-    private Collection $tresories;
+    #[ORM\OneToMany(mappedBy: 'devise', targetEntity: Compte::class)]
+    private Collection $comptes;
+
+
 
     
     public function __construct()
     {
-        $this->tresories = new ArrayCollection();
-        $this->tresorieHistories = new ArrayCollection();
+        $this->comptes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -46,33 +47,34 @@ class Devise
     }
 
     /**
-     * @return Collection<int, Tresorie>
+     * @return Collection<int, Compte>
      */
-    public function getTresories(): Collection
+    public function getComptes(): Collection
     {
-        return $this->tresories;
+        return $this->comptes;
     }
 
-    public function addTresory(Tresorie $tresory): static
+    public function addCompte(Compte $compte): static
     {
-        if (!$this->tresories->contains($tresory)) {
-            $this->tresories->add($tresory);
-            $tresory->setDevise($this);
+        if (!$this->comptes->contains($compte)) {
+            $this->comptes->add($compte);
+            $compte->setDevise($this);
         }
 
         return $this;
     }
 
-    public function removeTresory(Tresorie $tresory): static
+    public function removeCompte(Compte $compte): static
     {
-        if ($this->tresories->removeElement($tresory)) {
+        if ($this->comptes->removeElement($compte)) {
             // set the owning side to null (unless already changed)
-            if ($tresory->getDevise() === $this) {
-                $tresory->setDevise(null);
+            if ($compte->getDevise() === $this) {
+                $compte->setDevise(null);
             }
         }
 
         return $this;
     }
+
 
 }
