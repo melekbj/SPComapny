@@ -45,34 +45,40 @@
                 </div>
              {% endfor %}
 
-    <div class="row m-2 mb-3 justify-content-between">
-			<div>
-				<h3>Ajouter bon de commande :</h3>
-			</div>
-			<div>
-				<a href="{{path('add_material_route')}}" class="btn btn-success">
-          Ajouter materiel +
-        </a>
-        <a href="{{path('add_banque_route')}}" class="btn btn-danger">
-          Ajouter Banque +
-        </a>
-			</div>
-		</div>
+            <div class="row m-2 mb-3 justify-content-between">
+              <div>
+                <h3>Ajouter bon de commande :</h3>
+              </div>
+              <div>
+                <a href="{{path('add_material_route')}}" class="btn btn-success">
+                  Ajouter materiel +
+                </a>
+                <a href="{{path('add_banque_route')}}" class="btn btn-danger">
+                  Ajouter Banque +
+                </a>
+                <a href="{{path('app_add_devise')}}" class="btn btn-warning">
+                  Ajouter Devise +
+                </a>
+              </div>
+            </div>
 			
-				
-        
 				<hr>
         
-
-
 
 				<form method="POST" id="commandForm">
 					<div class="row">
 						<div class="col-md-4">
-							<div class="form-group">
-								<label for="ref">N° de commande</label>
-								<input type="text" class="form-control" id="ref" name="ref" required unique>
-							</div>
+              <div class="form-group">
+                  <label for="ref">N° de commande</label>
+                  <input type="text" class="form-control" id="ref" name="ref" required>
+                  {% if validationErrors is defined and validationErrors['ref'] is defined %}
+                      <div class="error-message">
+                          {% for error in validationErrors['ref'] %}
+                              {{ error.message }}
+                          {% endfor %}
+                      </div>
+                  {% endif %}
+              </div>
 						</div>
 						<div class="col-md-4">
 							<div class="form-group">
@@ -95,7 +101,7 @@
 							<div class="form-group">
 								<label for="banque">Banque</label>
 								<select class="form-control" name="banque" required>
-									<option value="">Choose a banque</option>
+									<option value="">Choisir une banque</option>
 									{% for banque in banques %}
 										<option value="{{ banque.id }}">{{ banque.nom }}</option>
 									{% endfor %}
@@ -110,13 +116,13 @@
 						</div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="devise">Devise</label>
-                    <select name="devise" class="form-control">
-                        <option value="">Choisir devise</option>
-                        {% for devise in devises %}
-                            <option value="{{ devise }}">{{ devise }}</option>
-                        {% endfor %}
-                    </select>
+                  <label for="devise">Devise</label>
+                  <select class="form-control" name="devise" required>
+                    <option value="">Choisir une devise</option>
+                    {% for devise in devises %}
+                      <option value="{{ devise.id }}">{{ devise.nom }}</option>
+                    {% endfor %}
+                  </select>
                 </div>
             </div>
 						<div class="col-md-3">
@@ -125,12 +131,8 @@
 								<input type="text" class="form-control" id="avance" name="avance" pattern="[0-9]+" title="Veuillez saisir un numéro valide">
 							</div>
 						</div>
-						
-
-
 					</div>
 
-					
           <div class="row">
             <div id="materialContainers" class="col-md-12">
               <div class="row material-container">

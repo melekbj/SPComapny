@@ -41,17 +41,18 @@
                         </button>
 
                         <div class="card-body">
-                            <h4 class="card-title">Les comptes de cette banque</h4>
+                            <h4 class="card-title text-center">Les comptes de <span class="text-primary">{{banque.nom}}</span> </h4>
 
                             <div class="flex-container">
                                 {% for item in comptes %}
                                     <div class="block">
-                                    <a href="{{ path('app_operations_by_comptes', {'id': item.id}) }}">
-                                        {{item.num}}
-                                        {{item.devise.nom}}
-                                        {{item.solde}}
-                                        {{item.banques.nom}}
-                                    </a>
+                                        <a href="{{ path('app_operations_by_comptes', {'id': item.id}) }}" class="d-block">
+                                            <span class="d-block"> N° du compte : {{ item.num }}</span>
+                                            <span class="d-block"> Devise : {{ item.devise.nom }}</span>
+                                            <span class="d-block"> Solde : {{ item.solde }}</span>
+                                            <span class="d-block"> Banque : {{ item.banques.nom }}</span>
+                                        </a>
+
                                     </div>
                                     {% if loop.index is divisible by(3) %}
                                     <div style="clear:both;"></div>

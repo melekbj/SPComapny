@@ -139,7 +139,7 @@
             <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
               <i class="icon-bell mx-0"></i>
 
-              {% if oldCommandsCount > 0 or pendingUsersCount > 0 %}
+              {% if oldCommandsCount > 0 or (pendingUsersCount > 0 and currentUser() and 'ROLE_ADMIN' in currentUser().roles)  %}
                 <span class="count"></span>
               {% endif %}
             </a>
@@ -175,6 +175,8 @@
                   </div>
                 </a>
                 {% endif %}
+                {% if currentUser() and 'ROLE_ADMIN' in currentUser().roles %}
+                
                 {% if pendingUsersCount > 0 %}
                   <a href="{{path('app_pending_users')}}" class="dropdown-item preview-item">
                     <div class="preview-thumbnail">
@@ -197,6 +199,20 @@
 
                     </div>
                   </a>
+                {% endif %}
+                {% else %}
+                  <a class="dropdown-item preview-item">
+
+                  <div
+                    class="preview-item-content">
+
+                    <p class="font-weight-light small-text text-muted font-italic">
+                      Pas de notifications
+                    </p>
+
+
+                  </div>
+                </a>
                 {% endif %}
 
               {% else %}
@@ -469,6 +485,13 @@
             </a>
           </li>
 
+          <li class="nav-item">
+            <a class="nav-link" href="{{(path('app_liste_tr'))}}">
+              <i class="icon-columns menu-icon"></i>
+              <span class="menu-title">Liste des trésoreries </span>
+            </a>
+          </li>
+
           {% if app.user.getRoles()=='ROLE_ADMIN' %}
           <li class="nav-item">
             <a class="nav-link" href="{{(path('app_users'))}}">
@@ -483,6 +506,8 @@
               <span class="menu-title">Liste des demandes <br> utilisateurs</span>
             </a>
           </li>
+
+          
           {% endif %}
         </ul>
       </nav>

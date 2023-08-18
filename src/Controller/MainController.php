@@ -611,7 +611,7 @@ class MainController extends AbstractController
 
         $catMateriels = $em->getRepository(CategorieMateriel::class)->findAll();
 
-        $devises = ['USD', 'EUR', 'GBP', 'JPY'];
+        $devises = $em->getRepository(Devise::class)->findall();
         
 
         if ($request->isMethod('POST')) {
@@ -619,18 +619,19 @@ class MainController extends AbstractController
             $formData = $request->request->all();
             // dd($formData);
             $ref = $formData['ref'];
-            $devise = $formData['devise'];
+            $deviseId = $formData['devise'];
             $description = $formData['description'];
             $banqueId = $formData['banque'];
             $tauxtva = $formData['tauxtva'];
             $avance = $formData['avance'];
             $dateString = $formData['date'];
             $date = \DateTime::createFromFormat('Y-m-d', $dateString); // Assuming the date format is "YYYY-MM-DD"
-
+            
             // Retrieve the selected Banque entity
             $banque = $em->getRepository(Banques::class)->find($banqueId);
+            $devise = $em->getRepository(Devise::class)->find($deviseId);
         
-
+                
             // Create a new Commande instance
             $commande = new Commande();
             $commande->setDescription($description);
@@ -649,7 +650,7 @@ class MainController extends AbstractController
              $quantities = $formData['quantite'];
              $prices = $formData['price'];
 
-
+            
             // Iterate over the selected Materiel IDs and create CommandMaterial entities
             foreach ($selectedMaterials as $index => $materielId) {
                 // Retrieve the selected Materiel entity
@@ -676,10 +677,8 @@ class MainController extends AbstractController
             $this->addFlash('success', 'Commande ajouté avec succès');
             return $this->redirectToRoute('app_commandes');
 
-            
+       
         }
-
-
 
         return $this->render('main/commandes/ajoutCommande.html.twig', [
             'controller_name' => 'MainController',
@@ -688,7 +687,7 @@ class MainController extends AbstractController
             'categories' => $catMateriels,
             'banques' => $banques,
             'commandes' => $commande,
-            'devises' => $devises,
+            'devises' => $devises,   
         ]);
     }
 
@@ -716,7 +715,7 @@ class MainController extends AbstractController
         $commande = $em->getRepository(Commande::class)->find($id);
         $commandeMaterials = $commande->getCommandeMateriels();
 
-        $devises = ['USD', 'EUR', 'GBP', 'JPY'];
+        $devises = $em->getRepository(Devise::class)->findall();
 
         // Check if the command exists
         if (!$commande) {
@@ -728,7 +727,7 @@ class MainController extends AbstractController
             $formData = $request->request->all();
 
             $description = $formData['description'];
-            $devise = $formData['devise'];
+            $deviseId = $formData['devise'];
             $tauxtva = $formData['tauxtva'];
             $avance = $formData['avance'];
             $ref = $formData['ref'];
@@ -741,6 +740,7 @@ class MainController extends AbstractController
 
             // Retrieve the selected Banque entity
             $banque = $em->getRepository(Banques::class)->find($banqueId);
+            $devise = $em->getRepository(Devise::class)->find($deviseId);
 
             // Update the command attributes
             $commande->setDescription($description);
@@ -1008,7 +1008,7 @@ class MainController extends AbstractController
 // *************************************Gestion etat du commande********************************************************
 
     #[Route("/set-etat/{id}/{etat}", name: 'app_set_etat')]
-    public function setEtat($id, $etat,PersistenceManagerRegistry $doctrine, SessionInterface $session)
+    public function setEtat($id, $etat,PersistenceManagerRegistry $doctrine, SessionInterface $session, SendMailService $mail)
     {   
         $user = $this->getUser();
         $entityManager = $doctrine->getManager();
@@ -1023,6 +1023,24 @@ class MainController extends AbstractController
         
         // Persist the changes to the database
         $entityManager->flush();
+
+        // Send email to users with ROLE_USER
+        if (strpos($user->getRoles(), 'ROLE_SUPER_USER') !== false) {
+            $userRepository = $entityManager->getRepository(User::class);
+            $usersWithUserRole = $userRepository->findBy(['roles' => 'ROLE_USER']);
+    
+            $subject = 'Command Etat Changed';
+            $template = 'command_etat_changed'; // Update this with your template name
+    
+            $data = [
+                'command' => $command,
+                'newEtat' => $etat,
+            ];
+    
+            foreach ($usersWithUserRole as $userWithUserRole) {
+                $mail->sendMail('truvision_tn@truvisionco.com', 'Secure Print', $userWithUserRole->getEmail(), $subject, $template, $data);
+            }
+        }
 
         // Optionally, you can add a flash message to indicate successful update
         $session->getFlashBag()->add('success', 'Etat changed successfully!');
@@ -1291,250 +1309,10 @@ class MainController extends AbstractController
         ]);
     }
 
-// *************************************Gestion des tresories********************************************************
-
-    // #[Route('/tresorie', name: 'app_tresorie')]
-    // public function tresorie(PersistenceManagerRegistry $doctrine, Request $request): Response
-    // {
-    //     $user = $this->getUser();
-    //     $image = $user->getImage();
-
-    //     $em = $doctrine->getManager();
-    //     $pays = $em->getRepository(Pays::class)->findAll();
-
-    //     return $this->render('main/tresories/tresorie.html.twig', [
-    //         'controller_name' => 'MainController',
-    //         'image' => $image,
-    //         'etats' => $pays,
-            
-    //     ]);
-    // }
-
-    // #[Route('/liste_tresorie_banque/{id}', name: 'app_tresorie_banque')]
-    // public function TresorieBanque(Pays $pays,PersistenceManagerRegistry $doctrine, Request $request, $id): Response
-    // {
-    //     $user = $this->getUser();
-    //     $image = $user->getImage();
-
-    //     $em = $doctrine->getManager();
-
-    //     $exchangeRates = $this->fetchExchangeRatesFromApi();
-
-    //     $pays = $em->getRepository(Pays::class)->find($id);
-        
-    //     $tresoriee = $em->getRepository(Tresorie::class)->findBy(['pays' => $pays]);
-
-    //     $tresorieRepository = $em->getRepository(Tresorie::class);
-
-    //     $banks = $pays->getBanques();
-
-    //     // Handle the bank filter if it's submitted
-    //     $selectedBankId = $request->query->get('bank_id');
-
-    //     if ($selectedBankId) {
-    //         $tresoriee = $tresorieRepository->findBy([
-    //             'pays' => $pays,
-    //             'banque' => $selectedBankId,
-    //         ]);
-    //     } else {
-    //         $tresoriee = $tresorieRepository->findBy(['pays' => $pays]);
-    //     }
-
-    //     $paysId = $id;
-
-    //     $tresorie = new Tresorie();
-    //     $tresorie->setPays($pays);
-    //     $tresorie->setDate(new \DateTime());
-    //     $form = $this->createForm(TresorieType::class, $tresorie, ['pays_id' => $paysId]);
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $entityManager = $doctrine->getManager();
-    //         $bankId = $tresorie->getBanque()->getId();
-
-    //         // Find the last tresorie entry for the same bank
-    //         $lastTresorie = $entityManager->getRepository(Tresorie::class)->findOneBy(['banque' => $bankId], ['id' => 'DESC']);
-            
-    //         // Set the initial soldeR value
-    //         if ($lastTresorie) {
-    //             $tresorie->setSoldeR($lastTresorie->getSoldeAM());
-    //         } else {
-    //             // If there's no previous entry, set soldeR to the initial montant
-    //             $tresorie->setSoldeR($tresorie->getMontant());
-    //         }
-
-    //         // Calculate soldeAM based on the type
-    //         if ($tresorie->getType() == 'entree') {
-    //             $tresorie->setSoldeAM($tresorie->getSoldeR() + $tresorie->getMontant());
-    //         } elseif ($tresorie->getType() == 'sortie') {
-    //             $tresorie->setSoldeAM($tresorie->getSoldeR() - $tresorie->getMontant());
-    //         }
-
-    //         $tresorie->setUser($user);
-                    
-    //         // Persist and flush
-    //         $entityManager->persist($tresorie);
-    //         $entityManager->flush();
-                
-    //         $this->addFlash('success', 'Trésorerie ajoutée avec succès');
-    //         return $this->redirectToRoute('app_tresorie_banque', ['id' => $id]);
-    //     }
-
-
-    //     $devise = new Devise();
-    //     $formDevise = $this->createForm(DeviseType::class, $devise);
-    //     $formDevise->handleRequest($request);
-
-    //     if($formDevise->isSubmitted() && $formDevise->isValid()){
-    //         $entityManager = $doctrine->getManager();
-    //         $entityManager->persist($devise);
-    //         $entityManager->flush();
-    //         $this->addFlash('success', 'Devise ajouté avec succès');
-    //         return $this->redirectToRoute('app_tresorie_banque', ['id' => $id]);
-    //     }
-
-    //     return $this->render('main/tresories/tresorieBanques.html.twig', [
-    //         'controller_name' => 'MainController',
-    //         'image' => $image,
-    //         'tresories' => $tresoriee,
-    //         'tresorieForm' =>$form->createView(),
-    //         'pays' => $pays,
-    //         'deviseForm' =>$formDevise->createView(),
-    //         'banks' => $banks,
-    //         'id' =>$paysId,
-    //         'exchangeRates' => $exchangeRates,
-    //     ]);
-    // }
-
-    // #[Route('/edit_tresorie/{id}', name: 'app_edit_tresorie')]
-    // public function editTresorie(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
-    // {
-    //     $user = $this->getUser();
-    //     $image = $user->getImage();
-        
-    //     $em = $doctrine->getManager();
-    //     $tresorie = $em->getRepository(Tresorie::class)->find($id);
-        
-
-    //     // Store the country ID before modifying the form
-    //     $paysId = $tresorie->getPays()->getId();
-
-    //     $form = $this->createForm(EditTresorieType::class, $tresorie);
-    //     $form->handleRequest($request);
-
-    //     if($form->isSubmitted() && $form->isValid()){
-    //         $entityManager = $doctrine->getManager();
-    //         $entityManager->persist($tresorie);
-
-    //         $tresorieHistory = new TresorieHistory();
-    //         $tresorieHistory->setSoldeR($tresorie->getSoldeR());
-    //         $tresorieHistory->setSoldeAM($tresorie->getSoldeAM());
-    //         $tresorieHistory->setMontant($tresorie->getMontant());
-    //         $tresorieHistory->setDescription($tresorie->getDescription());
-    //         $tresorieHistory->setType($tresorie->getType());
-    //         $tresorieHistory->setBanque($tresorie->getBanque());
-    //         $tresorieHistory->setDevise($tresorie->getDevise());
-    //         $tresorieHistory->setUpdatedAt(); 
-    //         $tresorieHistory->setUser($user); 
-    //         // $tresorieHistory->setPays($paysId);
-    //         $entityManager->persist($tresorieHistory);
-
-    //         $entityManager->flush();
-    //         $this->addFlash('success', 'Tresorie modifié avec succès');
-
-    //         // Redirect to the 'app_tresorie_banque' route with the country ID
-    //         return $this->redirectToRoute('app_tresorie_banque', ['id' => $paysId]);
-    //     }
-
-    //     return $this->render('main/tresories/editTresorie.html.twig', [
-    //         'controller_name' => 'MainController',
-    //         'image' => $image,
-    //         'editForm' =>$form->createView(),
-            
-    //     ]);
-    // }
-
-    // #[Route('/edit_tresorie/{id}', name: 'app_edit_tresorie')]
-    // public function editTresorie(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
-    // {
-    //     $user = $this->getUser();
-    //     $image = $user->getImage();
-
-    //     $em = $doctrine->getManager();
-    //     $tresorie = $em->getRepository(Tresorie::class)->find($id);
-
-    //     $paysId = $tresorie->getPays()->getId();
-
-    //     $form = $this->createForm(EditTresorieType::class, $tresorie);
-    //     $form->handleRequest($request);
-
-    //     if($form->isSubmitted() && $form->isValid()){
-    //         $entityManager = $doctrine->getManager();
-    //         $entityManager->persist($tresorie);
-    //         $entityManager->flush();
-    //         $this->addFlash('success', 'Trésorerie modifiée avec succès');
-    //         return $this->redirectToRoute('app_tresorie_banque', ['id' => $paysId]);
-    //     }
-
-    //     return $this->render('main/tresories/editTresorie.html.twig', [
-    //         'controller_name' => 'MainController',
-    //         'image' => $image,
-    //         'editForm' =>$form->createView(),
-            
-    //     ]);
-
-
-    // }
-
-    // #[Route('/delete_tresorie/{id}', name: 'app_delete_tresorie')]
-    // public function deleteTresorie(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
-    // {
-    //     $user = $this->getUser();
-    //     $image = $user->getImage();
-
-    //     $em = $doctrine->getManager();
-    //     $tresorie = $em->getRepository(Tresorie::class)->find($id);
-
-    //     // Capture the pays ID before deleting the tresorie
-    //     $paysId = $tresorie->getPays()->getId();
-
-    //     $em->remove($tresorie);
-    //     $em->flush();
-    //     $this->addFlash('success', 'Trésorerie supprimée avec succès');
-
-    //     // Redirect with the pays ID after deletion
-    //     return $this->redirectToRoute('app_tresorie_banque', ['id' => $paysId]);
-    // }
-
-
-
-    // #[Route('/show_bank_tresorie/{id}', name: 'app_show_bank_tresorie')]
-    // public function historyTresorie(PersistenceManagerRegistry $doctrine, Request $request,$id)
-    // {
-    //     $em = $doctrine->getManager();
-        
-    //     $user = $this->getUser();
-    //     $image = $user->getImage();
-
-    //     $tresorie = $em->getRepository(Tresorie::class)->find($id);
-        
-    //     $bankHistory = $em->getRepository(TresorieHistory::class)->findBy(['banque' => $tresorie->getBanque()]);
-
-
-    //     return $this->render('main/tresories/historiqueTresorie.html.twig', [
-    //         'bankHistory' => $bankHistory,
-    //         'tresories' => $tresorie,
-    //         'image' => $image,
-    //     ]);
-    // }
-
-
 // *************************************Gestion des devises********************************************************
 
-
-
-    #[Route('/list_devise', name: 'app_devise')]
-    public function ListDevise(PersistenceManagerRegistry $doctrine, Request $request): Response
+    #[Route('/ajout_devise', name: 'app_add_devise')]
+    public function ajoutDevise(PersistenceManagerRegistry $doctrine, Request $request): Response
     {
         $user = $this->getUser();
         $image = $user->getImage();
@@ -1551,14 +1329,13 @@ class MainController extends AbstractController
             $entityManager->persist($devise);
             $entityManager->flush();
             $this->addFlash('success', 'Devise ajouté avec succès');
-            return $this->redirectToRoute('app_tresorie_banque', ['id' => $id]);
+            return $this->redirectToRoute('app_ajout_bon_commande');
         }
 
-        return $this->render('main/tresorie/tresorieBanques.html.twig', [
+        return $this->render('main/devises/ajoutDevise.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
-            'categories' => $categories,
-            'CategoryForm' =>$form->createView(),
+            'deviseForm' =>$form->createView(),
         ]);
     }
 
@@ -1648,15 +1425,10 @@ class MainController extends AbstractController
         $em = $doctrine->getManager();
         $banks = $em->getRepository(Banques::class)->createQueryBuilder('b')
             ->where('b.pays = :paysId')
-            ->andwhere('b.nom NOT LIKE :pattern')
             ->setParameter('paysId', $id)
-            ->setParameter('pattern', 'caisse%')
             ->getQuery()
             ->getResult();
 
-        
-        
-        
         
         return $this->render('main/tresoreries/banksByCountry.html.twig', [
             'controller_name' => 'MainController',
@@ -1669,7 +1441,7 @@ class MainController extends AbstractController
 
 
     #[Route('/comptes_by_bank/{id}', name: 'app_comptes_by_bank')]
-    public function ComptesByBank(PersistenceManagerRegistry $doctrine, Request $request, $id): Response
+    public function ComptesByBank(PersistenceManagerRegistry $doctrine, Request $request, $id, Banques $banque): Response
     {
         $user = $this->getUser();
         $image = $user->getImage();
@@ -1706,6 +1478,7 @@ class MainController extends AbstractController
             'image' => $image,
             'form' => $form->createView(),
             'comptes' => $comptes,
+            'banque' => $banque,
             
         ]);
     }
@@ -1776,6 +1549,33 @@ class MainController extends AbstractController
         // Redirect with the pays ID after deletion
         return $this->redirectToRoute('app_operations_by_comptes', ['id' => $compteId]);
     }
+  
+    #[Route('/liste_tr', name: 'app_liste_tr')]
+    public function listeTr(Request $request, PersistenceManagerRegistry $doctrine): Response
+    {
+        $user = $this->getUser();
+        $image = $user->getImage();
+
+        $paysRepository = $doctrine->getRepository(Pays::class);
+        $paysWithBanques = $paysRepository->findAll();
+
+        // Get filter values from the request
+        $selectedPaysId = $request->query->get('pays');
+        $selectedBanqueId = $request->query->get('banque');
+
+        // Apply filters
+        if ($selectedPaysId) {
+            $paysWithBanques = $paysRepository->findAll($selectedPaysId, $selectedBanqueId);
+        }
+
+        return $this->render('main/tresoreries/listeTR.html.twig', [
+            'paysWithBanques' => $paysWithBanques,
+            'image' => $image,
+            'selectedPaysId' => $selectedPaysId,
+            'selectedBanqueId' => $selectedBanqueId,
+        ]);
+    }
+
 
 
 

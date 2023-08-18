@@ -6,8 +6,12 @@ use App\Repository\DeviseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 #[ORM\Entity(repositoryClass: DeviseRepository::class)]
+#[UniqueEntity(fields: ['nom'], message: 'Il existe déjà une devise portant ce nom')]
+
 class Devise
 {
     #[ORM\Id]
@@ -15,18 +19,20 @@ class Devise
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique:true)]
     private ?string $nom = null;
 
     #[ORM\OneToMany(mappedBy: 'devise', targetEntity: Compte::class)]
     private Collection $comptes;
 
+    #[ORM\OneToMany(mappedBy: 'devise', targetEntity: Commande::class)]
+    private Collection $commandes;
 
 
-    
     public function __construct()
     {
         $this->comptes = new ArrayCollection();
+        $this->commandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,6 +76,36 @@ class Devise
             // set the owning side to null (unless already changed)
             if ($compte->getDevise() === $this) {
                 $compte->setDevise(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): static
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes->add($commande);
+            $commande->setDevise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): static
+    {
+        if ($this->commandes->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getDevise() === $this) {
+                $commande->setDevise(null);
             }
         }
 

@@ -1,0 +1,14 @@
+{# {% extends 'email/base.html.twig' %} #}
+
+{% block body %}
+    <h1>Command Etat Changed</h1>
+    
+    <p>Hello,</p>
+    
+    <p>The etat of the following command has been changed:</p>
+    
+    <p><strong>N° de commande:</strong> {{ command.ref }}</p>
+    <p><strong>New Etat:</strong> {{ newEtat }}</p>
+    
+    <p>Thank you for using our system.</p>
+{% endblock %}

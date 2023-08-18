@@ -71,7 +71,7 @@
                                         <th>Banque</th>
                                         <th>Materiel</th>
                                         <th>Quantity</th>
-                                        <th>TTM</th>
+                                        {# <th>Avance</th> #}
                                         {# <th>Taux TVA</th> #}
                                         <th>PRIX UNIT. HT</th>
                                         <th>MONTANT HT</th>
@@ -80,9 +80,9 @@
                                 <tbody>
                                     {% set totalHT = 0 %}
                                     {% set devise = '' %}
-
+                                    
                                         {% for commandeMateriel in commande.commandeMateriels %}
-                                        {% set devise = commandeMateriel.commande.devise %}
+                                        {% set devise = commande.devise.nom %}
                                             <tr>
                                                 {% if loop.first %}
                                                     <td rowspan="{{ commande.commandeMateriels|length }}">{{ commande.description }}</td>
@@ -92,7 +92,7 @@
                                                 {% endif %}
                                                 <td>{{ commandeMateriel.materiel.nom }}</td>
                                                 <td>{{ commandeMateriel.quantite }}</td>
-                                                <td>{{ commandeMateriel.materiel.tauxtva }}</td>
+                                                {# <td>{{ commandeMateriel.commande.avance }}</td> #}
                                                 {# <td rowspan="{{ commande.commandeMateriels|length }}">{{ commandeMateriel.commande.tauxtva}}%</td> #}
                                                 <td>{{ commandeMateriel.prixV }}</td>
                                                 <td>{{ commandeMateriel.quantite * commandeMateriel.prixV }}  {{devise}}</td>
@@ -123,12 +123,29 @@
                             </div>
 
                             <table class="table table-bordered col-xl-12">
+                            {# {% for commandeMateriel in commande.commandeMateriels %} #}
                                 <tr>
                                     <th>TOTAL TTC
                                         <span class=" float-right">{{ totalHT + (totalHT * ( commande.tauxtva / 100 )) }} {{devise}}</span>
                                     </th>
+                                    
                                 </tr>
-
+                                {% if commande.avance > 0 %}
+                                
+                                <tr>
+                                    <th>Avance
+                                        <span class=" float-right">{{ commande.avance }} {{devise}}</span>
+                                    </th>
+                                    
+                                </tr>
+                                 <tr>
+                                    <th>Reste
+                                        <span class=" float-right">{{ (totalHT + (totalHT * ( commande.tauxtva / 100 ))) - commande.avance  }} {{devise}}</span>
+                                    </th>
+                                    
+                                </tr>
+                                {% endif %}
+                            {# {% endfor %} #}
                             </table>
 
                         </div>

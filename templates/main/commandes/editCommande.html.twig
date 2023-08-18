@@ -75,11 +75,10 @@
 									<input type="number" id="tauxtva" name="tauxtva" value="{{ commande.tauxTVA }}" required class="form-control">
 								</div>
 								<div class="col-lg-4">
-									<label class="font-italic font-weight-bold" for="devise">Devise</label>
-									<select name="devise" id="devise" class="form-control">
-										<option value="">Choisir devise</option>
+									<label class="font-italic font-weight-bold" for="devise">Devise:</label>
+									<select id="devise" name="devise" required class="form-control">
 										{% for devise in devises %}
-											<option value="{{ devise }}" {% if devise == commande.devise %}selected{% endif %}>{{ devise }}</option>
+											<option value="{{ devise.id }}" {% if commande.devise and devise.id == commande.devise.id %} selected {% endif %}>{{ devise.nom }}</option>
 										{% endfor %}
 									</select>
 								</div>
