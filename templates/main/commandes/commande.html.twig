@@ -85,6 +85,7 @@
 										{# <th>Prix d'achat</th> #}
 										<th>Prix de vente</th>
 										<th>Nom du banque</th>
+										<th>Pays</th>
 										<th>Taux tva</th>
 										<th>Date</th>
 										<th>User name</th>
@@ -110,6 +111,7 @@
 										<td>{{ commande_materiel.prixV }}</td>
 										{% if loop.first %}
 										<td rowspan="{{ numRows }}">{{ item.banque.nom }}</td>
+										<td rowspan="{{ numRows }}">{{ item.banque.pays.nom }}</td>
 										<td rowspan="{{ numRows }}">{{ item.tauxtva }}%</td>
 										<td rowspan="{{ numRows }}">{{ item.date | date('d-m-Y') }}</td>
 										<td rowspan="{{ numRows }}">{{ item.user.fullname }}</td>
