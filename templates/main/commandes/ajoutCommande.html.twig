@@ -146,8 +146,10 @@
                 </div>
                 <div class="horizontal-container" style="display: none;">
                   <input type="number" class=" col-md-4 form-control quantity" name="quantite[]" placeholder="Quantité" pattern="[0-9]+" title="Veuillez saisir un numéro valide" required/>
+                  <label for="price"><span style="margin-left:-10px;" class="font-italic">Prix</span></label>
                   <input class=" col-md-4 form-control price" type="text" name="price[]" value=""  pattern="\d+(\.\d+)?" title="Veuillez saisir un numéro valide"/>
                   <button class=" addMaterial btn btn-info" type="button"><span style="font-size:16px;">+</span></button>
+                  <button class="removeMaterial btn btn-danger" type="button"><span style="font-size:16px;">−</span></button>
                 </div>
                 
               </div>
@@ -229,18 +231,49 @@
         addButton.textContent = '+';
         addButton.onclick = addNewMaterialRow;
 
+        let removeButton = document.createElement('button');
+        removeButton.className = 'ml-2 removeMaterial';
+        removeButton.type = 'button';
+        removeButton.textContent = '−';
+        removeButton.onclick = removeMaterialRow; 
+
         materialContainer.appendChild(selectDropdown);
         materialContainer.appendChild(quantityPriceDiv);
         materialContainer.appendChild(addButton);
+        materialContainer.appendChild(removeButton);
+
+        const originalQuantity = quantityInput.value;
+        const originalPrice = priceInput.value;
+
+        
+
+        const clonedQuantityInput = materialContainer.querySelector('.quantity');
+        const clonedPriceInput = materialContainer.querySelector('.price');
+        clonedQuantityInput.value = originalQuantity;
+        clonedPriceInput.value = originalPrice;
+        
+        // Hide the quantity and price div in the cloned container
+        const clonedDivToShowHide = materialContainer.querySelector('.quantity').parentElement;
+        clonedDivToShowHide.style.display = 'none';
 
         document.getElementById('materialContainers').appendChild(materialContainer);
       }
 
-      // Event listener for the existing "+" buttons
-      let addMaterialButtons = document.getElementsByClassName('addMaterial');
-      for (let i = 0; i < addMaterialButtons.length; i++) {
-          addMaterialButtons[i].onclick = addNewMaterialRow;
-      }
+      // Event listener for the existing "+" and "-" buttons
+      let materialContainers = document.getElementById('materialContainers');
+      materialContainers.addEventListener('click', function (event) {
+          const clickedButton = event.target;
+          
+          if (clickedButton.classList.contains('addMaterial')) {
+              addNewMaterialRow();
+          } else if (clickedButton.classList.contains('removeMaterial')) {
+              const materialContainer = clickedButton.closest('.material-container');
+              materialContainer.remove();
+          }
+      });
+
+      
+
 </script>
 
 
@@ -272,22 +305,18 @@
 
 
 
-    // Get the container for material select dropdowns
     const materialContainers = document.getElementById('materialContainers');
 
-    materialContainers.addEventListener('click', function (event) {
+      materialContainers.addEventListener('click', function (event) {
       const clickedElement = event.target;
 
       // Check if the clicked element is a button with the class "addMaterial"
       if (clickedElement.classList.contains('addMaterial')) {
-          // Clone the material container (including select dropdown and button)
+          // Clone the material container (including select dropdown and buttons)
           const clonedMaterialContainer = clickedElement.closest('.material-container').cloneNode(true);
 
           // Get the select dropdown from the cloned container
           const clonedSelect = clonedMaterialContainer.querySelector('.materialSelect');
-
-          // Reset the value of the cloned select dropdown
-          clonedSelect.value = '';
 
           // Hide the quantity and price div in the cloned container
           const clonedDivToShowHide = clonedMaterialContainer.querySelector('.quantity').parentElement;
@@ -298,6 +327,13 @@
 
           // Disable the "+" button in the current container
           clickedElement.style.display = 'none';
+      } else if (clickedElement.classList.contains('removeMaterial')) {
+          // Find the parent material container and remove it
+          const containerToRemove = clickedElement.closest('.material-container');
+          containerToRemove.remove();
+          // Disable the "-" button in the current container
+          clickedElement.style.display = 'none';
+          
       }
   });
 
