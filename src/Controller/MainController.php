@@ -1558,24 +1558,35 @@ class MainController extends AbstractController
 
         $paysRepository = $doctrine->getRepository(Pays::class);
         $paysWithBanques = $paysRepository->findAll();
+        // $entityManager
+        $entityManager = $doctrine->getManager();
 
         // Get filter values from the request
-        $selectedPaysId = $request->query->get('pays');
-        $selectedBanqueId = $request->query->get('banque');
+        $qb = $entityManager->createQueryBuilder();
 
+        $qb->select('p')
+           ->from(Pays::class, 'p')
+           ->leftJoin('p.banques', 'b'); // Assuming you have a relation 'banques' in your Pays entity
+    
+        // Get filter values from the request
+        $selectedPaysId = $request->query->get('pays');
+    
         // Apply filters
         if ($selectedPaysId) {
-            $paysWithBanques = $paysRepository->findAll($selectedPaysId, $selectedBanqueId);
+            $qb->andWhere('p.id = :selectedPaysId')
+               ->setParameter('selectedPaysId', $selectedPaysId);
         }
+    
+        $query = $qb->getQuery();
+        $paysWithBanques = $query->getResult();
+    
 
         return $this->render('main/tresoreries/listeTR.html.twig', [
             'paysWithBanques' => $paysWithBanques,
             'image' => $image,
-            'selectedPaysId' => $selectedPaysId,
-            'selectedBanqueId' => $selectedBanqueId,
+            'selectedPaysId' => $selectedPaysId, 
         ]);
     }
-
 
 
 
