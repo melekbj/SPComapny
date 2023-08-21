@@ -15,8 +15,14 @@ class CompteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('num')
-            ->add('solde')
+            ->add('num', null, [
+                'label' => 'Libellé',
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
+            
+            // ->add('solde')
             ->add('devise',EntityType::class
                , [
                  'class' => Devise::class,

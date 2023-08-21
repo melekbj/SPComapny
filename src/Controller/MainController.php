@@ -551,6 +551,7 @@ class MainController extends AbstractController
 
         $etat = $request->query->get('etat');
         $reference = $request->query->get('reference');
+        $date = $request->query->get('date');
 
         $commandeRepository = $em->getRepository(Commande::class);
         // Retrieve the list of banques from the database
@@ -574,8 +575,15 @@ class MainController extends AbstractController
             $queryBuilder->orWhere('c.ref LIKE :reference')
                 ->setParameter('reference', '%' . $reference . '%');
         }
+
+        if ($date) {
+            $queryBuilder->andWhere('c.date = :date') // Adjust this based on your actual date field name
+                ->setParameter('date', new \DateTime($date));
+        }
     
         $commande = $queryBuilder->getQuery()->getResult();
+
+        
         
 
         return $this->render('main/commandes/commande.html.twig', [
@@ -624,6 +632,7 @@ class MainController extends AbstractController
             $banqueId = $formData['banque'];
             $tauxtva = $formData['tauxtva'];
             $avance = $formData['avance'];
+            $remise = $formData['remise'];
             $dateString = $formData['date'];
             $date = \DateTime::createFromFormat('Y-m-d', $dateString); // Assuming the date format is "YYYY-MM-DD"
             
@@ -637,6 +646,7 @@ class MainController extends AbstractController
             $commande->setDescription($description);
             $commande->setTauxTVA($tauxtva);
             $commande->setAvance($avance);
+            $commande->setRemise($remise);
             $commande->setBanque($banque);
             $commande->setDate($date);  
             $commande->setRef($ref);
@@ -730,6 +740,7 @@ class MainController extends AbstractController
             $deviseId = $formData['devise'];
             $tauxtva = $formData['tauxtva'];
             $avance = $formData['avance'];
+            $remise = $formData['remise'];
             $ref = $formData['ref'];
             $dateString = $formData['date'];
             $date = \DateTime::createFromFormat('Y-m-d', $dateString); // Assuming the date format is "YYYY-MM-DD"
@@ -746,6 +757,7 @@ class MainController extends AbstractController
             $commande->setDescription($description);
             $commande->setTauxTVA($tauxtva);
             $commande->setAvance($avance);
+            $commande->setRemise($remise);
             $commande->setBanque($banque);
             $commande->setDate($date);
             $commande->setDevise($devise);
@@ -1025,22 +1037,22 @@ class MainController extends AbstractController
         $entityManager->flush();
 
         // Send email to users with ROLE_USER
-        if (strpos($user->getRoles(), 'ROLE_SUPER_USER') !== false) {
-            $userRepository = $entityManager->getRepository(User::class);
-            $usersWithUserRole = $userRepository->findBy(['roles' => 'ROLE_USER']);
+        // if (strpos($user->getRoles(), 'ROLE_SUPER_USER') !== false) {
+        //     $userRepository = $entityManager->getRepository(User::class);
+        //     $usersWithUserRole = $userRepository->findBy(['roles' => 'ROLE_USER']);
     
-            $subject = 'Command Etat Changed';
-            $template = 'command_etat_changed'; // Update this with your template name
+        //     $subject = 'Command Etat Changed';
+        //     $template = 'command_etat_changed'; // Update this with your template name
     
-            $data = [
-                'command' => $command,
-                'newEtat' => $etat,
-            ];
+        //     $data = [
+        //         'command' => $command,
+        //         'newEtat' => $etat,
+        //     ];
     
-            foreach ($usersWithUserRole as $userWithUserRole) {
-                $mail->sendMail('truvision_tn@truvisionco.com', 'Secure Print', $userWithUserRole->getEmail(), $subject, $template, $data);
-            }
-        }
+        //     foreach ($usersWithUserRole as $userWithUserRole) {
+        //         $mail->sendMail('truvision_tn@truvisionco.com', 'Secure Print', $userWithUserRole->getEmail(), $subject, $template, $data);
+        //     }
+        // }
 
         // Optionally, you can add a flash message to indicate successful update
         $session->getFlashBag()->add('success', 'Etat changed successfully!');
@@ -1459,6 +1471,7 @@ class MainController extends AbstractController
 
         $compte = new Compte();
         $compte->setBanques($banque);
+        $compte->setSolde(0);
 
         // Create a form using the CompteType form type
         $form = $this->createForm(CompteType::class, $compte);
@@ -1504,7 +1517,7 @@ class MainController extends AbstractController
         $operation = new Operation();
         $operation->setCompte($compte);
         $operation->setUser($user);
-        $operation->setDate(new \DateTime());
+        // $operation->setDate(new \DateTime());
 
         // Create a form using the CompteType form type
         $form = $this->createForm(OperationType::class, $operation);
@@ -1512,12 +1525,40 @@ class MainController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            // If the form is submitted and valid, persist the operation entity
-            $entityManager->persist($operation);
-            $entityManager->flush();
+            // Update the soldeR and soldeam fields based on form data
+            $montant = $operation->getMontant();
+            $type = $operation->getType();
+        
+            // Fetch the latest soldeam from the database for the given compte
+            $latestOperation = $entityManager->getRepository(Operation::class)
+                ->findOneBy(['compte' => $compte], ['id' => 'DESC']);
+        
+            $lastsoldeAM = $latestOperation ? $latestOperation->getSoldeam() : $compte->getSolde();
+        
+            // The soldeR should be based on the previous soldeam value
+            $soldeR = $lastsoldeAM;
+        
+            // Set the initial soldeR value to the Operation entity
+            $operation->setSoldeR($soldeR);
+        
+            if ($operation->getType() == 'entree') {
+                $operation->setSoldeAM($operation->getSoldeR() + $operation->getMontant());
+            } elseif ($operation->getType() == 'sortie') {
+                $operation->setSoldeAM($operation->getSoldeR() - $operation->getMontant());
+            }
+
+            $compte->setSolde($operation->getSoldeAM());
             
+            // Persist and flush the changes for both entities
+            $entityManager->persist($operation);
+            $entityManager->persist($compte);
+            $entityManager->flush();
+        
             return $this->redirectToRoute('app_operations_by_comptes', ['id' => $id]);
         }
+        
+        
+        
 
         return $this->render('main/tresoreries/operationByCompte.html.twig', [
             'controller_name' => 'MainController',
@@ -1525,7 +1566,6 @@ class MainController extends AbstractController
             'form' => $form->createView(),
             'operations' => $operations,
             'compte' => $comptee,
-            
         ]);
     }
 

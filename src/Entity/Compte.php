@@ -24,7 +24,7 @@ class Compte
     #[ORM\ManyToOne(inversedBy: 'comptes')]
     private ?Devise $devise = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable:true)]
     private ?float $solde = null;
 
     #[ORM\ManyToOne(inversedBy: 'compte')]

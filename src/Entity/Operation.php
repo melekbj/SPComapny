@@ -35,6 +35,9 @@ class Operation
     #[ORM\ManyToOne(inversedBy: 'operations')]
     private ?User $user = null;
 
+    #[ORM\Column]
+    private ?float $montant = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +123,18 @@ class Operation
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getMontant(): ?float
+    {
+        return $this->montant;
+    }
+
+    public function setMontant(float $montant): static
+    {
+        $this->montant = $montant;
 
         return $this;
     }

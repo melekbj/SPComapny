@@ -39,6 +39,16 @@ class CommandeRepository extends ServiceEntityRepository
         }
     }
 
+    public function findByDate($selectedDate)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->andWhere('c.date = :selectedDate')
+            ->setParameter('selectedDate', $selectedDate)
+            ->getQuery();
+
+        return $qb->getResult();
+    }
+
 //    /**
 //     * @return Commande[] Returns an array of Commande objects
 //     */

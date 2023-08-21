@@ -6,6 +6,7 @@ use App\Entity\Operation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
@@ -27,8 +28,13 @@ class OperationType extends AbstractType
                 ],
             ])
             ->add('description')
-            ->add('soldeR')
-            ->add('soldeAM')
+            ->add('montant')
+            ->add('date', DateType::class, [
+                'required' => true, // This makes the date field optional
+                'widget' => 'single_text',         
+            ])
+            // ->add('soldeR')
+            // ->add('soldeAM')
             // ->add('compte')
             ->add('save', SubmitType::class, [
                 'attr' => [

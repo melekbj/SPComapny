@@ -148,72 +148,59 @@
 
 
               {% if oldCommandsCount > 0 or pendingUsersCount > 0 %}
-                {% if oldCommandsCount > 0 %}
-                <a href="{{path('app_commandes_expiration')}}" class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <div class="preview-icon bg-success">
-                      <i class="ti-info-alt mx-0"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content">
-                    <h6 class="preview-subject font-weight-normal">Date limite dépassée</h6>
-
-                    <p class="font-weight-light small-text text-muted">
-
-                      Veuillez patienter !
-                      <br>
-                      Vous avez
-                      <span class="">{{ oldCommandsCount }}
-                        commandes datant
-                        <br>
-                        de plus de 30 jours.
-                        <br>
-                        Veillez à les vérifier !</span>
-                    </p>
-
-
-                  </div>
-                </a>
-                {% endif %}
-                {% if currentUser() and 'ROLE_ADMIN' in currentUser().roles %}
-                
-                {% if pendingUsersCount > 0 %}
-                  <a href="{{path('app_pending_users')}}" class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-info">
-                        <i class="ti-user mx-0"></i>
+                  {% if oldCommandsCount > 0 %}
+                    <a href="{{path('app_commandes_expiration')}}" class="dropdown-item preview-item">
+                      <div class="preview-thumbnail">
+                        <div class="preview-icon bg-success">
+                          <i class="ti-info-alt mx-0"></i>
+                        </div>
                       </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <h6 class="preview-subject font-weight-normal">Inscription nouveau utilisateur</h6>
+                      <div class="preview-item-content">
+                        <h6 class="preview-subject font-weight-normal">Date limite dépassée</h6>
 
-                      <p class="font-weight-light small-text text-muted">
+                        <p class="font-weight-light small-text text-muted">
 
-                        Veuillez patienter !
-                        <br>
-                        Vous avez
-                        <span class="">{{ pendingUsersCount }}
-                        nouvelles invitations
-                      </p>
-
-
-                    </div>
-                  </a>
-                {% endif %}
-                {% else %}
-                  <a class="dropdown-item preview-item">
-
-                  <div
-                    class="preview-item-content">
-
-                    <p class="font-weight-light small-text text-muted font-italic">
-                      Pas de notifications
-                    </p>
+                          Veuillez patienter !
+                          <br>
+                          Vous avez
+                          <span class="">{{ oldCommandsCount }}
+                            commandes datant
+                            <br>
+                            de plus de 30 jours.
+                            <br>
+                            Veillez à les vérifier !</span>
+                        </p>
 
 
-                  </div>
-                </a>
-                {% endif %}
+                      </div>
+                    </a>
+                  {% endif %}
+
+                
+                
+                  {% if(pendingUsersCount > 0 and currentUser() and 'ROLE_ADMIN' in currentUser().roles)  %}
+                    <a href="{{path('app_pending_users')}}" class="dropdown-item preview-item">
+                      <div class="preview-thumbnail">
+                        <div class="preview-icon bg-info">
+                          <i class="ti-user mx-0"></i>
+                        </div>
+                      </div>
+                      <div class="preview-item-content">
+                        <h6 class="preview-subject font-weight-normal">Inscription nouveau utilisateur</h6>
+
+                        <p class="font-weight-light small-text text-muted">
+
+                          Veuillez patienter !
+                          <br>
+                          Vous avez
+                          <span class="">{{ pendingUsersCount }}
+                          nouvelles invitations
+                        </p>
+
+
+                      </div>
+                    </a>
+                  {% endif %}
 
               {% else %}
                 <a class="dropdown-item preview-item">

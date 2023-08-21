@@ -132,18 +132,34 @@
                                 </tr>
                                 {% if commande.avance > 0 %}
                                 
-                                <tr>
-                                    <th>Avance
-                                        <span class=" float-right">{{ commande.avance }} {{devise}}</span>
-                                    </th>
-                                    
-                                </tr>
-                                 <tr>
-                                    <th>Reste
-                                        <span class=" float-right">{{ (totalHT + (totalHT * ( commande.tauxtva / 100 ))) - commande.avance  }} {{devise}}</span>
-                                    </th>
-                                    
-                                </tr>
+                                    <tr>
+                                        <th>Avance
+                                            <span class=" float-right">{{ commande.avance }} {{devise}}</span>
+                                        </th>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <th>Reste
+                                            <span class=" float-right">{{ (totalHT + (totalHT * ( commande.tauxtva / 100 ))) - commande.avance  }} {{devise}}</span>
+                                        </th>
+                                        
+                                    </tr>
+                                {% endif %}
+
+                                {% if commande.remise > 0 %}
+                                
+                                    <tr>
+                                        <th>Remise
+                                            <span class=" float-right">{{ commande.remise }}%</span>
+                                        </th>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <th>Reste
+                                            <span class=" float-right">{{ (totalHT + (totalHT * ( commande.tauxtva / 100 ))) - commande.remise  }} {{devise}}</span>
+                                        </th>
+                                        
+                                    </tr>
                                 {% endif %}
                             {# {% endfor %} #}
                             </table>

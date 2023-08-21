@@ -43,13 +43,16 @@
 											Solde réel
 										</th>
 										<th>
+											Montant
+										</th>
+										<th>
 											Solde AM
 										</th>
 										<th>
 											Date de création
 										</th>
 										<th>
-											User name
+											Nom user
 										</th>
                                         {% if app.user and app.user.roles == "ROLE_ADMIN"  %}
 										<th class=" text-center">
@@ -74,10 +77,13 @@
 												{{item.soldeR}}											
 											</td>
 											<td>
+												{{item.montant}}											
+											</td>
+											<td>
 												{{item.soldeAM}}
 											</td> 
 											<td>
-												{{ item.date | date('d-m-Y H:i') }}
+												{{ item.date | date('d-m-Y') }}
 											</td>
 											<td>
 												{{ item.user.fullname }}

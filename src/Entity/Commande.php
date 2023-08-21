@@ -54,6 +54,9 @@ class Commande
     #[ORM\ManyToOne(inversedBy: 'commandes')]
     private ?Devise $devise = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $remise = null;
+
 
     public function __construct()
     {
@@ -226,6 +229,18 @@ public function getDevise(): ?Devise
 public function setDevise(?Devise $devise): static
 {
     $this->devise = $devise;
+
+    return $this;
+}
+
+public function getRemise(): ?float
+{
+    return $this->remise;
+}
+
+public function setRemise(?float $remise): static
+{
+    $this->remise = $remise;
 
     return $this;
 }

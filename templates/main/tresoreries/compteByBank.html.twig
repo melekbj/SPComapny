@@ -37,11 +37,11 @@
                         {% endfor %}
 
                         <button type="button" class="btn btn-success mb-5" data-toggle="modal" data-target="#exampleModal">
-                            Ajouter compte +
+                            Créer un compte +
                         </button>
 
                         <div class="card-body">
-                            <h4 class="card-title text-center">Les comptes de <span class="text-primary">{{banque.nom}}</span> </h4>
+                            <h4 class=" text-center">Les comptes du banque <span class="text-primary">{{banque.nom}}</span> en <span class="text-info">{{banque.pays.nom}}</span> </h4>
 
                             <div class="flex-container">
                                 {% for item in comptes %}
@@ -77,7 +77,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Ajouter nouveau compte</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Ouvrir un nouveau compte en <span class=" text-primary">({{banque.nom}})</span>  </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>

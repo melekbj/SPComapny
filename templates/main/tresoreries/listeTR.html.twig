@@ -43,36 +43,36 @@
 						</div>
 							
 						<div class="table-responsive">
-							 <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Pays</th>
-                                        {# <th>Num Banque</th> #}
-                                        <th>Nom Banque</th>
-                                        <th>Comptes</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for paysWithBanque in paysWithBanques %}
-                                        {% for banque in paysWithBanque.banques %}
-                                            <tr>
-                                                {% if loop.first %}
-                                                    <td rowspan="{{ paysWithBanque.banques|length }}">{{ paysWithBanque.nom }}</td>
-                                                {% endif %}
-                                                {# <td>{{ banque.id }}</td> #}
-                                                <td>{{ banque.nom }}</td>
-                                                <td>
-                                                    <ul>
-                                                        {% for compte in banque.compte %}
-                                                            <li><a href="{{ path('app_operations_by_comptes', {'id': compte.id}) }}">{{ compte.num }} (Solde: {{ compte.solde }})</a></li>
-                                                        {% endfor %}
-                                                    </ul>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+							<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Pays</th>
+            <th>Nom Banque</th>
+            <th>Comptes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for paysWithBanque in paysWithBanques %}
+            {% for banque in paysWithBanque.banques %}
+                <tr>
+                    {% if loop.first %}
+                        <td rowspan="{{ paysWithBanque.banques|length }}">{{ paysWithBanque.nom }}</td>
+                    {% endif %}
+                    <td>{{ banque.nom }}</td>
+                    <td>
+                        <ul>
+                            {% for compte in banque.compte %}
+                                <li><a href="{{ path('app_operations_by_comptes', {'id': compte.id}) }}">{{ compte.num }} (Solde: {{ compte.solde }})</a></li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr style="border-bottom: 2px solid black;"></tr> {# Add this line to insert a strong line between rows #}
+        {% endfor %}
+    </tbody>
+</table>
+
 
 
 						</div>
