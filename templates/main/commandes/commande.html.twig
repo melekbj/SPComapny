@@ -78,7 +78,7 @@
 
 
 						<div class="table-responsive">
-							{% if commandes|length > 0 %}
+							{% if pagination|length > 0 %}
 							<table class="table table-condensed table-bordered">
 								<thead>
 									<tr>
@@ -101,7 +101,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									{% for item in commandes %}
+									{% for item in pagination %}
 									{% set numRows = item.commandemateriels|length %}
 									{% for commande_materiel in item.commandemateriels %}
 									<tr class="{% if item.etat == 'nonlivre' %}table-danger{% elseif item.etat == 'livrepaye' %}table-primary{% elseif item.etat == 'livrenonpaye' %}table-info{% endif %}">
@@ -164,6 +164,7 @@
 
 
 
+{# {{ dump(pagination) }} #}
 
 
 										{% endif %}
@@ -173,12 +174,16 @@
 									{% endfor %}
 								</tbody>
 							</table>
+
+							
+
+
 							{% else %}
 							<p class="  text-danger text-capitalize font-italic">No records available here.</p>
 							{% endif %}
 
 
-
+							
 
 						</div>
 					</div>
@@ -190,13 +195,9 @@
 
 
 
-
-
-
-
-
-
-
+<div class="pagination">
+								{{ knp_pagination_render(pagination) }}
+							</div>
 
 
 

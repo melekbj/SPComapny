@@ -35,6 +35,7 @@ use App\Repository\UserRepository;
 use App\Form\CategorieMaterielType;
 use App\Event\CommandStateChangeEvent;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
@@ -538,7 +539,7 @@ class MainController extends AbstractController
 // *************************************Gestion des commandes********************************************************
 
     #[Route('/commandes', name: 'app_commandes')]
-    public function ListeCommandes(PersistenceManagerRegistry $doctrine, Request $request): Response
+    public function ListeCommandes(PersistenceManagerRegistry $doctrine, Request $request, PaginatorInterface $paginator): Response
     {
         // Get the user and image information
         $user = $this->getUser();
@@ -547,30 +548,21 @@ class MainController extends AbstractController
         // Get the Doctrine entity manager
         $em = $doctrine->getManager();
 
-        $commande = $em->getRepository(Commande::class)->findall();
+        $commandeRepository = $em->getRepository(Commande::class);
 
         $etat = $request->query->get('etat');
         $reference = $request->query->get('reference');
         $date = $request->query->get('date');
 
-        $commandeRepository = $em->getRepository(Commande::class);
-        // Retrieve the list of banques from the database
-        $banques = $em->getRepository(Banques::class)->findAll();
-        
-        // Retrieve the list of materiels from the database
-        $materiels = $em->getRepository(Materiels::class)->findAll();
-        
-
-        // Perform the filtering based on the selected "etat" value and bank ID
+        // Create the query builder
         $queryBuilder = $commandeRepository->createQueryBuilder('c');
 
-        // Apply the etat filter
+        // Apply filters
         if ($etat) {
             $queryBuilder->andWhere('c.etat = :etat')
                 ->setParameter('etat', $etat);
         }
-    
-        // Apply the reference filter
+        
         if ($reference) {
             $queryBuilder->orWhere('c.ref LIKE :reference')
                 ->setParameter('reference', '%' . $reference . '%');
@@ -580,18 +572,23 @@ class MainController extends AbstractController
             $queryBuilder->andWhere('c.date = :date') // Adjust this based on your actual date field name
                 ->setParameter('date', new \DateTime($date));
         }
-    
-        $commande = $queryBuilder->getQuery()->getResult();
 
-        
-        
+        // Get the query
+        $query = $queryBuilder->getQuery();
+
+        // Paginate the results
+        $pagination = $paginator->paginate(
+            $query,       // Query to paginate
+            $request->query->getInt('page', 1), // Current page number
+            10           // Items per page
+        );
+
 
         return $this->render('main/commandes/commande.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
-            'materiels' => $materiels,
-            'banques' => $banques,
-            'commandes' => $commande,
+            // 'commandes' => $commande,
+            'pagination' => $pagination,
         ]);
     }
 
@@ -1428,7 +1425,7 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[Route('/banks_by_country/{id}', name: 'app_banks_by_country')]
+    #[Route('/banks_by_country_tresorerie/{id}', name: 'app_banks_by_country_tresorerie')]
     public function banksByCountryTresoreries(Pays $pays, PersistenceManagerRegistry $doctrine, Request $request, $id): Response
     {
         $user = $this->getUser();

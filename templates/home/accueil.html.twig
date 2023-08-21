@@ -42,15 +42,13 @@
 				</div>
                 <div class="col-lg-12">
                     <div class="logo-carousel-inner">
-                       {% for banque in banques %}
-							{% if banque.photo != 'photo' %}
-								<div class="single-logo-item" style="padding:0%;">
-									<img src="{{ vich_uploader_asset(banque, 'imageFile') }}" alt="">
-									{# <h4 class="text-center">{{ banque.nom }}</h4> #}
-								</div>
-							{% endif %}
-						{% endfor %}
-
+                        {% for banque in banques %}
+                          {% if banque.photo != 'photo' %}
+                              <div class="single-logo-item">
+                                  <img src="{{ asset('images/banques/' ~ banque.photo) }}" width="10px" alt="photo">
+                              </div>
+                          {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -289,9 +287,8 @@
                 <div class="col-lg-12">
                     <div class="logo-carousel-inner">
                         {% for country in countrys %}
-                            <div class="single-logo-item">
-                                <img src="{{ vich_uploader_asset(country, 'imageFile') }}" width=10px alt="">
-								{# <h5 class=" text-capitalize text-lg-center">{{country.nom}}</h5> #}
+                            <div class="single-logo-item"> 
+                              	<img src="{{ asset('images/etats/' ~ country.photo) }}" width="90px" alt="photo" class="mr-2">
 							</div>
 							
                         {% endfor %}

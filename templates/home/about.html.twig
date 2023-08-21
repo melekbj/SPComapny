@@ -171,9 +171,11 @@
                 <div class="col-lg-12">
                     <div class="logo-carousel-inner">
                         {% for banque in banques %}
-                            <div class="single-logo-item">
-                                <img src="{{ vich_uploader_asset(banque, 'imageFile') }}" width=10px alt="">
-                            </div>
+                          {% if banque.photo != 'photo' %}
+                              <div class="single-logo-item">
+                                  <img src="{{ asset('images/banques/' ~ banque.photo) }}" width="10px" alt="photo">
+                              </div>
+                          {% endif %}
                         {% endfor %}
                     </div>
                 </div>
