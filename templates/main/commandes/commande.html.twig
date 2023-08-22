@@ -1,11 +1,20 @@
 {% extends "baseAdmin.html.twig" %}
 
 
-
-
-
-
 {% block body %}
+
+
+<style>
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px; 
+	
+}
+
+
+</style>
 
 <div class="main-panel">
 	<div class="content-wrapper">
@@ -60,7 +69,7 @@
 	
 
 		<div class="row">
-			<div class="col-lg-12 grid-margin stretch-card">
+			<div class="col-lg-12">
 				<div class="card">
 					{% for message in app.flashes('success') %}
 						<div class="alert alert-success">
@@ -68,18 +77,11 @@
 						</div>
 					{% endfor %}
 					<div class="card-body">
-						<h4 class="card-title">Liste des commandes</h4>
-						{# <p class="card-description">
-						                                                  Add class <code>.table-striped</code>
-						                                                </p> #}
-
-
-						<br><br>
-
+						<h3 class=" text-center mb-3">Liste des commandes</h3>
 
 						<div class="table-responsive">
 							{% if pagination|length > 0 %}
-							<table class="table table-condensed table-bordered">
+							<table class="table table-bordered table-hover">
 								<thead>
 									<tr>
 										<th>N° de commande</th>
@@ -102,77 +104,72 @@
 								</thead>
 								<tbody>
 									{% for item in pagination %}
-									{% set numRows = item.commandemateriels|length %}
-									{% for commande_materiel in item.commandemateriels %}
-									<tr class="{% if item.etat == 'nonlivre' %}table-danger{% elseif item.etat == 'livrepaye' %}table-primary{% elseif item.etat == 'livrenonpaye' %}table-info{% endif %}">
-										{% if loop.first %}
-										<td rowspan="{{ numRows }}">{{ item.ref }}</td>
-										<td rowspan="{{ numRows }}">
-                                            {% set parts = item.description|split('-') %}
-                                            {% for part in parts %}
-                                                {{ part }}<br>
-                                            {% endfor %}
-                                        </td>
-										{% endif %}
-										<td>{{ commande_materiel.materiel.nom }}</td>
-										<td>{{ commande_materiel.quantite }}</td>
-										{# <td>{{ commande_materiel.materiel.pu }}</td> #}
-										<td>{{ commande_materiel.prixV }}</td>
-										{% if loop.first %}
-										<td rowspan="{{ numRows }}">{{ item.banque.nom }}</td>
-										<td rowspan="{{ numRows }}">{{ item.banque.pays.nom }}</td>
-										<td rowspan="{{ numRows }}">{{ item.tauxtva }}%</td>
-										<td rowspan="{{ numRows }}">{{ item.date | date('d-m-Y') }}</td>
-										<td rowspan="{{ numRows }}">{{ item.user.fullname }}</td>
-										<td rowspan="{{ numRows }}">
-											{% if item.etat == 'pending' %}
-											<span class="text-info font-italic font-weight-500 font-weight-bold">En cours...</span>
-											{% elseif item.etat == 'nonlivre' %}
-												<span class="text-danger font-italic font-weight-500 font-weight-bold">Non livré</span>
-											{% elseif item.etat == 'livrepaye' %}
-												<span class="text-success font-italic font-weight-500 font-weight-bold">Livré et payé</span>
-											{% elseif item.etat == 'livrenonpaye' %}
-												<span class="text-primary font-italic font-weight-500 font-weight-bold">Livré non payé</span>
-											{% endif %}
-										</td>
-										<td rowspan="{{ numRows }}">
-											{% if app.user and app.user.commandes.contains(item) %}
-											<a href="{{ path('app_show_commande', {'id': item.id}) }}" class="btn btn-info btn-sm">Afficher</a>
-											<a href="{{ path('app_edit_commande', {'id': item.id}) }}" class="btn btn-success btn-sm">Modifier</a>
-											{% endif %}
-											{% if app.user.getRoles()=='ROLE_ADMIN' or app.user.commandes.contains(item) %}
-											<a href="{{path('app_delete_commande', {'id': item.id})}}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')">Supprimer</a>
-											{% endif %}
-										</td>
-										{% if app.user.getRoles()=='ROLE_SUPER_USER' %}
-										<td rowspan="{{ numRows }}">
-											{% if app.user and app.user.commandes.contains(item) %}
-												<div class="dropdown">
-													<button class="btn btn-inverse-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														Set Etat
-													</button>
-													<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-														<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'nonlivre'})}}">Non Livré</a>
-														<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'livrenonpaye'})}}">Livré non payé</a>
-														<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'livrepaye'})}}">Livré payé</a>
-													</div>
-												</div>
-											{% endif %}
-										</td>
-										{% endif %}
+										{% set numRows = item.commandemateriels|length %}
+										{% for commande_materiel in item.commandemateriels %}
+											<tr class="{% if item.etat == 'nonlivre' %}table-danger{% elseif item.etat == 'livrepaye' %}table-primary{% elseif item.etat == 'livrenonpaye' %}table-info{% endif %}">
+												{% if loop.first %}
+													<td rowspan="{{ numRows }}">{{ item.ref }}</td>
+													<td rowspan="{{ numRows }}">
+														{% set parts = item.description|split('-') %}
+														{% for part in parts %}
+															{{ part }}<br>
+														{% endfor %}
+													</td>
+												{% endif %}
+												<td>{{ commande_materiel.materiel.nom }}</td>
+												<td>{{ commande_materiel.quantite }}</td>
+												{# <td>{{ commande_materiel.materiel.pu }}</td> #}
+												<td>{{ commande_materiel.prixV }}</td>
+												{% if loop.first %}
+													<td rowspan="{{ numRows }}">{{ item.banque.nom }}</td>
+													<td rowspan="{{ numRows }}">{{ item.banque.pays.nom }}</td>
+													<td rowspan="{{ numRows }}">{{ item.tauxtva }}%</td>
+													<td rowspan="{{ numRows }}">{{ item.date | date('d-m-Y') }}</td>
+													<td rowspan="{{ numRows }}">{{ item.user.fullname }}</td>
+													<td rowspan="{{ numRows }}">
+														{% if item.etat == 'pending' %}
+															<span class="text-info font-italic font-weight-500 font-weight-bold">En cours...</span>
+														{% elseif item.etat == 'nonlivre' %}
+															<span class="text-danger font-italic font-weight-500 font-weight-bold">Non livré</span>
+														{% elseif item.etat == 'livrepaye' %}
+															<span class="text-success font-italic font-weight-500 font-weight-bold">Livré et payé</span>
+														{% elseif item.etat == 'livrenonpaye' %}
+															<span class="text-primary font-italic font-weight-500 font-weight-bold">Livré non payé</span>
+														{% endif %}
+													</td>
+													<td rowspan="{{ numRows }}">
+														{% if app.user and app.user.commandes.contains(item) %}
+															<a href="{{ path('app_show_commande', {'id': item.id}) }}" class="btn btn-info btn-sm">Afficher</a>
+															<a href="{{ path('app_edit_commande', {'id': item.id}) }}" class="btn btn-success btn-sm">Modifier</a>
+														{% endif %}
+														{% if app.user.getRoles()=='ROLE_ADMIN' or app.user.commandes.contains(item) %}
+															<a href="{{path('app_delete_commande', {'id': item.id})}}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')">Supprimer</a>
+														{% endif %}
+													</td>
+													{% if app.user.getRoles()=='ROLE_SUPER_USER' %}
+														<td rowspan="{{ numRows }}">
+															{% if app.user and app.user.commandes.contains(item) %}
+																<div class="dropdown">
+																	<button class="btn btn-inverse-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																		Set Etat
+																	</button>
+																	<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+																		<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'nonlivre'})}}">Non Livré</a>
+																		<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'livrenonpaye'})}}">Livré non payé</a>
+																		<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'livrepaye'})}}">Livré payé</a>
+																	</div>
+																</div>
+															{% endif %}
+														</td>
+													{% endif %}
+												{% endif %}
 
-
-
-
-{# {{ dump(pagination) }} #}
-
-
-										{% endif %}
-										
-									</tr>
-									{% endfor %}
+											</tr>
+										{% endfor %}
+										<tr style="border-bottom: 2px solid black;"></tr>
 									{% endfor %}
 								</tbody>
+
 							</table>
 
 							
@@ -183,7 +180,9 @@
 							{% endif %}
 
 
-							
+							<div class="pagination">
+								{{ knp_pagination_render(pagination, "pagination.html.twig") }}
+							</div>
 
 						</div>
 					</div>
@@ -195,9 +194,10 @@
 
 
 
-<div class="pagination">
-								{{ knp_pagination_render(pagination) }}
-							</div>
+
+
+
+
 
 
 

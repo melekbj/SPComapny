@@ -336,7 +336,7 @@ class MainController extends AbstractController
             ->setParameter('pattern', 'caisse%')
             ->getQuery()
             ->getResult();
-        //editpays
+        //editpaysinformation
         $pays = $em->getRepository(Pays::class)->find($id);
         $form = $this->createForm(PaysInfoType::class, $pays);
         $form->handleRequest($request);
@@ -580,7 +580,7 @@ class MainController extends AbstractController
         $pagination = $paginator->paginate(
             $query,       // Query to paginate
             $request->query->getInt('page', 1), // Current page number
-            10           // Items per page
+            5           // Items per page
         );
 
 
