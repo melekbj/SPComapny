@@ -148,6 +148,8 @@
 
 
               {% if oldCommandsCount > 0 or pendingUsersCount > 0 %}
+
+
                   {% if oldCommandsCount > 0 %}
                     <a href="{{path('app_commandes_expiration')}}" class="dropdown-item preview-item">
                       <div class="preview-thumbnail">
@@ -178,7 +180,7 @@
 
                 
                 
-                  {% if(pendingUsersCount > 0 and currentUser() and 'ROLE_ADMIN' in currentUser().roles)  %}
+                  {% if (pendingUsersCount > 0 and currentUser() and 'ROLE_ADMIN' in currentUser().roles)  %}
                     <a href="{{path('app_pending_users')}}" class="dropdown-item preview-item">
                       <div class="preview-thumbnail">
                         <div class="preview-icon bg-info">
@@ -200,6 +202,19 @@
 
                       </div>
                     </a>
+                  {% else %}
+                  <a class="dropdown-item preview-item">
+
+                    <div
+                      class="preview-item-content">
+
+                      <p class="font-weight-light small-text text-muted font-italic">
+                        Pas de notifications
+                      </p>
+
+
+                    </div>
+                  </a>
                   {% endif %}
 
               {% else %}

@@ -96,8 +96,8 @@
 										<th>Date</th>
 										<th>User name</th>
 										<th>Etat</th>
-										<th>Actions</th>
-										{% if app.user.getRoles()=='ROLE_SUPER_USER' %}
+										<th colspan="2" class="text-center">Actions</th>
+										{% if app.user.getRoles()=='ROLE_SUPER_USER' and app.user.commandes.contains(pagination)  %}
 										<th>Gérer etat</th>
 										{% endif %}
 									</tr>
@@ -138,17 +138,17 @@
 														{% endif %}
 													</td>
 													<td rowspan="{{ numRows }}">
-														{% if app.user and app.user.commandes.contains(item) %}
+														{% if app.user and app.user.commandes.contains(item) or app.user.getRoles()=='ROLE_ADMIN' %}
 															<a href="{{ path('app_show_commande', {'id': item.id}) }}" class="btn btn-info btn-sm">Afficher</a>
 															<a href="{{ path('app_edit_commande', {'id': item.id}) }}" class="btn btn-success btn-sm">Modifier</a>
-														{% endif %}
-														{% if app.user.getRoles()=='ROLE_ADMIN' or app.user.commandes.contains(item) %}
 															<a href="{{path('app_delete_commande', {'id': item.id})}}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')">Supprimer</a>
+														{% else %}
+															<a href="{{ path('app_show_commande', {'id': item.id}) }}" class="btn btn-info btn-sm">Afficher</a>
 														{% endif %}
 													</td>
-													{% if app.user.getRoles()=='ROLE_SUPER_USER' %}
+													{% if app.user.getRoles()=='ROLE_SUPER_USER' and app.user.commandes.contains(item) %}
 														<td rowspan="{{ numRows }}">
-															{% if app.user and app.user.commandes.contains(item) %}
+															
 																<div class="dropdown">
 																	<button class="btn btn-inverse-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 																		Set Etat
@@ -159,7 +159,7 @@
 																		<a class="dropdown-item" href="{{path('app_set_etat', {'id': item.id, 'etat': 'livrepaye'})}}">Livré payé</a>
 																	</div>
 																</div>
-															{% endif %}
+															
 														</td>
 													{% endif %}
 												{% endif %}

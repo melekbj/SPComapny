@@ -33,24 +33,16 @@ use App\Entity\CategorieMateriel;
 use App\Entity\CommandeMateriels;
 use App\Repository\UserRepository;
 use App\Form\CategorieMaterielType;
-use App\Event\CommandStateChangeEvent;
+use App\Security\EditCommandeVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Repository\CategorieMaterielRepository;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -67,32 +59,46 @@ class MainController extends AbstractController
         
         $userRepository = $doctrine->getRepository(User::class);
         $commandRepository = $doctrine->getRepository(Commande::class);
+        $bankRepository = $doctrine->getRepository(Banques::class);
+        $compteRepository =  $doctrine->getRepository(Compte::class);
+        $paysRepository = $doctrine->getRepository(Pays::class);
+        $paysList = $paysRepository->findAll();
+    
+        $paysData = [];
+        foreach ($paysList as $pays) {
+            $soldeSumByPays = 0;
+            
+            foreach ($pays->getBanques() as $banque) {
+                foreach ($banque->getCompte() as $compte) {
+                    $soldeSumByPays += $compte->getSolde();
+                }
+            }
+        
+            if (!isset($paysData[$pays->getNom()])) {
+                $paysData[$pays->getNom()] = 0;
+            }
+            
+            $paysData[$pays->getNom()] += $soldeSumByPays;
+        }
+        
+        $paysDataArray = [];
+        foreach ($paysData as $paysName => $soldeSum) {
+            $paysDataArray[] = [
+                'name' => $paysName,
+                'solde' => $soldeSum,
+            ];
+        }
+        
 
         // Get total number of commands
         $totalCommands = count($commandRepository->findAll());
+        $banks = $bankRepository->findAll();
 
-        // $solderSum = $tresorieRepo->createQueryBuilder('t')
-        //     ->select('SUM(t.soldeR) as totalSolder')
-        //     ->getQuery()
-        //     ->getSingleScalarResult();
+        $totalSoldeDesComptes = $compteRepository->createQueryBuilder('c')
+        ->select('SUM(c.solde) as totalSolde')
+        ->getQuery()
+        ->getSingleScalarResult();
 
-        $finishedCommands = $commandRepository->findBy(['etat' => 'livrepaye']);
-        $allFinishedCommands = count($finishedCommands);
-
-        // $totalFinishedCommandsPercentage = ( $allFinishedCommands / $totalCommands) * 100;
-        
-
-        $pendingUsers = $userRepository->findBy(['etat' => 'pending']);
-        $allUsers = $userRepository->findAll();
-        
-        $totalAllUsers = count($allUsers);
-        // Calculate the total number of users and the percentage of pending users
-        $totalUsers = count($pendingUsers);
-        $totalUsersPercentage = ($totalUsers / count($userRepository->findAll())) * 100;
-
-        // Calculate the percentage of commands
-        $totalCommandsPercentage = ($totalCommands / $totalAllUsers) * 100;
-        
         // command status to be displayed in chart
         $pendingC = $commandRepository->count(['etat' => 'pending']);
         $livrepaye = $commandRepository->count(['etat' => 'livrepaye']);
@@ -106,19 +112,11 @@ class MainController extends AbstractController
         $blocked = $userRepository->count(['etat' => 'blocked']);
         $deblocked = $userRepository->count(['etat' => 'debloqué']);
 
-       
-
         
         return $this->render('main/index/index.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
-            'pendingUsersCount' => $totalUsers,
-            'pendingUsersPercentage' => $totalUsersPercentage,
             'totalCommandsCount' => $totalCommands,
-            'totalCommandsPercentage' => $totalCommandsPercentage,
-            // 'solderSum' => $solderSum,
-            'allFinishedCommands' => $allFinishedCommands,
-            // 'percentageFinishedC' => $totalFinishedCommandsPercentage,
             'pendingC' => $pendingC,
             'livrepaye' => $livrepaye,
             'livrenonpaye' => $livrenonpaye,
@@ -127,6 +125,9 @@ class MainController extends AbstractController
             'approved' => $approved,
             'blocked' => $blocked,
             'deblocked' => $deblocked,
+            'banks' => $banks,
+            'totalSoldeDesComptes' => $totalSoldeDesComptes,
+            'paysData' => $paysDataArray, 
            
 
         ]);
@@ -580,7 +581,7 @@ class MainController extends AbstractController
         $pagination = $paginator->paginate(
             $query,       // Query to paginate
             $request->query->getInt('page', 1), // Current page number
-            5           // Items per page
+            2           // Items per page
         );
 
 
@@ -728,6 +729,8 @@ class MainController extends AbstractController
         if (!$commande) {
             throw $this->createNotFoundException('Commande not found');
         }
+
+        // $this->denyAccessUnlessGranted(EditCommandeVoter::EDIT_COMMANDE, $commande, 'You are not allowed to edit this commande.');
 
         if ($request->isMethod('POST')) {
             // Get the submitted data

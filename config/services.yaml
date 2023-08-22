@@ -28,6 +28,8 @@ services:
             # $session: '@session'
         tags:
             - { name: twig.extension }
+    # App\Security\EditCommandeVoter:
+    #     tags: ['security.voter']
     
 
 

@@ -156,19 +156,19 @@
 								<li>
 									<div class="header-icons">
 										{# <a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a> #}
-										<a class="shopping-cart" href="#"><i class="fas fa-shopping-cart"></i></a>
+										{# <a class="shopping-cart" href="#"><i class="fas fa-shopping-cart"></i></a> #}
 										{% if app.user and app.user.getEtat()=='approved' %}
 										<a class="shopping-cart" href="{{path('app_dashboard')}}"><i class="fas fa-user"></i></a>
 										<a class="shopping-cart" href="{{path('app_logout')}}"><i class="fas fa-sign-out-alt"></i></a>
 										{% else %}
-										<a class="shopping-cart" href="{{path('app_login')}}"><i class="fas fa-user"></i></a>	
+										<a class="shopping-cart" href="{{path('app_login')}}"><i class="fas fa-user"></i><span class="ml-2">Se connecter</span></a>	
 										{% endif %}
 										
 									</div>
 								</li>
 							</ul>
 						</nav>
-						<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+						{# <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a> #}
 						<div class="mobile-menu"></div>
 						<!-- menu end -->
 					</div>
