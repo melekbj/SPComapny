@@ -66,33 +66,50 @@ class MainController extends AbstractController
     
         $paysData = [];
         foreach ($paysList as $pays) {
-            $soldeSumByPays = 0;
+            $soldeSumByPays = [];
             
             foreach ($pays->getBanques() as $banque) {
                 foreach ($banque->getCompte() as $compte) {
-                    $soldeSumByPays += $compte->getSolde();
+                    $devise = $compte->getDevise(); // Assuming the method is getDevise()
+                    $deviseIdentifier = $devise->getNom(); // Change this to the appropriate identifier
+                    if (!isset($soldeSumByPays[$deviseIdentifier])) {
+                        $soldeSumByPays[$deviseIdentifier] = 0;
+                    }
+                    $soldeSumByPays[$deviseIdentifier] += $compte->getSolde();
                 }
             }
-        
+            
             if (!isset($paysData[$pays->getNom()])) {
-                $paysData[$pays->getNom()] = 0;
+                $paysData[$pays->getNom()] = [];
             }
             
-            $paysData[$pays->getNom()] += $soldeSumByPays;
+            $paysData[$pays->getNom()] = $soldeSumByPays;
         }
         
         $paysDataArray = [];
-        foreach ($paysData as $paysName => $soldeSum) {
-            $paysDataArray[] = [
-                'name' => $paysName,
-                'solde' => $soldeSum,
-            ];
+        foreach ($paysData as $paysName => $soldeByDevise) {
+            foreach ($soldeByDevise as $deviseIdentifier => $soldeSum) {
+                $paysDataArray[] = [
+                    'name' => $paysName,
+                    'deviseIdentifier' => $deviseIdentifier, // Change this to the appropriate identifier
+                    'solde' => $soldeSum,
+                ];
+            }
         }
         
 
+        //get commands with etat nonlivre et livrenonpaye in a single line
+        $nonlivre = $commandRepository->count(['etat' => 'nonlivre']);
+        $commandsEnCours = $commandRepository->findBy(['etat' => ['nonlivre', 'livrenonpaye']]);
+
+
         // Get total number of commands
         $totalCommands = count($commandRepository->findAll());
+        $totalCommandsEnCours = count($commandsEnCours);
         $banks = $bankRepository->findAll();
+
+        // percentage of totalcommandsen cours from total commands
+        // $percentage = ($totalCommandsEnCours * 100) / $totalCommands;
 
         $totalSoldeDesComptes = $compteRepository->createQueryBuilder('c')
         ->select('SUM(c.solde) as totalSolde')
@@ -128,6 +145,8 @@ class MainController extends AbstractController
             'banks' => $banks,
             'totalSoldeDesComptes' => $totalSoldeDesComptes,
             'paysData' => $paysDataArray, 
+            'CommandsEnCours' => $totalCommandsEnCours,
+            
            
 
         ]);
@@ -581,7 +600,7 @@ class MainController extends AbstractController
         $pagination = $paginator->paginate(
             $query,       // Query to paginate
             $request->query->getInt('page', 1), // Current page number
-            2           // Items per page
+            4         // Items per page
         );
 
 

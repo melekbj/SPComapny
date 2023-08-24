@@ -48,7 +48,7 @@
                         <div class="card-body">
                             <div class="row ml-2 mr-2 mb-3 justify-content-between">
                                 <div>
-                                    <strong>Commande N°</strong>
+                                    <span class="text-primary"><strong>Commande N°</strong></span>
                                     
                                     {{commande.ref}}
 
@@ -66,7 +66,7 @@
 
                             <table class="table table-bordered">
                                 <thead>
-                                    <tr>
+                                    <tr class=" bg-dark text-white">
                                         <th>Command Description</th>
                                         <th>Banque</th>
                                         <th>Materiel</th>
@@ -79,6 +79,9 @@
                                 </thead>
                                 <tbody>
                                     {% set totalHT = 0 %}
+                                    {% set totalTTC = 0 %}
+                                    {% set tva = 0 %}
+                                    {% set remise = 0 %}
                                     {% set devise = '' %}
                                     
                                         {% for commandeMateriel in commande.commandeMateriels %}
@@ -94,11 +97,13 @@
                                                 <td>{{ commandeMateriel.quantite }}</td>
                                                 {# <td>{{ commandeMateriel.commande.avance }}</td> #}
                                                 {# <td rowspan="{{ commande.commandeMateriels|length }}">{{ commandeMateriel.commande.tauxtva}}%</td> #}
-                                                <td>{{ commandeMateriel.prixV }}</td>
+                                                <td>{{ commandeMateriel.prixV }} {{devise}}</td>
                                                 <td>{{ commandeMateriel.quantite * commandeMateriel.prixV }}  {{devise}}</td>
                                             </tr>
                                             {% set totalHT = totalHT + (commandeMateriel.quantite * commandeMateriel.prixV) %}
-                                            
+                                            {% set tva = totalHT * ( commande.tauxtva / 100 ) %}
+                                            {% set totalTTC = totalHT + tva %}
+                                            {% set remise = totalTTC * ( commande.remise / 100 ) %}
                                         {% endfor %}
                                 </tbody>
                             </table>
@@ -107,15 +112,15 @@
                                 <table class="table table-borderless col-md-16 w-150">
                                     <tr>
                                         <th>
-                                            Total HT
-                                            <span class=" float-right">{{ totalHT }} {{devise}}</span>
+                                            <span class="text-primary">Total HT</span>
+                                            <span class=" float-right">{{ totalHT|number_format(0, '.', ' ') }} {{devise}}
                                             
                                         </th>
                                     </tr>
                                     <tr>
                                         <th>
-                                            TVA
-                                            <span class=" float-right">{{ totalHT * ( commande.tauxtva / 100 ) }}
+                                            <span class="text-primary">TVA</span>
+                                            <span class=" float-right">{{ (totalHT * ( commande.tauxtva / 100 ))|number_format(0, '.', ' ') }} {{devise}}
                                             </span>
                                         </th>
                                     </tr>
@@ -125,26 +130,12 @@
                             <table class="table table-bordered col-xl-12">
                             {# {% for commandeMateriel in commande.commandeMateriels %} #}
                                 <tr>
-                                    <th>TOTAL TTC
-                                        <span class=" float-right">{{ totalHT + (totalHT * ( commande.tauxtva / 100 )) }} {{devise}}</span>
+                                    <th>
+                                        <span class="text-primary">TOTAL TTC</span>
+                                        <span class=" float-right">{{ totalTTC|number_format(0, '.', ' ') }} {{devise}}</span>
                                     </th>
                                     
                                 </tr>
-                                {% if commande.avance > 0 %}
-                                
-                                    <tr>
-                                        <th>Avance
-                                            <span class=" float-right">{{ commande.avance }} {{devise}}</span>
-                                        </th>
-                                        
-                                    </tr>
-                                    <tr>
-                                        <th>Reste
-                                            <span class=" float-right">{{ (totalHT + (totalHT * ( commande.tauxtva / 100 ))) - commande.avance  }} {{devise}}</span>
-                                        </th>
-                                        
-                                    </tr>
-                                {% endif %}
 
                                 {% if commande.remise > 0 %}
                                 
@@ -156,11 +147,34 @@
                                     </tr>
                                     <tr>
                                         <th>Reste
-                                            <span class=" float-right">{{ (totalHT + (totalHT * ( commande.tauxtva / 100 ))) - commande.remise  }} {{devise}}</span>
+                                            <span class=" float-right"> {{ (totalTTC - remise)|number_format(0, '.', ' ') }} {{devise}}</span>
                                         </th>
                                         
                                     </tr>
                                 {% endif %}
+                                {% if commande.avance > 0 %}
+                                
+                                    <tr>
+                                        <th>Avance
+                                            <span class=" float-right">{{ (commande.avance)|number_format(0, '.', ' ') }} {{devise}}</span>
+                                        </th>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <th>Reste
+                                        {% if commande.remise > 0 %}
+                                            <span class=" float-right">{{  (( totalTTC - remise ) - commande.avance)|number_format(0, '.', ' ')  }} {{devise}}</span>
+                                        {% else %}
+                                            <span class=" float-right">{{ (totalTTC - commande.avance)|number_format(0, '.', ' ') }} {{devise}}</span>
+                                        {% endif %}
+                                        
+                                            
+                                        </th>
+                                        
+                                    </tr>
+                                {% endif %}
+
+                               
                             {# {% endfor %} #}
                             </table>
 

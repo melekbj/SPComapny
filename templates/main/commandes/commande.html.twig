@@ -92,7 +92,7 @@
 										<th>Prix de vente</th>
 										<th>Nom du banque</th>
 										<th>Pays</th>
-										<th>Taux tva</th>
+										{# <th>Taux tva</th> #}
 										<th>Date</th>
 										<th>User name</th>
 										<th>Etat</th>
@@ -119,11 +119,11 @@
 												<td>{{ commande_materiel.materiel.nom }}</td>
 												<td>{{ commande_materiel.quantite }}</td>
 												{# <td>{{ commande_materiel.materiel.pu }}</td> #}
-												<td>{{ commande_materiel.prixV }}</td>
+												<td>{{ commande_materiel.prixV }} {{item.devise.nom}}</td>
 												{% if loop.first %}
 													<td rowspan="{{ numRows }}">{{ item.banque.nom }}</td>
 													<td rowspan="{{ numRows }}">{{ item.banque.pays.nom }}</td>
-													<td rowspan="{{ numRows }}">{{ item.tauxtva }}%</td>
+													{# <td rowspan="{{ numRows }}">{{ item.tauxtva }}%</td> #}
 													<td rowspan="{{ numRows }}">{{ item.date | date('d-m-Y') }}</td>
 													<td rowspan="{{ numRows }}">{{ item.user.fullname }}</td>
 													<td rowspan="{{ numRows }}">

@@ -59,50 +59,30 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6 grid-margin transparent">
+            <div class="col-md-12 grid-margin transparent">
               <div class="row">
 
-                <div class="col-md-6 mb-4 stretch-card transparent">
-                    <div class="card card-tale">
-                        <div class="card-body">
-                            <p class="mb-4">Invitations des utilisateurs</p>
-                            <p class="fs-30 mb-2"></p>
-                            <p>%</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 mb-4 stretch-card transparent">
-                    <div class="card card-dark-blue">
-                        <div class="card-body">
-                            <p class="mb-4">Nombre de commandes</p>
-                            <p class="fs-30 mb-2">{{ totalCommandsCount }}</p>
-                            <p>% </p>
-                        </div>
-                    </div>
-                </div>
-
-              </div>
-              <div class="row">
-                <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
+                <div class="col-md-6 stretch-card transparent">
                   <div class="card card-light-blue">
                     <div class="card-body">
-                      <p class="mb-4">Tresorie banques</p>
-                      {# <p class="fs-30 mb-2">{{solderSum}}</p> #}
-                      <p>2.00%</p>
+                      <p class="mb-4">Commandes en cours</p>
+                      <p class="fs-30 mb-2">{{CommandsEnCours}}</p>
+                      {# <p>{{ perCommEnCours|number_format(2) }} %</p> #}
                     </div>
                   </div>
                 </div>
+
                 <div class="col-md-6 stretch-card transparent">
                   <div class="card card-light-danger">
                     <div class="card-body">
-                      <p class="mb-4">Commandes en cours</p>
-                      <p class="fs-30 mb-2"></p>
-                      <p>%</p>
+                      <p class="mb-4">Total des commandes</p>
+                      <p class="fs-30 mb-2">{{ totalCommandsCount }}</p>
+                      <p>100 %</p>
                     </div>
                   </div>
                 </div>
-                
+
+
               </div>
             </div>
           </div>

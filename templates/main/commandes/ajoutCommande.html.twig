@@ -70,7 +70,7 @@
 						<div class="col-md-4">
               <div class="form-group">
                   <label for="ref">N° de commande</label>
-                  <input type="text" class="form-control" id="ref" name="ref" required>
+                  <input type="text" class="form-control" id="ref" name="ref" required autocomplete="off">
                   {% if validationErrors is defined and validationErrors['ref'] is defined %}
                       <div class="error-message">
                           {% for error in validationErrors['ref'] %}
@@ -128,14 +128,14 @@
 						<div class="col-md-3">
 							<div class="form-group">
 								<label for="avance">Avance</label>
-								<input type="text" class="form-control" id="avance" name="avance" pattern="[0-9]+" title="Veuillez saisir un numéro valide">
+								<input type="text" class="form-control" id="avance" name="avance" pattern="[0-9]+" title="Veuillez saisir un numéro valide" required>
 							</div>
 						</div>
 
             <div class="col-md-3">
 							<div class="form-group">
-								<label for="remise">Remise</label>
-								<input type="text" class="form-control" id="remise" name="remise" pattern="[0-9]+" title="Veuillez saisir un numéro valide">
+								<label for="remise">Remise (%)</label>
+								<input type="text" class="form-control" id="remise" name="remise" pattern="[0-9]+" title="Veuillez saisir un numéro valide" required>
 							</div>
 						</div>
 					</div>
