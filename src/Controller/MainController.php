@@ -109,7 +109,7 @@ class MainController extends AbstractController
         $banks = $bankRepository->findAll();
 
         // percentage of totalcommandsen cours from total commands
-        // $percentage = ($totalCommandsEnCours * 100) / $totalCommands;
+        $percentage = ($totalCommandsEnCours * 100) / $totalCommands;
 
         $totalSoldeDesComptes = $compteRepository->createQueryBuilder('c')
         ->select('SUM(c.solde) as totalSolde')
@@ -129,11 +129,14 @@ class MainController extends AbstractController
         $blocked = $userRepository->count(['etat' => 'blocked']);
         $deblocked = $userRepository->count(['etat' => 'debloqué']);
 
+        $exchangeRates = $this->fetchExchangeRatesFromApi();
+
         
         return $this->render('main/index/index.html.twig', [
             'controller_name' => 'MainController',
             'image' => $image,
             'totalCommandsCount' => $totalCommands,
+            'percentage' => $percentage,
             'pendingC' => $pendingC,
             'livrepaye' => $livrepaye,
             'livrenonpaye' => $livrenonpaye,
@@ -146,6 +149,8 @@ class MainController extends AbstractController
             'totalSoldeDesComptes' => $totalSoldeDesComptes,
             'paysData' => $paysDataArray, 
             'CommandsEnCours' => $totalCommandsEnCours,
+            'exchangeRates' => $exchangeRates,
+
             
            
 
@@ -600,7 +605,7 @@ class MainController extends AbstractController
         $pagination = $paginator->paginate(
             $query,       // Query to paginate
             $request->query->getInt('page', 1), // Current page number
-            4         // Items per page
+            2        // Items per page
         );
 
 

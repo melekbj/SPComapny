@@ -2,7 +2,7 @@
 
 {% block body %}
 
-      <style>
+  <style>
           /* Define the animation keyframes */
         @keyframes fadeInOut {
           0% {
@@ -24,685 +24,386 @@
         }
 
       
-      </style>
-    <div class="main-panel">
-        <div class="content-wrapper">
+  </style>
+  {# Assuming you have fetched the rates in your controller and passed them to the template as 'exchangeRates' #}
+
+  
+
+
+
+
+
+  <div class="main-panel">
+    <div class="content-wrapper">
+      <div class="row">
+        <div class="col-md-12 grid-margin">
           <div class="row">
-            <div class="col-md-12 grid-margin">
-              <div class="row">
-                <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                 <h3 class="font-weight-bold"> <span class="text-primary">Bienvenue</span> {{app.user.fullname}}</h3>
-                  {% if oldCommandsCount > 0 %}
-                      <h3 class="font-weight-normal mb-0 alert alert-info animated-text">
-                          Veuillez patienter !
-                          Vous avez <span class="text-primary">{{ oldCommandsCount }} commandes datant de plus de 30 jours. Veillez à les vérifier !</span>
-                      </h3>
-                  {% endif %}
+            <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+              <h3 class="font-weight-bold">
+                <span class="text-primary">Bienvenue</span>
+                {{app.user.fullname}}</h3>
+              {% if oldCommandsCount > 0 %}
+                <h3 class="font-weight-normal mb-0 alert alert-info animated-text">
+                  Veuillez patienter !
+                                                            Vous avez
+                  <span class="text-primary">{{ oldCommandsCount }}
+                    commandes datant de plus de 30 jours. Veillez à les vérifier !</span>
+                </h3>
+              {% endif %}
 
-                
 
-                </div>
-                <div class="col-12 col-xl-4">
-                 <div class="justify-content-end d-flex">
-                    <div class="d-flex" style="background-color:white;padding:12px;border-radius:10px;" id="weather-data">
-                        <div>
-                            <h2 class="mb-0 font-weight-normal" style="color:#F28123"><i class="icon-sun mr-2"></i><span id="temperature">Loading...</span><sup>C</sup></h2>
-                        </div>
-                        <div class="ml-2">
-                            <h4 class="location font-weight-normal" style="color:#F28123"><span id="city">Loading...</span></h4>
-                            <h6 class="font-weight-normal" style="color:#F28123"><span id="country">Loading...</span></h6>
-                        </div>
-                    </div>
-                 </div>
-                </div>
-              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12 grid-margin transparent">
-              <div class="row">
 
-                <div class="col-md-6 stretch-card transparent">
-                  <div class="card card-light-blue">
-                    <div class="card-body">
-                      <p class="mb-4">Commandes en cours</p>
-                      <p class="fs-30 mb-2">{{CommandsEnCours}}</p>
-                      {# <p>{{ perCommEnCours|number_format(2) }} %</p> #}
-                    </div>
+            
+              <div class="justify-content-end" style="margin-left:130px;">
+
+                <div class="d-flex" id="weather-data">
+                  <div>
+                    <h2 class="mb-0 font-weight-normal" style="color:#F28123">
+                      <i class="icon-sun mr-2"></i>
+                      <span id="temperature">Loading...</span>
+                      <sup>C</sup>
+                    </h2>
                   </div>
-                </div>
-
-                <div class="col-md-6 stretch-card transparent">
-                  <div class="card card-light-danger">
-                    <div class="card-body">
-                      <p class="mb-4">Total des commandes</p>
-                      <p class="fs-30 mb-2">{{ totalCommandsCount }}</p>
-                      <p>100 %</p>
-                    </div>
+                  <div class="ml-2">
+                    <h4 class="location font-weight-normal" style="color:#F28123">
+                      <span id="city">Loading...</span>
+                    </h4>
+                    <h6 class="font-weight-normal" style="color:#F28123">
+                      <span id="country">Loading...</span>
+                    </h6>
                   </div>
                 </div>
 
 
+                <div class="mt-2">
+                    <div class="d-flex">
+                        <ul class="list-unstyled">
+                            <li class="h5 text-center">
+                                <img src="https://as2.ftcdn.net/v2/jpg/00/65/12/49/1000_F_65124908_UpNHzTdQn2HNAIT8yYqybMQeGfsRmVc7.jpg" alt="US Flag" width="30" class="flag-icon">
+                                1 USD = {{ exchangeRates['TND']|number_format(2) }} TND
+                                <img src="https://as2.ftcdn.net/v2/jpg/00/94/45/17/1000_F_94451798_ehaEejZoajI9yjKKwcFQlx9Jcpq44PEY.jpg" alt="US Flag" width="30" class="flag-icon">
+                            </li>
+
+                            <li class="h5">
+                                <img src="https://as1.ftcdn.net/v2/jpg/01/14/25/88/1000_F_114258861_tNfUTPqB1y5HxT8OhEVjwrQGnp5KoHEX.jpg" width="30" alt="EU Flag" class="flag-icon">
+                                1 EUR = {{ (exchangeRates['TND'] / exchangeRates['EUR'])|number_format(2) }} TND
+                                <img src="https://as2.ftcdn.net/v2/jpg/00/94/45/17/1000_F_94451798_ehaEejZoajI9yjKKwcFQlx9Jcpq44PEY.jpg" alt="US Flag" width="30" class="flag-icon">
+
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+
+
               </div>
-            </div>
+            
+
+            
+
+
+
+
           </div>
-
-
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 grid-margin transparent">
           <div class="row">
-            <div class="col-md-12 grid-margin stretch-card">
-              <div class="card position-relative mb-4">
+
+            <div class="col-md-6 stretch-card transparent">
+              <div class="card card-light-blue">
                 <div class="card-body">
-                  <div id="detailedReports" class="carousel slide detailed-report-carousel position-static pt-2" data-ride="carousel">
-                    <div class="carousel-inner">
-                      <div class="carousel-item active">
-                        <div class="row col-md-12">
-                          <div class=" col-md-8">
-                            <div class="ml-xl-4 mt-3">
-                              <p class="card-title">Trésorerie pays
-                              </p>
-                              <h1 class="text-primary">{{totalSoldeDesComptes}}$</h1>
-                              <h3 class="font-weight-500 mb-xl-4 text-primary">Afrique</h3>
-                              <p class="mb-2 mb-xl-0">Cela résume la somme totale des soldes à travers les pays, couvrant diverses transactions financières, dépôts et retraits.</p>
-                            </div>
-                          </div>
+                  <p class="mb-4">Commandes en cours</p>
+                  <p class="fs-30 mb-2">{{CommandsEnCours}}</p>
+                  <p>{{ percentage|number_format(2) }} %</p>
+                </div>
+              </div>
+            </div>
 
-                        </div>
-                        <div class="col-md-8 mx-auto ml-5">
-                          <div class="row ml-5">
-                            <div class="col-md-10 mt-3 ml-5">
-                              <canvas id="myChart3"></canvas>
-                              <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                              <script>
-                                  function getRandomColor() {
-                                      const letters = '0123456789ABCDEF';
-                                      let color = '#';
-                                      for (let i = 0; i < 6; i++) {
-                                          color += letters[Math.floor(Math.random() * 16)];
-                                      }
-                                      return color;
-                                  }
+            <div class="col-md-6 stretch-card transparent">
+              <div class="card card-light-danger">
+                <div class="card-body">
+                  <p class="mb-4">Total des commandes</p>
+                  <p class="fs-30 mb-2">{{ totalCommandsCount }}</p>
+                  <p>100 %</p>
+                </div>
+              </div>
+            </div>
 
-                                  const paysData = {{ paysData|json_encode|raw }}; // Pass the pays data to JavaScript
 
-                                  const ctx3 = document.getElementById('myChart3');
+          </div>
+        </div>
+      </div>
 
-                                  const backgroundColors = Array.from({ length: paysData.length }, () => getRandomColor());
-                                  const borderColor = backgroundColors.map(color => color.replace("0.5", "1"));
 
-                                  new Chart(ctx3, {
-                                      type: 'pie',
-                                      data: {
-                                          labels: paysData.map(pays => pays.name), // Use pays names as labels
-                                          datasets: [{
-                                              label: 'Solde des comptes',
-                                              data: paysData.map(pays => pays.solde), // Use solde values as data
-                                              backgroundColor: backgroundColors,
-                                              borderColor: borderColor,
-                                              borderWidth: 1
-                                          }]
-                                      },
-                                      options: {
-                                          scales: {
-                                              yAxes: [{
-                                                  ticks: {
-                                                      beginAtZero: true
-                                                  }
-                                              }]
-                                          }
-                                      }
-                                  });
-                              </script>
-
-                              <div id="north-america-legend"></div>
-                            </div>
-                          </div>
+      <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+          <div class="card position-relative mb-4">
+            <div class="card-body">
+              <div id="detailedReports" class="carousel slide detailed-report-carousel position-static pt-2" data-ride="carousel">
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <div class="row col-md-12">
+                      <div class=" col-md-8">
+                        <div class="ml-xl-4 mt-3">
+                          <p class="card-title">Trésorerie pays
+                          </p>
+                          <h1 class="text-primary">{{totalSoldeDesComptes}}$</h1>
+                          <h3 class="font-weight-500 mb-xl-4 text-primary">Afrique</h3>
+                          <p class="mb-2 mb-xl-0">Cela résume la somme totale des soldes à travers les pays, couvrant diverses transactions financières, dépôts et retraits.</p>
                         </div>
                       </div>
-                      {% for bank in banks %}
-                        <div class="carousel-item">
-                          <div class="row">
-                            <div class="col-md-12 col-xl-3 d-flex flex-column justify-content-start">
-                              <div class="ml-xl-6 mt-3">
-                                <p class="card-title">Trésorerie banques</p>
-                                <!-- Display the bank's name -->
-                                <h3 class="text-info">{{ bank.nom }}</h3>
-                                <h5 class="font-weight-500 mb-xl-4 text-success">Les comptes bancaires
-                                  <span class="h4">→</span>
-                                </h5>
-                                <!-- You can add a description here -->
-                              </div>
-                            </div>
-                            <div class="col-md-12 col-xl-9">
-                              <div class="row">
-                                <div class="col-md-6 border-right">
-                                  <div class="table-responsive mb-3 mb-md-0 mt-3">
-                                    <table class="table table-borderless report-table">
-                                      {% for compte in bank.compte %}
-                                        <tr>
-                                          <td class="text-muted">{{ compte.num }}</td>
-                                          <td class="">{{ compte.solde }}</td>
 
-                                        </tr>
-                                      {% endfor %}
-                                    </table>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      {% endfor %}
                     </div>
-                    <a class="carousel-control-prev" href="#detailedReports" role="button" data-slide="prev">
-                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                      <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#detailedReports" role="button" data-slide="next">
-                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                      <span class="sr-only">Next</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
-
-
-          <div class="row">
-            <div class="col-md-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <p class="card-title">État des commandes</p>
-                  <p class="font-weight-500">La section État des commandes fournit des mises à jour en temps réel sur l'état de vos commandes, en indiquant si elles sont "en cours", "terminées", "livrées non payées" ou "non livrées". Restez informé de l'état d'avancement de vos commandes pour garantir un traitement et une livraison efficaces.</p>
-                      <canvas id="myChart" height="250"></canvas>
-                      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                      <script>
-                          const ctx = document.getElementById('myChart');
-
-                          new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                              labels: ['En cours', 'Terminées', 'Livré non payé', 'Non livré'],
-                              datasets: [{
-                                label: '# des commandes',
-                                data: [{{ pendingC }}, {{ livrepaye }}, {{ livrenonpaye }}, {{ nonlivre }}],
-                                backgroundColor: [
-                                'rgba(255, 99, 132, 0.5)',
-                                'rgba(54, 162, 235, 0.5)',
-                                'rgba(255, 206, 86, 0.5)',
-                                'rgba(75, 192, 110, 0.5)'
-                                ],
-                                borderColor: [
-                                  'rgba(255, 99, 132, 1)',
-                                  'rgba(54, 162, 235, 1)',
-                                  'rgba(255, 206, 86, 1)',
-                                  'rgba(75, 192, 192, 1)'
-                                ],
-                                borderWidth: 1
-                              }]
-                            },
-                            options: {
-                              scales: {
-                                yAxes: [{
-                                  ticks: {
-                                    beginAtZero: true
-                                  }
-                                }]
-                              }
+                    <div class="col-md-8 mx-auto ml-5">
+                      <div class="row ml-5">
+                        <div class="col-md-10 mt-3 ml-5">
+                          <canvas id="myChart3"></canvas>
+                          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                          <script>
+                            function getRandomColor() {
+                            const letters = '0123456789ABCDEF';
+                            let color = '#';
+                            for (let i = 0; i < 6; i++) {
+                            color += letters[Math.floor(Math.random() * 16)];
                             }
-                          });
-                      </script>
-                </div>
-              </div>
-            </div>
-            {% if app.user and app.user.roles == "ROLE_ADMIN" %}
-            
-            <div class="col-md-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                 <div class="d-flex justify-content-between">
-                  <p class="card-title">Statut des utilisateurs</p>
-                 </div>
-                  <p class="font-weight-500">La rubrique Statut des utilisateurs fournit des mises à jour en temps réel sur l'état des utilisateurs, indiquant s'ils sont "approuvés", "en attente", "bloqués" ou "débloqués". Restez informé des statuts des utilisateurs afin de garantir une gestion fluide des utilisateurs et un traitement efficace des comptes d'utilisateurs.</p>
-                  <div id="sales-legend" class="chartjs-legend mt-4 mb-2"></div>
-                  <canvas id="myChart2"></canvas>
-                      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                      <script>
-                          const ctx2 = document.getElementById('myChart2');
-                          new Chart(ctx2, {
+                            return color;
+                            }
+
+                            const paysData = {{ paysData|json_encode|raw }}; // Pass the pays data to JavaScript
+
+                            const ctx3 = document.getElementById('myChart3');
+
+                            const backgroundColors = Array.from({
+                            length: paysData.length
+                            }, () => getRandomColor());
+                            const borderColor = backgroundColors.map(color => color.replace("0.5", "1"));
+
+                            new Chart(ctx3, {
                             type: 'pie',
                             data: {
-                              labels: ['En attente', 'Approuvés', 'Bloqués', 'Debloqués'],
-                              datasets: [{
-                                label: '# des utilisateurs',
-                                data: [{{ pendingU }}, {{ approved }}, {{ blocked }}, {{ deblocked }}],
-                                backgroundColor: [
-                                'rgba(255, 99, 132, 0.5)',
-                                'rgba(54, 162, 235, 0.5)',
-                                'rgba(255, 206, 86, 0.5)',
-                                'rgba(75, 192, 110, 0.5)'
-                                ],
-                                borderColor: [
-                                  'rgba(255, 99, 132, 1)',
-                                  'rgba(54, 162, 235, 1)',
-                                  'rgba(255, 206, 86, 1)',
-                                  'rgba(75, 192, 192, 1)'
-                                ],
-                                borderWidth: 1
-                              }]
+                            labels: paysData.map(pays => pays.name), // Use pays names as labels
+                            datasets: [
+                            {
+                            label: 'Solde des comptes',
+                            data: paysData.map(pays => pays.solde), // Use solde values as data
+                            backgroundColor: backgroundColors,
+                            borderColor: borderColor,
+                            borderWidth: 1
+                            }
+                            ]
                             },
                             options: {
-                              scales: {
-                                yAxes: [{
-                                  ticks: {
-                                    beginAtZero: true
-                                  }
-                                }]
-                              }
+                            scales: {
+                            yAxes: [
+                            {
+                            ticks: {
+                            beginAtZero: true
                             }
-                          });
-                      </script>
-                </div>
-              </div>
-            </div>
+                            }
+                            ]
+                            }
+                            }
+                            });
+                          </script>
 
-            {% endif %}
-          </div>
-
-
-
-          
-
-
-
-          {# <div class="row">
-            <div class="col-md-7 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <p class="card-title mb-0">Top Products</p>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-borderless">
-                      <thead>
-                        <tr>
-                          <th>Product</th>
-                          <th>Price</th>
-                          <th>Date</th>
-                          <th>Status</th>
-                        </tr>  
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Search Engine Marketing</td>
-                          <td class="font-weight-bold">$362</td>
-                          <td>21 Sep 2018</td>
-                          <td class="font-weight-medium"><div class="badge badge-success">Completed</div></td>
-                        </tr>
-                        <tr>
-                          <td>Search Engine Optimization</td>
-                          <td class="font-weight-bold">$116</td>
-                          <td>13 Jun 2018</td>
-                          <td class="font-weight-medium"><div class="badge badge-success">Completed</div></td>
-                        </tr>
-                        <tr>
-                          <td>Display Advertising</td>
-                          <td class="font-weight-bold">$551</td>
-                          <td>28 Sep 2018</td>
-                          <td class="font-weight-medium"><div class="badge badge-warning">Pending</div></td>
-                        </tr>
-                        <tr>
-                          <td>Pay Per Click Advertising</td>
-                          <td class="font-weight-bold">$523</td>
-                          <td>30 Jun 2018</td>
-                          <td class="font-weight-medium"><div class="badge badge-warning">Pending</div></td>
-                        </tr>
-                        <tr>
-                          <td>E-Mail Marketing</td>
-                          <td class="font-weight-bold">$781</td>
-                          <td>01 Nov 2018</td>
-                          <td class="font-weight-medium"><div class="badge badge-danger">Cancelled</div></td>
-                        </tr>
-                        <tr>
-                          <td>Referral Marketing</td>
-                          <td class="font-weight-bold">$283</td>
-                          <td>20 Mar 2018</td>
-                          <td class="font-weight-medium"><div class="badge badge-warning">Pending</div></td>
-                        </tr>
-                        <tr>
-                          <td>Social media marketing</td>
-                          <td class="font-weight-bold">$897</td>
-                          <td>26 Oct 2018</td>
-                          <td class="font-weight-medium"><div class="badge badge-success">Completed</div></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-5 grid-margin stretch-card">
-							<div class="card">
-								<div class="card-body">
-									<h4 class="card-title">To Do Lists</h4>
-									<div class="list-wrapper pt-2">
-										<ul class="d-flex flex-column-reverse todo-list todo-list-custom">
-											<li>
-												<div class="form-check form-check-flat">
-													<label class="form-check-label">
-														<input class="checkbox" type="checkbox">
-														Meeting with Urban Team
-													</label>
-												</div>
-												<i class="remove ti-close"></i>
-											</li>
-											<li class="completed">
-												<div class="form-check form-check-flat">
-													<label class="form-check-label">
-														<input class="checkbox" type="checkbox" checked>
-														Duplicate a project for new customer
-													</label>
-												</div>
-												<i class="remove ti-close"></i>
-											</li>
-											<li>
-												<div class="form-check form-check-flat">
-													<label class="form-check-label">
-														<input class="checkbox" type="checkbox">
-														Project meeting with CEO
-													</label>
-												</div>
-												<i class="remove ti-close"></i>
-											</li>
-											<li class="completed">
-												<div class="form-check form-check-flat">
-													<label class="form-check-label">
-														<input class="checkbox" type="checkbox" checked>
-														Follow up of team zilla
-													</label>
-												</div>
-												<i class="remove ti-close"></i>
-											</li>
-											<li>
-												<div class="form-check form-check-flat">
-													<label class="form-check-label">
-														<input class="checkbox" type="checkbox">
-														Level up for Antony
-													</label>
-												</div>
-												<i class="remove ti-close"></i>
-											</li>
-										</ul>
-                  </div>
-                  <div class="add-items d-flex mb-0 mt-2">
-										<input type="text" class="form-control todo-list-input"  placeholder="Add new task">
-										<button class="add btn btn-icon text-primary todo-list-add-btn bg-transparent"><i class="icon-circle-plus"></i></button>
-									</div>
-								</div>
-							</div>
-            </div>
-          </div> #}
-          {# <div class="row">
-            <div class="col-md-4 stretch-card grid-margin">
-              <div class="card">
-                <div class="card-body">
-                  <p class="card-title mb-0">Projects</p>
-                  <div class="table-responsive">
-                    <table class="table table-borderless">
-                      <thead>
-                        <tr>
-                          <th class="pl-0  pb-2 border-bottom">Places</th>
-                          <th class="border-bottom pb-2">Orders</th>
-                          <th class="border-bottom pb-2">Users</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="pl-0">Kentucky</td>
-                          <td><p class="mb-0"><span class="font-weight-bold mr-2">65</span>(2.15%)</p></td>
-                          <td class="text-muted">65</td>
-                        </tr>
-                        <tr>
-                          <td class="pl-0">Ohio</td>
-                          <td><p class="mb-0"><span class="font-weight-bold mr-2">54</span>(3.25%)</p></td>
-                          <td class="text-muted">51</td>
-                        </tr>
-                        <tr>
-                          <td class="pl-0">Nevada</td>
-                          <td><p class="mb-0"><span class="font-weight-bold mr-2">22</span>(2.22%)</p></td>
-                          <td class="text-muted">32</td>
-                        </tr>
-                        <tr>
-                          <td class="pl-0">North Carolina</td>
-                          <td><p class="mb-0"><span class="font-weight-bold mr-2">46</span>(3.27%)</p></td>
-                          <td class="text-muted">15</td>
-                        </tr>
-                        <tr>
-                          <td class="pl-0">Montana</td>
-                          <td><p class="mb-0"><span class="font-weight-bold mr-2">17</span>(1.25%)</p></td>
-                          <td class="text-muted">25</td>
-                        </tr>
-                        <tr>
-                          <td class="pl-0">Nevada</td>
-                          <td><p class="mb-0"><span class="font-weight-bold mr-2">52</span>(3.11%)</p></td>
-                          <td class="text-muted">71</td>
-                        </tr>
-                        <tr>
-                          <td class="pl-0 pb-0">Louisiana</td>
-                          <td class="pb-0"><p class="mb-0"><span class="font-weight-bold mr-2">25</span>(1.32%)</p></td>
-                          <td class="pb-0">14</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4 stretch-card grid-margin">
-              <div class="row">
-                <div class="col-md-12 grid-margin stretch-card">
-                  <div class="card">
-                    <div class="card-body">
-                      <p class="card-title">Charts</p>
-                      <div class="charts-data">
-                        <div class="mt-3">
-                          <p class="mb-0">Data 1</p>
-                          <div class="d-flex justify-content-between align-items-center">
-                            <div class="progress progress-md flex-grow-1 mr-4">
-                              <div class="progress-bar bg-inf0" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <p class="mb-0">5k</p>
-                          </div>
+                          <div id="north-america-legend"></div>
                         </div>
-                        <div class="mt-3">
-                          <p class="mb-0">Data 2</p>
-                          <div class="d-flex justify-content-between align-items-center">
-                            <div class="progress progress-md flex-grow-1 mr-4">
-                              <div class="progress-bar bg-info" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <p class="mb-0">1k</p>
-                          </div>
-                        </div>
-                        <div class="mt-3">
-                          <p class="mb-0">Data 3</p>
-                          <div class="d-flex justify-content-between align-items-center">
-                            <div class="progress progress-md flex-grow-1 mr-4">
-                              <div class="progress-bar bg-info" role="progressbar" style="width: 48%" aria-valuenow="48" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <p class="mb-0">992</p>
-                          </div>
-                        </div>
-                        <div class="mt-3">
-                          <p class="mb-0">Data 4</p>
-                          <div class="d-flex justify-content-between align-items-center">
-                            <div class="progress progress-md flex-grow-1 mr-4">
-                              <div class="progress-bar bg-info" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <p class="mb-0">687</p>
-                          </div>
-                        </div>
-                      </div>  
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-md-12 stretch-card grid-margin grid-margin-md-0">
-                  <div class="card data-icon-card-primary">
-                    <div class="card-body">
-                      <p class="card-title text-white">Number of Meetings</p>                      
+                  {% for bank in banks %}
+                    <div class="carousel-item">
                       <div class="row">
-                        <div class="col-8 text-white">
-                          <h3>34040</h3>
-                          <p class="text-white font-weight-500 mb-0">The total number of sessions within the date range.It is calculated as the sum . </p>
+                        <div class="col-md-12 col-xl-3 d-flex flex-column justify-content-start">
+                          <div class="ml-xl-6 mt-3">
+                            <p class="card-title">Trésorerie banques</p>
+                            <!-- Display the bank's name -->
+                            <h3 class="text-info">{{ bank.nom }}</h3>
+                            <h5 class="font-weight-500 mb-xl-4 text-success">Les comptes bancaires
+                              <span class="h4">→</span>
+                            </h5>
+                            <!-- You can add a description here -->
+                          </div>
                         </div>
-                        <div class="col-4 background-icon">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4 stretch-card grid-margin">
-              <div class="card">
-                <div class="card-body">
-                  <p class="card-title">Notifications</p>
-                  <ul class="icon-data-list">
-                    <li>
-                      <div class="d-flex">
-                        <img src="{{ asset('assetsA/images/faces/face1.jpg')}}" alt="user">
-                        <div>
-                          <p class="text-info mb-1">Isabella Becker</p>
-                          <p class="mb-0">Sales dashboard have been created</p>
-                          <small>9:30 am</small>
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="d-flex">
-                        <img src="{{ asset('assetsA/images/faces/face2.jpg')}}" alt="user">
-                        <div>
-                          <p class="text-info mb-1">Adam Warren</p>
-                          <p class="mb-0">You have done a great job #TW111</p>
-                          <small>10:30 am</small>
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="d-flex">
-                      <img src="{{ asset('assetsA/images/faces/face3.jpg')}}" alt="user">
-                     <div>
-                      <p class="text-info mb-1">Leonard Thornton</p>
-                      <p class="mb-0">Sales dashboard have been created</p>
-                      <small>11:30 am</small>
-                     </div>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="d-flex">
-                        <img src="{{ asset('assetsA/images/faces/face4.jpg')}}" alt="user">
-                        <div>
-                          <p class="text-info mb-1">George Morrison</p>
-                          <p class="mb-0">Sales dashboard have been created</p>
-                          <small>8:50 am</small>
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="d-flex">
-                        <img src="{{ asset('assetsA/images/faces/face5.jpg')}}" alt="user">
-                        <div>
-                        <p class="text-info mb-1">Ryan Cortez</p>
-                        <p class="mb-0">Herbs are fun and easy to grow.</p>
-                        <small>9:00 am</small>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div> #}
-          {# <div class="row">
-            <div class="col-md-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <p class="card-title">Advanced Table</p>
-                  <div class="row">
-                    <div class="col-12">
-                      <div class="table-responsive">
-                        <table id="example" class="display expandable-table" style="width:100%">
-                          <thead>
-                            <tr>
-                              <th>Quote#</th>
-                              <th>Product</th>
-                              <th>Business type</th>
-                              <th>Policy holder</th>
-                              <th>Premium</th>
-                              <th>Status</th>
-                              <th>Updated at</th>
-                              <th></th>
-                            </tr>
-                          </thead>
-                      </table>
-                      </div>
-                    </div>
-                  </div>
-                  </div>
-                </div>
+                        <div class="col-md-12 col-xl-9">
+                          <div class="row">
+                            <div class="col-md-6 border-right">
+                              <div class="table-responsive mb-3 mb-md-0 mt-3">
+                                <table class="table table-borderless report-table">
+                                  {% for compte in bank.compte %}
+                                    <tr>
+                                      <td class="text-muted">{{ compte.num }}</td>
+                                      <td class="">{{ compte.solde }}</td>
 
-                
+                                    </tr>
+                                  {% endfor %}
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+                <a class="carousel-control-prev" href="#detailedReports" role="button" data-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#detailedReports" role="button" data-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
               </div>
             </div>
-        </div> #}
-        <!-- content-wrapper ends -->
-        <!-- partial:partials/_footer.html -->
-        {# <footer class="footer">
-          <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021.  Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash. All rights reserved.</span>
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="ti-heart text-danger ml-1"></i></span>
           </div>
-          <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Distributed by <a href="https://www.themewagon.com/" target="_blank">Themewagon</a></span> 
-          </div>
-        </footer>  #}
-        <!-- partial -->
+        </div>
       </div>
-  <!-- container-scroller -->
 
 
+      <div class="row">
+        <div class="col-md-6 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <p class="card-title">État des commandes</p>
+              <p class="font-weight-500">La section État des commandes fournit des mises à jour en temps réel sur l'état de vos commandes, en indiquant si elles sont "en cours", "terminées", "livrées non payées" ou "non livrées". Restez informé de l'état d'avancement de vos commandes pour garantir un traitement et une livraison efficaces.</p>
+              <canvas id="myChart" height="250"></canvas>
+              <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+              <script>
+                const ctx = document.getElementById('myChart');
 
-
-
-
-<script>
-    function fetchWeatherData() {
-        const apiKey = 'a833e1c1400d496a8a693622232107'; // Replace with your valid API key from WeatherAPI
-        const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=Tunis`;
-
-        fetch(apiUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                new Chart(ctx, {
+                type: 'bar',
+                data: {
+                labels: [
+                'En cours', 'Terminées', 'Livré non payé', 'Non livré'
+                ],
+                datasets: [
+                {
+                label: '# des commandes',
+                data: [
+                {{ pendingC }}, {{ livrepaye }}, {{ livrenonpaye }}, {{ nonlivre }}
+                ],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)', 'rgba(75, 192, 110, 0.5)'
+                ],
+                borderColor: [
+                'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
                 }
-                return response.json();
-            })
-            .then(data => {
-                const temperatureElement = document.getElementById('temperature');
-                const cityElement = document.getElementById('city');
-                const countryElement = document.getElementById('country');
+                ]
+                },
+                options: {
+                scales: {
+                yAxes: [
+                {
+                ticks: {
+                beginAtZero: true
+                }
+                }
+                ]
+                }
+                }
+                });
+              </script>
+            </div>
+          </div>
+        </div>
+        {% if app.user and app.user.roles == "ROLE_ADMIN" %}
 
-                temperatureElement.textContent = data.current.temp_c;
-                cityElement.textContent = data.location.name;
-                countryElement.textContent = data.location.country;
-            })
-            .catch(error => {
-                console.error('Error fetching weather data:', error);
-            });
-    }
+          <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <p class="card-title">Statut des utilisateurs</p>
+                </div>
+                <p class="font-weight-500">La rubrique Statut des utilisateurs fournit des mises à jour en temps réel sur l'état des utilisateurs, indiquant s'ils sont "approuvés", "en attente", "bloqués" ou "débloqués". Restez informé des statuts des utilisateurs afin de garantir une gestion fluide des utilisateurs et un traitement efficace des comptes d'utilisateurs.</p>
+                <div id="sales-legend" class="chartjs-legend mt-4 mb-2"></div>
+                <canvas id="myChart2"></canvas>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script>
+                  const ctx2 = document.getElementById('myChart2');
+                  new Chart(ctx2, {
+                  type: 'pie',
+                  data: {
+                  labels: [
+                  'En attente', 'Approuvés', 'Bloqués', 'Debloqués'
+                  ],
+                  datasets: [
+                  {
+                  label: '# des utilisateurs',
+                  data: [
+                  {{ pendingU }}, {{ approved }}, {{ blocked }}, {{ deblocked }}
+                  ],
+                  backgroundColor: [
+                  'rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)', 'rgba(75, 192, 110, 0.5)'
+                  ],
+                  borderColor: [
+                  'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)'
+                  ],
+                  borderWidth: 1
+                  }
+                  ]
+                  },
+                  options: {
+                  scales: {
+                  yAxes: [
+                  {
+                  ticks: {
+                  beginAtZero: true
+                  }
+                  }
+                  ]
+                  }
+                  }
+                  });
+                </script>
+              </div>
+            </div>
+          </div>
 
-    fetchWeatherData();
-</script>
+        {% endif %}
+      </div>
+
+
+    </div>
+  </div>
+
+
+
+  <script>
+      function fetchWeatherData() {
+          const apiKey = 'a833e1c1400d496a8a693622232107'; // Replace with your valid API key from WeatherAPI
+          const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=Tunis`;
+
+          fetch(apiUrl)
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  const temperatureElement = document.getElementById('temperature');
+                  const cityElement = document.getElementById('city');
+                  const countryElement = document.getElementById('country');
+
+                  temperatureElement.textContent = data.current.temp_c;
+                  cityElement.textContent = data.location.name;
+                  countryElement.textContent = data.location.country;
+              })
+              .catch(error => {
+                  console.error('Error fetching weather data:', error);
+              });
+      }
+
+      fetchWeatherData();
+  </script>
 
 
 {% endblock %}

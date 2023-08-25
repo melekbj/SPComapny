@@ -7,14 +7,10 @@
 
       <div class="main-panel">
         <div class="content-wrapper">
-		    {# <div>
-				<h6 class="text-sm-right mr-3" style="font-size:12px;">
-				<<a href="{{path('app_dashboard')}}">dashboard</a><<a href="{{path('app_country')}}">pays</a><<a href="{{path('app_banks_by_country', {'id': Id})}}">banques</a><<a href=""></a>commandes
-				</h6>
-			</div> #}
-          <div class="card mb-3">
+		   
+			<div class="card mb-3">
 			<div class="card-body col-lg-12">
-				<form action="{{ path('app_commandes_by_bank', {'id': Id}) }}" method="get" class="form-inline">
+				<form action="{{ path('app_commandes') }}" method="get" class="form-inline">
 					<div class="form-group col-mx-8">
 						<h5 class="mt-2">
 							<strong>Filtrer par :</strong>
@@ -31,8 +27,12 @@
 						</select>
 					</div>
 
-					<div class="form-group col-lg-4">
-						<input type="text" name="reference" class="form-control col-lg-12" placeholder="Rechercher par n° de commande">
+					<div class="form-group col-lg-3">
+						<input type="text" name="reference" class="form-control col-lg-12" placeholder="N° de commande">
+					</div>
+
+					 <div class="form-group col-lg-3">
+						<input type="date" name="date" class="form-control col-lg-12" placeholder="Filtrer par date">
 					</div>
 
 					<button type="submit" class="btn btn-primary">Filtrer</button>
@@ -40,24 +40,6 @@
 			</div>
 		</div>
 
-
-
-          {# <form method="get">
-					<label>État:</label>
-					<select name="etat">
-						<option value="">Tous</option>
-						<option value="Pending">Pending</option>
-						<option value="Progress">Progress</option>
-						<option value="Completed">Completed</option>
-					</select>
-					<label>Prix:</label>
-					<select name="prixOrder">
-						<option value="">Aucun</option>
-						<option value="ASC">Prix croissant</option>
-						<option value="DESC">Prix décroissant</option>
-					</select>
-					<input type="submit" value="Filtrer">
-				</form> #}
 
 
           <div class="row">
